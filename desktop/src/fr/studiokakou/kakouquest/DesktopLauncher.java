@@ -20,6 +20,6 @@ public class DesktopLauncher {
 		}
 
 		config.setTitle("Kakou Quest");
-		new Lwjgl3Application(new Main(), config);
+		new Lwjgl3Application(new GameSpace(), config);
 	}
 }
