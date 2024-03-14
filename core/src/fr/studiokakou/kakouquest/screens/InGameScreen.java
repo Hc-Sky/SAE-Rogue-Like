@@ -9,24 +9,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.player.Player;
 
 public class InGameScreen implements Screen {
 
     GameSpace game;
     SpriteBatch batch;
-    Sprite exapleSprite;
+
+    Player player;
 
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
+        this.player = new Player(100, 100, "player");
     }
 
     @Override
     public void show() {
-        Texture texture = new Texture("assets/knight_f_run_anim_f0.png");
-        this.exapleSprite = new Sprite(texture, texture.getWidth()*5, texture.getHeight()*5);
-        this.exapleSprite.setY(100);
-        this.exapleSprite.setX(100);
+
     }
 
     @Override
@@ -34,19 +34,11 @@ public class InGameScreen implements Screen {
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W)){
-            exapleSprite.setY(exapleSprite.getY()+1);
-        }else  if (Gdx.input.isKeyPressed(Input.Keys.S)){
-            exapleSprite.setY(exapleSprite.getY()-1);
-        }else  if (Gdx.input.isKeyPressed(Input.Keys.A)){
-            exapleSprite.setX(exapleSprite.getX()-1);
-        }else  if (Gdx.input.isKeyPressed(Input.Keys.D)){
-            exapleSprite.setX(exapleSprite.getX()+1);
-        }
+        player.getKeyboardMove();
 
         batch.begin();
 
-        this.exapleSprite.draw(batch);
+        player.draw(this.batch);
 
         batch.end();
     }
