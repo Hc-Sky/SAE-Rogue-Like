@@ -20,3 +20,7 @@ Ajoutez les configurations suivantes
 Enfin cliquez sur Modify options et Add VM Options et ajoutez cette option -XstartOnFirstThread
 
 ![img_2.png](img_2.png)
+
+Config finale :
+
+![img_3.png](img_3.png)
