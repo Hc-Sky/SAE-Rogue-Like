@@ -22,6 +22,10 @@ public class Player {
     Texture texture;
     public Sprite sprite;
 
+    //player texture size
+    public int texture_height;
+    public int texture_width;
+
     public Player(float x, float y, String name){
 
         this.pos = new Point(x, y);
@@ -30,12 +34,19 @@ public class Player {
         this.texture = new Texture("assets/player/test_player_image.png");
         this.sprite = new Sprite(this.texture);
 
+        this.texture_width = this.texture.getWidth();
+        this.texture_height = this.texture.getHeight();
+
         this.move(0, 0);
 
         //default values
         this.hp=100;
         this.strength=10;
         this.speed=50f;
+    }
+
+    public Point center(){
+        return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
     public void move(float x, float y){
