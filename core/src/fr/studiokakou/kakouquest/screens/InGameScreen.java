@@ -1,18 +1,19 @@
 package fr.studiokakou.kakouquest.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 
 public class InGameScreen implements Screen {
+
+    //defaults
+    public static float FRAME_DURATION=0.25f;
 
     GameSpace game;
     SpriteBatch batch;
@@ -42,6 +43,7 @@ public class InGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         player.getKeyboardMove();
+        player.getOrientation(this.cam.camera);
 
         batch.begin();
 
