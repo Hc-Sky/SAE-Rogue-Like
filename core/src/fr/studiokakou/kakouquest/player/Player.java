@@ -27,7 +27,7 @@ public class Player {
         this.pos = new Point(x, y);
         this.name = name;
 
-        this.texture = new Texture("assets/knight_f_run_anim_f0.png");
+        this.texture = new Texture("assets/player/test_player_image.png");
         this.sprite = new Sprite(this.texture);
 
         this.move(0, 0);
