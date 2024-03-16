@@ -24,7 +24,7 @@ public class Player {
     boolean isDashing = false;
     static float dashDistance = 100f;
     Point dashFinalPoint;
-
+    Point dashOrientation;
 
     //player texture size
     public int texture_height;
@@ -69,15 +69,17 @@ public class Player {
 
     public void dash(OrthographicCamera camera){
         if (this.isDashing){
-            if (this.dashFinalPoint == null){
+            if (this.dashFinalPoint == null && this.dashOrientation==null){
                 Point mousePos = Utils.mousePosUnproject(camera);
                 this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.dashDistance);
+                this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
             }else {
-                if (Utils.getDistance(this.pos, this.dashFinalPoint) > 40){
+                if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 400f*Gdx.graphics.getDeltaTime());
                 } else {
                     this.isDashing=false;
                     this.dashFinalPoint=null;
+                    this.dashOrientation=null;
                 }
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.E)) {

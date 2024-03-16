@@ -32,7 +32,7 @@ public class InGameScreen implements Screen {
     @Override
     public void show() {
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/cursorv1.png"));
-        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
     }
 
