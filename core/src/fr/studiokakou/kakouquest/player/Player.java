@@ -9,15 +9,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 
 public class Player {
 
     //player pos
     Point pos;
+    Point lastPos;
 
     //player stats
     public String name;
@@ -48,6 +46,7 @@ public class Player {
     //animations
     Animation<TextureRegion> idleAnimation;
     Animation<TextureRegion> runAnimation;
+    Animation<TextureRegion> runAnimationRevert;
     static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
     public Player(float x, float y, String name){
@@ -56,12 +55,14 @@ public class Player {
 
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
+        this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.stateTime=0f;
 
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
 
         this.pos = new Point(x-((float) this.texture_width /2), y);
+        this.lastPos = this.pos;
 
         //default values
         this.hp=100;
@@ -74,6 +75,7 @@ public class Player {
     }
 
     public void move(float x, float y){
+        this.lastPos = this.pos;
         this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
     }
 
@@ -86,6 +88,7 @@ public class Player {
                 this.dashTimer = LocalDateTime.now();
             }else {
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
+                    assert this.dashFinalPoint != null;
                     this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 500f*Gdx.graphics.getDeltaTime());
                 } else {
                     this.isDashing=false;
@@ -134,7 +137,13 @@ public class Player {
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame;
         if (this.isRunning){
-            currentFrame = this.runAnimation.getKeyFrame(stateTime, true);
+            if (!flip && this.lastPos.x > this.pos.x){
+                currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
+            } else if (flip && this.lastPos.x < this.pos.x) {
+                currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
+            } else {
+                currentFrame = this.runAnimation.getKeyFrame(stateTime, true);
+            }
         }else {
             currentFrame = this.idleAnimation.getKeyFrame(stateTime, true);
         }

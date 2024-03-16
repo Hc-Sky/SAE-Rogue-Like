@@ -30,6 +30,25 @@ public class Utils {
         return new Animation<TextureRegion>(InGameScreen.FRAME_DURATION, textureRegions);
     }
 
+    public static Animation<TextureRegion> getAnimationRevert(String textureName, int FRAME_COLS, int FRAME_ROWS){
+        Texture texture = new Texture(textureName);
+
+        TextureRegion[][] tmp = TextureRegion.split(texture,
+                texture.getWidth() / FRAME_COLS,
+                texture.getHeight() / FRAME_ROWS);
+
+        TextureRegion[] textureRegions = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+
+        int index = 0;
+        for (int i = FRAME_ROWS-1; i >= 0; i--) {
+            for (int j = 0; j < FRAME_COLS; j++) {
+                textureRegions[index++] = tmp[i][j];
+            }
+        }
+
+        return new Animation<TextureRegion>(InGameScreen.FRAME_DURATION, textureRegions);
+    }
+
     public static int getAnimationWidth(Animation<TextureRegion> animation){
         TextureRegion currentFrame = animation.getKeyFrame(0f, true);
         return currentFrame.getRegionWidth();
