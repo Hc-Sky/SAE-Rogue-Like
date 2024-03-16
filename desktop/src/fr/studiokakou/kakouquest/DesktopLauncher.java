@@ -12,6 +12,8 @@ public class DesktopLauncher {
 		config.setForegroundFPS(GetProperties.getIntProperty("FRAME_RATE"));
 		config.useVsync(true);
 
+		config.setWindowIcon("assets/window/icon.png");
+
 		if (GetProperties.getBoolProperty("FULLSCREEN")){
 			config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		}else {

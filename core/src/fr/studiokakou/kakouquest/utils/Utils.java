@@ -53,4 +53,16 @@ public class Utils {
         Vector3 camPosVect = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         return new Point(camPosVect.x, camPosVect.y);
     }
+
+    public static Point getPointDirection(Point p1, Point p2, float distance){
+        float totalDistance = (float) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+        float ratio = distance / totalDistance;
+        float x = ratio * p2.x + (1 - ratio) * p1.x;
+        float y = ratio * p2.y + (1 - ratio) * p1.y;
+        return new Point(x, y);
+    }
+
+    public static float getDistance(Point p1, Point p2){
+        return (float) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+    }
 }

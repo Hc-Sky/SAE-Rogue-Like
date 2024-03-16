@@ -47,6 +47,7 @@ public class InGameScreen implements Screen {
 
         player.getKeyboardMove();
         player.getOrientation(this.cam.camera);
+        player.dash(this.cam.camera);
 
         batch.begin();
 

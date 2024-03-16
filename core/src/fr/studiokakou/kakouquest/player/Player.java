@@ -21,8 +21,9 @@ public class Player {
     public float speed;
 
     //dash infos
-    static float dashDistance = 200f;
-    float currentDashDistance = 0f;
+    boolean isDashing = false;
+    static float dashDistance = 100f;
+    Point dashFinalPoint;
 
 
     //player texture size
@@ -67,7 +68,22 @@ public class Player {
     }
 
     public void dash(OrthographicCamera camera){
-        Point mousePos = Utils.mousePosUnproject(camera);
+        if (this.isDashing){
+            if (this.dashFinalPoint == null){
+                Point mousePos = Utils.mousePosUnproject(camera);
+                this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.dashDistance);
+            }else {
+                if (Utils.getDistance(this.pos, this.dashFinalPoint) > 40){
+                    this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 400f*Gdx.graphics.getDeltaTime());
+                } else {
+                    this.isDashing=false;
+                    this.dashFinalPoint=null;
+                }
+            }
+        } else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            this.isDashing=true;
+        }
+
     }
 
     public void getOrientation(OrthographicCamera camera){
@@ -77,22 +93,24 @@ public class Player {
     }
 
     public void getKeyboardMove(){
-        if (Gdx.input.isKeyPressed(Input.Keys.W)){
-            this.move(0, 1);
-            this.isRunning=true;
-        } if (Gdx.input.isKeyPressed(Input.Keys.S)){
-            this.move(0, -1);
-            this.isRunning=true;
-        } if (Gdx.input.isKeyPressed(Input.Keys.A)){
-            this.move(-1, 0);
-            this.isRunning=true;
-        } if (Gdx.input.isKeyPressed(Input.Keys.D)){
-            this.move(1, 0);
-            this.isRunning=true;
-        } if (!(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))){
-            this.isRunning=false;
-        } if (Gdx.input.isKeyPressed(Input.Keys.P)){    //pour dev uniquement à supprimer
-            Gdx.app.exit();
+        if (!this.isDashing){
+            if (Gdx.input.isKeyPressed(Input.Keys.W)){
+                this.move(0, 1);
+                this.isRunning=true;
+            } if (Gdx.input.isKeyPressed(Input.Keys.S)){
+                this.move(0, -1);
+                this.isRunning=true;
+            } if (Gdx.input.isKeyPressed(Input.Keys.A)){
+                this.move(-1, 0);
+                this.isRunning=true;
+            } if (Gdx.input.isKeyPressed(Input.Keys.D)){
+                this.move(1, 0);
+                this.isRunning=true;
+            } if (!(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))){
+                this.isRunning=false;
+            } if (Gdx.input.isKeyPressed(Input.Keys.P)){    //pour dev uniquement à supprimer
+                Gdx.app.exit();
+            }
         }
     }
 
