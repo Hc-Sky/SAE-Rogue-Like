@@ -1,14 +1,19 @@
 package fr.studiokakou.kakouquest.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
+
+import java.awt.im.InputContext;
+import java.util.Locale;
 
 public class InGameScreen implements Screen {
 
@@ -30,7 +35,9 @@ public class InGameScreen implements Screen {
 
     @Override
     public void show() {
-
+        Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/cursorv1.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+        pm.dispose();
     }
 
     @Override
