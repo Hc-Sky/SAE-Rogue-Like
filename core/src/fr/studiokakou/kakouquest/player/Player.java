@@ -9,6 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
+
 public class Player {
 
     //player pos
@@ -22,9 +27,14 @@ public class Player {
 
     //dash infos
     boolean isDashing = false;
-    static float dashDistance = 50f;
+    boolean canDash = true;
     Point dashFinalPoint;
     Point dashOrientation;
+    LocalDateTime dashTimer;
+
+    //dash stats
+    static float DASH_DISTANCE = 50f;
+    static long DASH_PAUSE = 5;
 
     //player texture size
     public int texture_height;
@@ -71,8 +81,9 @@ public class Player {
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
                 Point mousePos = Utils.mousePosUnproject(camera);
-                this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.dashDistance);
+                this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
                 this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
+                this.dashTimer = LocalDateTime.now();
             }else {
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 500f*Gdx.graphics.getDeltaTime());
@@ -82,7 +93,10 @@ public class Player {
                     this.dashOrientation=null;
                 }
             }
-        } else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+        } else if (!this.canDash && this.dashTimer.plusSeconds(Player.DASH_PAUSE).isBefore(LocalDateTime.now())) {
+            this.canDash=true;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.E) && this.canDash) {
+            this.canDash=false;
             this.isDashing=true;
         }
 

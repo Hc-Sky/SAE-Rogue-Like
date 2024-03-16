@@ -10,8 +10,8 @@ public class Camera {
     Player player;
 
     public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 3) /720;
-    public static float CAM_Y_DISTANCE = (float) (Gdx.graphics.getHeight() * 53) /720;
-    public static float CAM_X_DISTANCE = (float) (Gdx.graphics.getWidth() * 95) /1280;
+    public static float CAM_Y_DISTANCE = 53;
+    public static float CAM_X_DISTANCE = 95;
 
     public float zoom;
 
