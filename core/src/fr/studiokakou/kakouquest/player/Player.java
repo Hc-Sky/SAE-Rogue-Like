@@ -3,11 +3,9 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
 
@@ -16,14 +14,16 @@ public class Player {
     //player pos
     Point pos;
 
-    //player infos
+    //player stats
     public String name;
     public int hp;
     public int strength;
     public float speed;
 
-    //player texture & sprite
-    Texture texture;
+    //dash infos
+    static float dashDistance = 200f;
+    float currentDashDistance = 0f;
+
 
     //player texture size
     public int texture_height;
@@ -41,7 +41,6 @@ public class Player {
 
     public Player(float x, float y, String name){
 
-        this.pos = new Point(x, y);
         this.name = name;
 
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
@@ -50,6 +49,8 @@ public class Player {
 
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
+
+        this.pos = new Point(x-((float) this.texture_width /2), y);
 
         //default values
         this.hp=100;
@@ -62,17 +63,17 @@ public class Player {
     }
 
     public void move(float x, float y){
-        this.pos = this.pos.add(x, y);
+        this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
+    }
+
+    public void dash(OrthographicCamera camera){
+        Point mousePos = Utils.mousePosUnproject(camera);
     }
 
     public void getOrientation(OrthographicCamera camera){
-        Point mousePos = Utils.getUnprojectPos(new Point(Gdx.input.getX(), Gdx.input.getY()), camera);
+        Point mousePos = Utils.mousePosUnproject(camera);
 
-        if (mousePos.x<this.center().x){
-            this.flip=true;
-        } else {
-            this.flip=false;
-        }
+        this.flip= mousePos.x < this.center().x;
     }
 
     public void getKeyboardMove(){

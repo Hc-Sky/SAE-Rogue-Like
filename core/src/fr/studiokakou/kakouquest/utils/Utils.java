@@ -41,11 +41,16 @@ public class Utils {
     }
 
     public static Point getUnprojectPos(Point p, OrthographicCamera camera){
-        Vector3 camPosVect = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector3 camPosVect = camera.unproject(new Vector3(p.x, p.y, 0));
         return new Point(camPosVect.x, camPosVect.y);
     }
 
     public static void markPoint(Point position, SpriteBatch batch){
         batch.draw(new Texture("assets/mark.png"), position.x, position.y);
+    }
+
+    public static Point mousePosUnproject(OrthographicCamera camera){
+        Vector3 camPosVect = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        return new Point(camPosVect.x, camPosVect.y);
     }
 }

@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 
@@ -23,5 +24,10 @@ public class GameSpace extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
 	}
 }

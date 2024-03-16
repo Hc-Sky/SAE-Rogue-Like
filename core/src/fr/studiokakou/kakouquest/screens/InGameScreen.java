@@ -1,24 +1,20 @@
 package fr.studiokakou.kakouquest.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
-
-import java.awt.im.InputContext;
-import java.util.Locale;
+import fr.studiokakou.kakouquest.utils.Utils;
 
 public class InGameScreen implements Screen {
 
     //defaults
-    public static float FRAME_DURATION=0.25f;
+    public static float FRAME_DURATION=0.20f;
 
     GameSpace game;
     SpriteBatch batch;
@@ -29,7 +25,7 @@ public class InGameScreen implements Screen {
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
-        this.player = new Player(100, 100, "player");
+        this.player = new Player((float) Gdx.graphics.getWidth() /2, (float) Gdx.graphics.getHeight() /2, "player");
         this.cam = new Camera(this.player);
     }
 
@@ -54,6 +50,8 @@ public class InGameScreen implements Screen {
 
         batch.begin();
 
+        Utils.markPoint(new Point((float) Gdx.graphics.getWidth() /2, (float) Gdx.graphics.getHeight() /2), this.batch);
+
         player.draw(this.batch);
 
         batch.end();
@@ -61,7 +59,7 @@ public class InGameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width,height);
     }
 
     @Override
@@ -81,6 +79,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        this.game.dispose();
     }
 }
