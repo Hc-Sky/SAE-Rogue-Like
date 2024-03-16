@@ -39,15 +39,15 @@ public class InGameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        cam.update();
-        batch.setProjectionMatrix(cam.camera.combined);
-
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         player.getKeyboardMove();
         player.getOrientation(this.cam.camera);
         player.dash(this.cam.camera);
+
+        cam.update();
+        batch.setProjectionMatrix(cam.camera.combined);
 
         batch.begin();
 

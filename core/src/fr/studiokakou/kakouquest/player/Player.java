@@ -22,7 +22,7 @@ public class Player {
 
     //dash infos
     boolean isDashing = false;
-    static float dashDistance = 100f;
+    static float dashDistance = 50f;
     Point dashFinalPoint;
     Point dashOrientation;
 
@@ -75,7 +75,7 @@ public class Player {
                 this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
             }else {
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
-                    this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 400f*Gdx.graphics.getDeltaTime());
+                    this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 500f*Gdx.graphics.getDeltaTime());
                 } else {
                     this.isDashing=false;
                     this.dashFinalPoint=null;

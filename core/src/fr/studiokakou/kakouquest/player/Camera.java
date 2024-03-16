@@ -10,6 +10,8 @@ public class Camera {
     Player player;
 
     public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 3) /720;
+    public static float CAM_Y_DISTANCE = (float) (Gdx.graphics.getHeight() * 53) /720;
+    public static float CAM_X_DISTANCE = (float) (Gdx.graphics.getWidth() * 95) /1280;
 
     public float zoom;
 
@@ -21,12 +23,23 @@ public class Camera {
 
         //init camera
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth()/this.zoom, Gdx.graphics.getHeight()/this.zoom);
-        this.update();
+        this.camera.position.x = this.player.center().x;
+        this.camera.position.y = this.player.center().y;
     }
 
     public void update(){
-        this.camera.position.x=this.player.center().x;
-        this.camera.position.y=this.player.center().y;
+        if (this.camera.position.x+Camera.CAM_X_DISTANCE < this.player.center().x){
+            this.camera.position.x=this.player.center().x-Camera.CAM_X_DISTANCE;
+        }
+        if (this.camera.position.x-Camera.CAM_X_DISTANCE > this.player.center().x){
+            this.camera.position.x=this.player.center().x+Camera.CAM_X_DISTANCE;
+        }
+        if (this.camera.position.y+Camera.CAM_Y_DISTANCE < this.player.center().y){
+            this.camera.position.y=this.player.center().y-Camera.CAM_Y_DISTANCE;
+        }
+        if (this.camera.position.y-Camera.CAM_Y_DISTANCE > this.player.center().y){
+            this.camera.position.y=this.player.center().y+Camera.CAM_Y_DISTANCE;
+        }
         this.camera.update();
     }
 

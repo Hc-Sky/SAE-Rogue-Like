@@ -54,9 +54,9 @@ public class Utils {
         return new Point(camPosVect.x, camPosVect.y);
     }
 
-    public static Point getPointDirection(Point p1, Point p2, float distance){
+    public static Point getPointDirection(Point p1, Point p2, float speed){
         float totalDistance = (float) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-        float ratio = distance / totalDistance;
+        float ratio = speed / totalDistance;
         float x = ratio * p2.x + (1 - ratio) * p1.x;
         float y = ratio * p2.y + (1 - ratio) * p1.y;
         return new Point(x, y);
