@@ -90,6 +90,8 @@ public class Player {
             this.isRunning=true;
         } if (!(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))){
             this.isRunning=false;
+        } if (Gdx.input.isKeyPressed(Input.Keys.P)){    //pour dev uniquement à supprimer
+            Gdx.app.exit();
         }
     }
 
