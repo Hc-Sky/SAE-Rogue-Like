@@ -56,7 +56,7 @@ public class Player {
     Animation<TextureRegion> spawnAnimation;
     static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
-    public Player(float x, float y, String name){
+    public Player(String name){
 
         this.name = name;
 
@@ -70,7 +70,7 @@ public class Player {
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
 
-        this.pos = new Point(x-((float) this.texture_width /2), y);
+
         this.lastPos = this.pos;
 
         //default values
@@ -80,6 +80,7 @@ public class Player {
     }
 
     public void spawnPlayer(float x, float y){
+        this.pos = new Point(x-((float) this.texture_width /2), y);
         this.stateTime=0f;
         this.isPlayerSpawning=true;
     }

@@ -38,7 +38,7 @@ public class InGameScreen implements Screen {
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
-        this.player = new Player(100, 100, "player");
+        this.player = new Player("player");
         this.cam = new Camera(this.player);
 
         //map size
