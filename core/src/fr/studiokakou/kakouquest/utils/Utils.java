@@ -51,6 +51,25 @@ public class Utils {
         return new Animation<TextureRegion>(frame_duration, textureRegions);
     }
 
+    public static Animation<TextureRegion> getAnimationHorizontal(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
+        Texture texture = new Texture(textureName);
+
+        TextureRegion[][] tmp = TextureRegion.split(texture,
+                texture.getWidth() / FRAME_COLS,
+                texture.getHeight() / FRAME_ROWS);
+
+        TextureRegion[] textureRegions = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+
+        int index = 0;
+        for (int i = 0; i < FRAME_COLS; i++) {
+            for (int j = 0; j < FRAME_ROWS; j++) {
+                textureRegions[index++] = tmp[j][i];
+            }
+        }
+
+        return new Animation<TextureRegion>(frame_duration, textureRegions);
+    }
+
     public static Animation<TextureRegion> getAnimationRevert(String textureName, int FRAME_COLS, int FRAME_ROWS){
         Texture texture = new Texture(textureName);
 

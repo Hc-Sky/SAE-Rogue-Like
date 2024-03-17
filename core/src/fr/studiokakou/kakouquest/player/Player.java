@@ -3,10 +3,12 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -45,12 +47,15 @@ public class Player {
     float stateTime;
     boolean flip=false;       //false = regard à droite
     boolean isRunning=false;
+    public boolean isPlayerSpawning=false;
+    public boolean hasPlayerSpawn=false;
 
     //animations
     Animation<TextureRegion> idleAnimation;
     Animation<TextureRegion> runAnimation;
     Animation<TextureRegion> runAnimationRevert;
     Animation<TextureRegion> dashAnimation;
+    Animation<TextureRegion> spawnAnimation;
     static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
     public Player(float x, float y, String name){
@@ -61,6 +66,7 @@ public class Player {
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
+        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.1f);
         this.stateTime=0f;
 
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
@@ -73,6 +79,11 @@ public class Player {
         this.hp=100;
         this.strength=10;
         this.speed=40f;
+    }
+
+    public void spawnPlayer(float x, float y){
+        this.stateTime=0f;
+        this.isPlayerSpawning=true;
     }
 
     public Point center(){
@@ -138,8 +149,6 @@ public class Player {
                 this.isRunning=true;
             } if (!(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))){
                 this.isRunning=false;
-            } if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){    //pour dev uniquement à supprimer
-                Gdx.app.exit();
             }
         }
     }
@@ -166,6 +175,19 @@ public class Player {
             batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x- (float) currentDashFrame.getRegionWidth() /4 : this.dashStartPoint.x+ (float) currentDashFrame.getRegionWidth()/2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
         }
 
-        batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
+        if (hasPlayerSpawn) {
+            batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
+        }
+
+        if (isPlayerSpawning){
+            TextureRegion currentSpawnFrame = this.spawnAnimation.getKeyFrame(stateTime, false);
+            batch.draw(currentSpawnFrame, this.center().x- (float) currentSpawnFrame.getRegionWidth() /2, this.pos.y);
+            if (this.spawnAnimation.getKeyFrameIndex(stateTime) == 3){
+                this.hasPlayerSpawn=true;
+            }
+            if (this.spawnAnimation.isAnimationFinished(stateTime)){
+                this.isPlayerSpawning = false;
+            }
+        }
     }
 }

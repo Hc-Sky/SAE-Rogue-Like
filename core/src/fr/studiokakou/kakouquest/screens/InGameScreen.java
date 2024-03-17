@@ -1,10 +1,12 @@
 package fr.studiokakou.kakouquest.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
@@ -30,6 +32,8 @@ public class InGameScreen implements Screen {
     public int map_height;
     public int map_width;
 
+    long startTime;
+
 
     public InGameScreen(GameSpace game){
         this.game=game;
@@ -50,17 +54,29 @@ public class InGameScreen implements Screen {
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
+
+        startTime = TimeUtils.millis();
     }
 
     @Override
     public void render(float delta) {
 
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            Gdx.app.exit();
+        }
+
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        player.getKeyboardMove();
-        player.getOrientation(this.cam.camera);
-        player.dash(this.cam.camera);
+        if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
+            player.spawnPlayer(100, 100);
+        }
+
+        if (player.hasPlayerSpawn && !player.isPlayerSpawning){
+            player.getKeyboardMove();
+            player.getOrientation(this.cam.camera);
+            player.dash(this.cam.camera);
+        }
 
         cam.update();
         batch.setProjectionMatrix(cam.camera.combined);

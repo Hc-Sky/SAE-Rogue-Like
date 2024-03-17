@@ -7,7 +7,7 @@ public class Camera {
     public OrthographicCamera camera;
     Player player;
 
-    public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 3) /720;
+    public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) /720;
     public static float CAM_Y_DISTANCE = 53;
     public static float CAM_X_DISTANCE = 95;
 
