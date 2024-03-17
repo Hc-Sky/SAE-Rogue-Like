@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Player {
 
     //player pos
-    Point pos;
+    Point pos = new Point(-1000, -1000);
     Point lastPos;
 
     //player stats
@@ -70,17 +70,16 @@ public class Player {
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
 
-
-        this.lastPos = this.pos;
-
         //default values
         this.hp=100;
         this.strength=10;
         this.speed=40f;
     }
 
-    public void spawnPlayer(float x, float y){
+    public void spawnPlayer(float x, float y, Camera camera){
         this.pos = new Point(x-((float) this.texture_width /2), y);
+        this.lastPos = this.pos;
+        camera.centerPlayer();
         this.stateTime=0f;
         this.isPlayerSpawning=true;
     }
@@ -154,27 +153,28 @@ public class Player {
 
     public void draw(SpriteBatch batch){
         stateTime += Gdx.graphics.getDeltaTime();
-        TextureRegion currentFrame;
-        if (this.isRunning){
-            if (!flip && this.lastPos.x > this.pos.x){
-                currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
-            } else if (flip && this.lastPos.x < this.pos.x) {
-                currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
-            } else {
-                currentFrame = this.runAnimation.getKeyFrame(stateTime, true);
-            }
-        }else {
-            currentFrame = this.idleAnimation.getKeyFrame(stateTime, true);
-        }
-
-        //dash animation
-        if (!this.canDash && this.dashOrientation!=null && !this.dashAnimation.isAnimationFinished(this.dashStateTime)){
-            this.dashStateTime += Gdx.graphics.getDeltaTime();
-            TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
-            batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x- (float) currentDashFrame.getRegionWidth() /4 : this.dashStartPoint.x+ (float) currentDashFrame.getRegionWidth()/2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
-        }
 
         if (hasPlayerSpawn) {
+            TextureRegion currentFrame;
+            if (this.isRunning){
+                if (!flip && this.lastPos.x > this.pos.x){
+                    currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
+                } else if (flip && this.lastPos.x < this.pos.x) {
+                    currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
+                } else {
+                    currentFrame = this.runAnimation.getKeyFrame(stateTime, true);
+                }
+            }else {
+                currentFrame = this.idleAnimation.getKeyFrame(stateTime, true);
+            }
+
+            //dash animation
+            if (!this.canDash && this.dashOrientation!=null && !this.dashAnimation.isAnimationFinished(this.dashStateTime)){
+                this.dashStateTime += Gdx.graphics.getDeltaTime();
+                TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
+                batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x- (float) currentDashFrame.getRegionWidth() /4 : this.dashStartPoint.x+ (float) currentDashFrame.getRegionWidth()/2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
+            }
+
             batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
         }
 

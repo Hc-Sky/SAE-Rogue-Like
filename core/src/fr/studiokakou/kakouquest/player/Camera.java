@@ -25,6 +25,11 @@ public class Camera {
         this.camera.position.y = this.player.center().y;
     }
 
+    public void centerPlayer(){
+        this.camera.position.x = this.player.center().x;
+        this.camera.position.y = this.player.center().y;
+    }
+
     public void update(){
         if (this.camera.position.x+Camera.CAM_X_DISTANCE < this.player.center().x){
             this.camera.position.x=this.player.center().x-Camera.CAM_X_DISTANCE;

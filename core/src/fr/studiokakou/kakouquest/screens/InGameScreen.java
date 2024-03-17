@@ -69,7 +69,7 @@ public class InGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
-            player.spawnPlayer(100, 100);
+            player.spawnPlayer(100, 100, this.cam);
         }
 
         if (player.hasPlayerSpawn && !player.isPlayerSpawning){
