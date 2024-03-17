@@ -66,7 +66,7 @@ public class Player {
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
-        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.1f);
+        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.stateTime=0f;
 
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
