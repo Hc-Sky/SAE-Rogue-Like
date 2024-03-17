@@ -38,7 +38,7 @@ public class InGameScreen implements Screen {
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
-        this.player = new Player("player");
+        this.player = new Player(100, 100,"player");
         this.cam = new Camera(this.player);
 
         //map size
@@ -69,7 +69,7 @@ public class InGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
-            player.spawnPlayer(100, 100, this.cam);
+            player.spawnPlayer();
         }
 
         if (player.hasPlayerSpawn && !player.isPlayerSpawning){

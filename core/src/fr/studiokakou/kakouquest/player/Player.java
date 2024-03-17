@@ -56,9 +56,12 @@ public class Player {
     Animation<TextureRegion> spawnAnimation;
     static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
-    public Player(String name){
+    public Player(float x, float y,String name){
 
         this.name = name;
+
+        this.pos = new Point(x-((float) this.texture_width /2), y);
+        this.lastPos = this.pos;
 
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
@@ -76,10 +79,7 @@ public class Player {
         this.speed=40f;
     }
 
-    public void spawnPlayer(float x, float y, Camera camera){
-        this.pos = new Point(x-((float) this.texture_width /2), y);
-        this.lastPos = this.pos;
-        camera.centerPlayer();
+    public void spawnPlayer(){
         this.stateTime=0f;
         this.isPlayerSpawning=true;
     }
