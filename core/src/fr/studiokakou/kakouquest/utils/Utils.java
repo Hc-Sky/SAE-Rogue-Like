@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector3;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 
+import java.util.Random;
+
 public class Utils {
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS){
         Texture texture = new Texture(textureName);
@@ -102,5 +104,9 @@ public class Utils {
 
     public static float getDistance(Point p1, Point p2){
         return (float) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+    }
+
+    public static int randint(int min, int max){
+        return min+(int)(Math.random() * ((max - min) + 1));
     }
 }

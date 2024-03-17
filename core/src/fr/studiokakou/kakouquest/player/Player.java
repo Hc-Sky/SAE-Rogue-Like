@@ -35,7 +35,7 @@ public class Player {
 
     //dash stats
     static float DASH_DISTANCE = 50f;
-    static long DASH_PAUSE = 2;
+    static long DASH_PAUSE = 3;
 
     //player texture size
     public int texture_height;
@@ -157,7 +157,7 @@ public class Player {
         }
 
         //dash animation
-        if (!this.canDash && this.dashOrientation!=null){
+        if (!this.canDash && this.dashOrientation!=null && !this.dashAnimation.isAnimationFinished(this.dashStateTime)){
             this.dashStateTime += Gdx.graphics.getDeltaTime();
             TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
             batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x- (float) currentDashFrame.getRegionWidth() /4 : this.dashStartPoint.x+ (float) currentDashFrame.getRegionWidth()/2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);

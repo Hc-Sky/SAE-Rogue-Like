@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
@@ -16,22 +17,37 @@ public class InGameScreen implements Screen {
     //defaults
     public static float FRAME_DURATION=0.20f;
 
+    //screen info
     GameSpace game;
     SpriteBatch batch;
 
+    //player
     Player player;
     Camera cam;
+
+    //map info
+    Map map;
+    public int map_height;
+    public int map_width;
+
 
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
-        this.player = new Player((float) Gdx.graphics.getWidth() /2, (float) Gdx.graphics.getHeight() /2, "player");
+        this.player = new Player(100, 100, "player");
         this.cam = new Camera(this.player);
+
+        //map size
+        this.map_height = 50;
+        this.map_width = 50;
     }
 
     @Override
     public void show() {
-        Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/cursorv1.png"));
+        this.map = new Map(this.map_width, this.map_height);
+
+        //set cursor
+        Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
     }
@@ -51,7 +67,8 @@ public class InGameScreen implements Screen {
 
         batch.begin();
 
-        Utils.markPoint(new Point((float) Gdx.graphics.getWidth() /2, (float) Gdx.graphics.getHeight() /2), this.batch);
+        //map draw
+        this.map.drawMap(this.batch);
 
         player.draw(this.batch);
 
