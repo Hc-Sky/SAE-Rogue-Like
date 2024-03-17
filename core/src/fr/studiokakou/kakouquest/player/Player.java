@@ -76,6 +76,9 @@ public class Player {
     }
 
     public Point center(){
+        return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /4));
+    }
+    public Point textureCenter(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
@@ -164,6 +167,5 @@ public class Player {
         }
 
         batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
-
     }
 }
