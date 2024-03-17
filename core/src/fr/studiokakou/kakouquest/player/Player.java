@@ -160,7 +160,7 @@ public class Player {
         if (!this.canDash && this.dashOrientation!=null){
             this.dashStateTime += Gdx.graphics.getDeltaTime();
             TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
-            batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x : this.dashStartPoint.x+ (float) this.texture_width, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
+            batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x- (float) currentDashFrame.getRegionWidth() /4 : this.dashStartPoint.x+ (float) currentDashFrame.getRegionWidth()/2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
         }
 
         batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
