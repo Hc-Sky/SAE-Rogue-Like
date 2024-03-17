@@ -3,8 +3,6 @@ package fr.studiokakou.kakouquest.map;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.utils.Utils;
 
-import java.util.ArrayList;
-
 public class Floor {
     Point pos;
 

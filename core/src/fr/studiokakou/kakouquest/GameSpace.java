@@ -1,12 +1,8 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
 
 import java.sql.Time;
