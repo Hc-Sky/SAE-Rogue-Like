@@ -3,7 +3,6 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,6 +34,7 @@ public class Player {
 
     //dash stats
     static float DASH_DISTANCE = 50f;
+    static float DASH_SPEED = 500f;
     static long DASH_PAUSE = 3;
 
     //player texture size
@@ -72,7 +72,7 @@ public class Player {
         //default values
         this.hp=100;
         this.strength=10;
-        this.speed=50f;
+        this.speed=40f;
     }
 
     public Point center(){
@@ -99,7 +99,7 @@ public class Player {
             }else {
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     assert this.dashFinalPoint != null;
-                    this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, 500f*Gdx.graphics.getDeltaTime());
+                    this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
                 } else {
                     this.isDashing=false;
                     this.dashFinalPoint=null;

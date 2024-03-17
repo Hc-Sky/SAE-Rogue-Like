@@ -19,6 +19,11 @@ public class Floor {
     public Floor(float x, float y){
         this.pos = new Point(x, y);
 
-        this.texture = new Texture(Floor.POSSIBLE_TEXTURE[Utils.randint(0,Floor.POSSIBLE_TEXTURE.length-1)]);
+        if (Utils.randint(0,4) == 0){
+            this.texture = new Texture(Floor.POSSIBLE_TEXTURE[Utils.randint(1,Floor.POSSIBLE_TEXTURE.length-1)]);
+        }else {
+            this.texture = new Texture(Floor.POSSIBLE_TEXTURE[0]);
+        }
+
     }
 }
