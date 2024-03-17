@@ -64,13 +64,9 @@ public class Point {
         }
 
         if (orientation.y > 0){
-            if (start.y > end.y){
-                return true;
-            }
+            return start.y > end.y;
         } else if (orientation.y < 0){
-            if (start.y < end.y){
-                return true;
-            }
+            return start.y < end.y;
         }
 
         return false;

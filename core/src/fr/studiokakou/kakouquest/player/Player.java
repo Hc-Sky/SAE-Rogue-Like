@@ -3,6 +3,7 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,12 +28,14 @@ public class Player {
     boolean isDashing = false;
     boolean canDash = true;
     Point dashFinalPoint;
+    Point dashStartPoint;
     Point dashOrientation;
     LocalDateTime dashTimer;
+    float dashStateTime;
 
     //dash stats
     static float DASH_DISTANCE = 50f;
-    static long DASH_PAUSE = 5;
+    static long DASH_PAUSE = 2;
 
     //player texture size
     public int texture_height;
@@ -47,6 +50,7 @@ public class Player {
     Animation<TextureRegion> idleAnimation;
     Animation<TextureRegion> runAnimation;
     Animation<TextureRegion> runAnimationRevert;
+    Animation<TextureRegion> dashAnimation;
     static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
     public Player(float x, float y, String name){
@@ -56,6 +60,7 @@ public class Player {
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
+        this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
         this.stateTime=0f;
 
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
@@ -84,8 +89,10 @@ public class Player {
             if (this.dashFinalPoint == null && this.dashOrientation==null){
                 Point mousePos = Utils.mousePosUnproject(camera);
                 this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
+                this.dashStartPoint = this.pos;
                 this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
                 this.dashTimer = LocalDateTime.now();
+                this.dashStateTime = 0f;
             }else {
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     assert this.dashFinalPoint != null;
@@ -93,12 +100,13 @@ public class Player {
                 } else {
                     this.isDashing=false;
                     this.dashFinalPoint=null;
-                    this.dashOrientation=null;
                 }
             }
         } else if (!this.canDash && this.dashTimer.plusSeconds(Player.DASH_PAUSE).isBefore(LocalDateTime.now())) {
+            this.dashStartPoint=null;
+            this.dashOrientation=null;
             this.canDash=true;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.E) && this.canDash) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT) && this.canDash) {
             this.canDash=false;
             this.isDashing=true;
         }
@@ -127,7 +135,7 @@ public class Player {
                 this.isRunning=true;
             } if (!(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))){
                 this.isRunning=false;
-            } if (Gdx.input.isKeyPressed(Input.Keys.P)){    //pour dev uniquement à supprimer
+            } if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){    //pour dev uniquement à supprimer
                 Gdx.app.exit();
             }
         }
@@ -148,6 +156,14 @@ public class Player {
             currentFrame = this.idleAnimation.getKeyFrame(stateTime, true);
         }
 
+        //dash animation
+        if (!this.canDash && this.dashOrientation!=null){
+            this.dashStateTime += Gdx.graphics.getDeltaTime();
+            TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
+            batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x : this.dashStartPoint.x+ (float) this.texture_width, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
+        }
+
         batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
+
     }
 }

@@ -2,8 +2,6 @@ package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
-import fr.studiokakou.kakouquest.map.Point;
 
 public class Camera {
     public OrthographicCamera camera;
