@@ -1,12 +1,10 @@
 package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import fr.studiokakou.kakouquest.GetProperties;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
@@ -25,8 +23,10 @@ public class Player {
     public int hp;
     public int strength;
     public float speed;
+
     //weapon
-    public static MeleeWeapon CurrentWeapon = MeleeWeapon.RUSTY_SWORD;
+    public static MeleeWeapon currentWeapon = MeleeWeapon.RUSTY_SWORD;
+
     //dash infos
     boolean isDashing = false;
     boolean canDash = true;
