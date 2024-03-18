@@ -71,4 +71,11 @@ public class Point {
 
         return false;
     }
+
+    public static Point getPosWithAngle(Point pos, float distance, float angleInDegree){
+        //fonction qui retourne un Point qui est a distance de pos avec un angle de angleInDegree de l'axe des abscisses dans le sens des aiguilles d'une montre
+        float x = (float) (pos.x + distance * Math.cos(Math.toRadians(angleInDegree)));
+        float y = (float) (pos.y + distance * Math.sin(Math.toRadians(angleInDegree)));
+        return new Point(x, y);
+    }
 }

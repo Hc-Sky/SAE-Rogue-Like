@@ -128,4 +128,9 @@ public class Utils {
     public static int randint(int min, int max){
         return min+(int)(Math.random() * ((max - min) + 1));
     }
+
+    public static float getAngleWithPoint(Point p1, Point p2){
+        //retourne un angle en degree (float) qu'il y a du point p1 au point p2 par l'axe des abscisses dans le sens des aiguilles d'une montre
+        return (float) Math.toDegrees(Math.atan2(p2.y - p1.y, p2.x - p1.x));
+    }
 }

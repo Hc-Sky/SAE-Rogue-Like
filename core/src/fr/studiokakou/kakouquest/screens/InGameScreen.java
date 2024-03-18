@@ -74,12 +74,12 @@ public class InGameScreen implements Screen {
 
         if (player.hasPlayerSpawn && !player.isPlayerSpawning){
             player.getKeyboardMove();
-            player.getOrientation(this.cam.camera);
-            player.dash(this.cam.camera);
+            player.getOrientation();
+            player.dash();
         }
 
         cam.update();
-        batch.setProjectionMatrix(cam.camera.combined);
+        batch.setProjectionMatrix(Camera.camera.combined);
 
         batch.begin();
 

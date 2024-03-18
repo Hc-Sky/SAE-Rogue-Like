@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Camera {
-    public OrthographicCamera camera;
+    public static OrthographicCamera camera;
     Player player;
 
     public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) /720;
@@ -20,30 +20,30 @@ public class Camera {
         this.zoom = Camera.DEFAULT_ZOOM;
 
         //init camera
-        this.camera = new OrthographicCamera(Gdx.graphics.getWidth()/this.zoom, Gdx.graphics.getHeight()/this.zoom);
-        this.camera.position.x = this.player.center().x;
-        this.camera.position.y = this.player.center().y;
+        Camera.camera = new OrthographicCamera(Gdx.graphics.getWidth()/this.zoom, Gdx.graphics.getHeight()/this.zoom);
+        Camera.camera.position.x = this.player.center().x;
+        Camera.camera.position.y = this.player.center().y;
     }
 
     public void centerPlayer(){
-        this.camera.position.x = this.player.center().x;
-        this.camera.position.y = this.player.center().y;
+        Camera.camera.position.x = this.player.center().x;
+        Camera.camera.position.y = this.player.center().y;
     }
 
     public void update(){
-        if (this.camera.position.x+Camera.CAM_X_DISTANCE < this.player.center().x){
-            this.camera.position.x=this.player.center().x-Camera.CAM_X_DISTANCE;
+        if (Camera.camera.position.x+Camera.CAM_X_DISTANCE < this.player.center().x){
+            Camera.camera.position.x=this.player.center().x-Camera.CAM_X_DISTANCE;
         }
-        if (this.camera.position.x-Camera.CAM_X_DISTANCE > this.player.center().x){
-            this.camera.position.x=this.player.center().x+Camera.CAM_X_DISTANCE;
+        if (Camera.camera.position.x-Camera.CAM_X_DISTANCE > this.player.center().x){
+            Camera.camera.position.x=this.player.center().x+Camera.CAM_X_DISTANCE;
         }
-        if (this.camera.position.y+Camera.CAM_Y_DISTANCE < this.player.center().y){
-            this.camera.position.y=this.player.center().y-Camera.CAM_Y_DISTANCE;
+        if (Camera.camera.position.y+Camera.CAM_Y_DISTANCE < this.player.center().y){
+            Camera.camera.position.y=this.player.center().y-Camera.CAM_Y_DISTANCE;
         }
-        if (this.camera.position.y-Camera.CAM_Y_DISTANCE > this.player.center().y){
-            this.camera.position.y=this.player.center().y+Camera.CAM_Y_DISTANCE;
+        if (Camera.camera.position.y-Camera.CAM_Y_DISTANCE > this.player.center().y){
+            Camera.camera.position.y=this.player.center().y+Camera.CAM_Y_DISTANCE;
         }
-        this.camera.update();
+        Camera.camera.update();
     }
 
 }

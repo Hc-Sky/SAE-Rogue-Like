@@ -1,7 +1,7 @@
 package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,7 +25,7 @@ public class Player {
     public float speed;
 
     //weapon
-    public static MeleeWeapon currentWeapon = MeleeWeapon.RUSTY_SWORD;
+    public MeleeWeapon currentWeapon;
 
     //dash infos
     boolean isDashing = false;
@@ -36,10 +36,21 @@ public class Player {
     LocalDateTime dashTimer;
     float dashStateTime;
 
+    //attack var
+    public static float PLAYER_MELEE_WEAPON_DISTANCE=10f;
+    public static float ATTACK_PAUSE = 200f; //en millisecondes
+    LocalDateTime attackTimer;
+    public boolean isAttacking=false;
+    public boolean canAttack = true;
+    Point attackDirection;
+    Point attackPos;
+    float attackEndRotation;
+    float attackRotation;
+
     //dash stats
     static float DASH_DISTANCE = 50f;
     static float DASH_SPEED = 500f;
-    static long DASH_PAUSE = 3;
+    static long DASH_PAUSE = 3;   //en secondes
 
     //player texture size
     public int texture_height;
@@ -64,9 +75,11 @@ public class Player {
 
         this.name = name;
 
+        //spawn player pos
         this.pos = new Point(x-((float) this.texture_width /2), y);
         this.lastPos = this.pos;
 
+        //player animations
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
@@ -74,6 +87,7 @@ public class Player {
         this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.stateTime=0f;
 
+        //get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
 
@@ -81,9 +95,12 @@ public class Player {
         this.hp=100;
         this.strength=10;
         this.speed=40f;
+
+        //default weapon
+        this.currentWeapon = MeleeWeapon.DEV_SWORD();
     }
 
-    public void spawnPlayer(){
+    public void spawnPlayer(){   //used to play the spawning animation
         this.stateTime=0f;
         this.isPlayerSpawning=true;
     }
@@ -100,10 +117,11 @@ public class Player {
         this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
     }
 
-    public void dash(OrthographicCamera camera){
+
+    public void dash(){    //used for the dash animation
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
-                Point mousePos = Utils.mousePosUnproject(camera);
+                Point mousePos = Utils.mousePosUnproject(Camera.camera);
                 this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
                 this.dashStartPoint = this.pos;
                 this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
@@ -129,9 +147,40 @@ public class Player {
 
     }
 
-    public void getOrientation(OrthographicCamera camera){
-        Point mousePos = Utils.mousePosUnproject(camera);
+    public void attack() {
+        if (canAttack && !this.isAttacking){
+            this.isAttacking=true;
+            this.canAttack = false;
+            this.attackDirection = Utils.mousePosUnproject(Camera.camera);
+            this.attackRotation = Utils.getAngleWithPoint(this.center(), this.attackDirection)-this.currentWeapon.attackRange/2;
+            this.attackEndRotation = this.attackRotation+this.currentWeapon.attackRange;
+        }
+    }
 
+    public void showAttack(SpriteBatch batch){
+        if (this.attackRotation <= this.attackEndRotation){
+            this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
+
+            this.currentWeapon.sprite.setPosition(this.attackPos.x-this.currentWeapon.width/2, this.attackPos.y);
+            this.currentWeapon.sprite.setRotation(this.attackRotation-90f);
+
+            this.currentWeapon.sprite.draw(batch);
+
+            this.attackRotation += this.currentWeapon.attackSpeed*Gdx.graphics.getDeltaTime()*1000;
+            this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
+
+            Utils.markPoint(this.attackPos, batch);
+        }else if (this.attackTimer==null){
+            this.isAttacking = false;
+            this.attackTimer = LocalDateTime.now();
+        } else if (this.attackTimer.plusNanos((long) (Player.ATTACK_PAUSE*1000000)).isBefore(LocalDateTime.now())) {
+            this.canAttack=true;
+            this.attackTimer=null;
+        }
+    }
+
+    public void getOrientation(){
+        Point mousePos = Utils.mousePosUnproject(Camera.camera);
         this.flip= mousePos.x < this.center().x;
     }
 
@@ -140,17 +189,19 @@ public class Player {
             if (Gdx.input.isKeyPressed(Keybinds.UP_KEY)){
                 this.move(0, 1);
                 this.isRunning=true;
-            } if (Gdx.input.isKeyPressed(Keybinds.DOWN_KEY)){
+            } else if (Gdx.input.isKeyPressed(Keybinds.DOWN_KEY)){
                 this.move(0, -1);
                 this.isRunning=true;
             } if (Gdx.input.isKeyPressed(Keybinds.LEFT_KEY)){
                 this.move(-1, 0);
                 this.isRunning=true;
-            } if (Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY)){
+            } else if (Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY)){
                 this.move(1, 0);
                 this.isRunning=true;
             } if (!(Gdx.input.isKeyPressed(Keybinds.UP_KEY) || Gdx.input.isKeyPressed(Keybinds.DOWN_KEY) || Gdx.input.isKeyPressed(Keybinds.LEFT_KEY) || Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY))){
                 this.isRunning=false;
+            } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+                this.attack();
             }
         }
     }
@@ -191,6 +242,10 @@ public class Player {
             if (this.spawnAnimation.isAnimationFinished(stateTime)){
                 this.isPlayerSpawning = false;
             }
+        }
+
+        if (!this.canAttack) {
+            this.showAttack(batch);
         }
     }
 }
