@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.GetProperties;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +25,8 @@ public class Player {
     public int hp;
     public int strength;
     public float speed;
-
+    //weapon
+    public static MeleeWeapon CurrentWeapon = MeleeWeapon.RUSTY_SWORD;
     //dash infos
     boolean isDashing = false;
     boolean canDash = true;
