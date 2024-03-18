@@ -3,9 +3,13 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
+import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
@@ -157,6 +161,16 @@ public class Player {
         }
     }
 
+    public void checkHit(Sprite meleeWeapon){
+        Rectangle meleeWeaponRectangle = meleeWeapon.getBoundingRectangle();
+        for (Test t : Map.tests){
+            Rectangle tRectangle = t.sprite.getBoundingRectangle();
+            if (meleeWeaponRectangle.overlaps(tRectangle)){
+                t.hit(this);
+            }
+        }
+    }
+
     public void showAttack(SpriteBatch batch){
         if (this.attackRotation <= this.attackEndRotation){
             this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
@@ -166,13 +180,14 @@ public class Player {
 
             this.currentWeapon.sprite.draw(batch);
 
+            this.checkHit(this.currentWeapon.sprite);
+
             this.attackRotation += this.currentWeapon.attackSpeed*Gdx.graphics.getDeltaTime()*1000;
             this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
-
-            Utils.markPoint(this.attackPos, batch);
         }else if (this.attackTimer==null){
             this.isAttacking = false;
             this.attackTimer = LocalDateTime.now();
+            Map.clearAttackedPlayers(this);
         } else if (this.attackTimer.plusNanos((long) (Player.ATTACK_PAUSE*1000000)).isBefore(LocalDateTime.now())) {
             this.canAttack=true;
             this.attackTimer=null;

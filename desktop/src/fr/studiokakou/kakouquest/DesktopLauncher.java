@@ -17,7 +17,7 @@ public class DesktopLauncher {
 		if (GetProperties.getBoolProperty("FULLSCREEN")){
 			config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		}else {
-			config.setResizable(true);
+			config.setResizable(false);
 			config.setWindowedMode(GetProperties.getIntProperty("RES_WIDTH"), GetProperties.getIntProperty("RES_HEIGHT"));
 		}
 
