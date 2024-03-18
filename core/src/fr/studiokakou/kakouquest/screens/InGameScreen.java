@@ -85,6 +85,7 @@ public class InGameScreen implements Screen {
 
         //map draw
         this.map.drawMap(this.batch);
+        this.map.updateHitsAnimation(this.batch);
 
         player.draw(this.batch);
 

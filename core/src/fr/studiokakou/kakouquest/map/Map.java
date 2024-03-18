@@ -42,4 +42,10 @@ public class Map {
             t.player_hitted.remove(player.name);
         }
     }
+
+    public void updateHitsAnimation(SpriteBatch batch){
+        for (Test t : tests){
+            t.updateHitAnimation(batch);
+        }
+    }
 }

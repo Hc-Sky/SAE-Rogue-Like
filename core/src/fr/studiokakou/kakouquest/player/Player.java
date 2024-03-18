@@ -166,7 +166,10 @@ public class Player {
         for (Test t : Map.tests){
             Rectangle tRectangle = t.sprite.getBoundingRectangle();
             if (meleeWeaponRectangle.overlaps(tRectangle)){
-                t.hit(this);
+                boolean damaged = t.hit(this);
+                if (damaged){
+                    this.currentWeapon.resistance-=1;
+                }
             }
         }
     }
