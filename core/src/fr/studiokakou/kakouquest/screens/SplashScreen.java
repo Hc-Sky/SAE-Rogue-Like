@@ -42,7 +42,6 @@ public class SplashScreen implements Screen {
 
         if(TimeUtils.millis() - startTime >= 1000) {
             this.dispose();
-            System.out.println("bonjour");
             game.setScreen(new InGameScreen(game));
         }
 

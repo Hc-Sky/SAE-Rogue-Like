@@ -3,6 +3,7 @@ package fr.studiokakou.kakouquest;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
+import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
 
 import java.sql.Time;
@@ -15,6 +16,9 @@ public class GameSpace extends Game {
 	
 	@Override
 	public void create () {
+		//update key binds
+		Keybinds.updateKeys();
+
 		batch = new SpriteBatch();
 		startTime = TimeUtils.millis();
 

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.GetProperties;
+import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.utils.Utils;
 
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 public class Player {
 
     //player pos
-    Point pos = new Point(-1000, -1000);
+    Point pos;
     Point lastPos;
 
     //player stats
@@ -118,7 +120,7 @@ public class Player {
             this.dashStartPoint=null;
             this.dashOrientation=null;
             this.canDash=true;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT) && this.canDash) {
+        } else if (Gdx.input.isKeyJustPressed(Keybinds.DASH_KEY) && this.canDash) {
             this.canDash=false;
             this.isDashing=true;
         }
@@ -133,19 +135,19 @@ public class Player {
 
     public void getKeyboardMove(){
         if (!this.isDashing){
-            if (Gdx.input.isKeyPressed(Input.Keys.W)){
+            if (Gdx.input.isKeyPressed(Keybinds.UP_KEY)){
                 this.move(0, 1);
                 this.isRunning=true;
-            } if (Gdx.input.isKeyPressed(Input.Keys.S)){
+            } if (Gdx.input.isKeyPressed(Keybinds.DOWN_KEY)){
                 this.move(0, -1);
                 this.isRunning=true;
-            } if (Gdx.input.isKeyPressed(Input.Keys.A)){
+            } if (Gdx.input.isKeyPressed(Keybinds.LEFT_KEY)){
                 this.move(-1, 0);
                 this.isRunning=true;
-            } if (Gdx.input.isKeyPressed(Input.Keys.D)){
+            } if (Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY)){
                 this.move(1, 0);
                 this.isRunning=true;
-            } if (!(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))){
+            } if (!(Gdx.input.isKeyPressed(Keybinds.UP_KEY) || Gdx.input.isKeyPressed(Keybinds.DOWN_KEY) || Gdx.input.isKeyPressed(Keybinds.LEFT_KEY) || Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY))){
                 this.isRunning=false;
             }
         }
