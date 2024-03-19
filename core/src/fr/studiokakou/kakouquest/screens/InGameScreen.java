@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
@@ -22,12 +23,17 @@ public class InGameScreen implements Screen {
     //screen info
     GameSpace game;
     SpriteBatch batch;
+    SpriteBatch hudBatch;
 
     //player
     Player player;
     Camera cam;
 
+    //hud
+    Hud hud;
+
     //map info
+    int currentLevel;
     Map map;
     public int map_height;
     public int map_width;
@@ -38,12 +44,15 @@ public class InGameScreen implements Screen {
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
+        this.hudBatch = game.hudBatch;
         this.player = new Player(100, 100,"player");
         this.cam = new Camera(this.player);
 
         //map size
         this.map_height = 50;
         this.map_width = 50;
+
+        this.currentLevel = 1;
     }
 
     @Override
@@ -54,6 +63,8 @@ public class InGameScreen implements Screen {
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
         pm.dispose();
+
+        this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
 
         startTime = TimeUtils.millis();
     }
@@ -90,6 +101,11 @@ public class InGameScreen implements Screen {
         player.draw(this.batch);
 
         batch.end();
+
+
+        hudBatch.begin();
+        this.hud.draw(hudBatch);
+        hudBatch.end();
     }
 
     @Override

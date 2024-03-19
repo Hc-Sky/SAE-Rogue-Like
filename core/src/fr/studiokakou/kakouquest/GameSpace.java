@@ -10,6 +10,7 @@ import java.sql.Time;
 
 public class GameSpace extends Game {
 	public SpriteBatch batch;
+	public SpriteBatch hudBatch;
 	public long startTime;
 
 	public SplashScreen splashScreen;
@@ -20,6 +21,7 @@ public class GameSpace extends Game {
 		Keybinds.updateKeys();
 
 		batch = new SpriteBatch();
+		hudBatch = new SpriteBatch();
 		startTime = TimeUtils.millis();
 
 		this.setScreen(new SplashScreen(this));
@@ -28,13 +30,13 @@ public class GameSpace extends Game {
 
 	@Override
 	public void render () {
-
 		super.render();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
+		hudBatch.dispose();
 	}
 
 	@Override

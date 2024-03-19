@@ -27,6 +27,7 @@ public class Player {
     public int hp;
     public int strength;
     public float speed;
+    public int stamina;
 
     //weapon
     public MeleeWeapon currentWeapon;
@@ -43,6 +44,7 @@ public class Player {
     //attack var
     public static float PLAYER_MELEE_WEAPON_DISTANCE=10f;
     public static float ATTACK_PAUSE = 200f; //en millisecondes
+    static int ATTACK_STAMINA_USAGE = 2;
     LocalDateTime attackTimer;
     public boolean isAttacking=false;
     public boolean canAttack = true;
@@ -55,6 +57,7 @@ public class Player {
     static float DASH_DISTANCE = 50f;
     static float DASH_SPEED = 500f;
     static long DASH_PAUSE = 3;   //en secondes
+    static int DASH_STAMINA_USAGE = 10;
 
     //player texture size
     public int texture_height;
@@ -99,6 +102,7 @@ public class Player {
         this.hp=100;
         this.strength=10;
         this.speed=40f;
+        this.stamina = 100;
 
         //default weapon
         this.currentWeapon = MeleeWeapon.DEV_SWORD();
@@ -121,6 +125,9 @@ public class Player {
         this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
     }
 
+    public boolean canActionWithStamina(int amount){
+        return this.stamina-amount >=0;
+    }
 
     public void dash(){    //used for the dash animation
         if (this.isDashing){
@@ -144,17 +151,19 @@ public class Player {
             this.dashStartPoint=null;
             this.dashOrientation=null;
             this.canDash=true;
-        } else if (Gdx.input.isKeyJustPressed(Keybinds.DASH_KEY) && this.canDash) {
+        } else if (Gdx.input.isKeyJustPressed(Keybinds.DASH_KEY) && this.canDash && this.canActionWithStamina(10)) {
             this.canDash=false;
             this.isDashing=true;
+            this.stamina-=10;
         }
 
     }
 
     public void attack() {
-        if (canAttack && !this.isAttacking){
+        if (canAttack && !this.isAttacking && this.canActionWithStamina(Player.ATTACK_STAMINA_USAGE)){
             this.isAttacking=true;
             this.canAttack = false;
+            this.stamina-=Player.ATTACK_STAMINA_USAGE;
             this.attackDirection = Utils.mousePosUnproject(Camera.camera);
             this.attackRotation = Utils.getAngleWithPoint(this.center(), this.attackDirection)-this.currentWeapon.attackRange/2;
             this.attackEndRotation = this.attackRotation+this.currentWeapon.attackRange;
