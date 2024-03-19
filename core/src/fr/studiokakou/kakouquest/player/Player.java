@@ -82,10 +82,6 @@ public class Player {
 
         this.name = name;
 
-        //spawn player pos
-        this.pos = new Point(spawn.x-((float) this.texture_width /2), spawn.y);
-        this.lastPos = this.pos;
-
         //player animations
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
@@ -97,6 +93,11 @@ public class Player {
         //get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
+
+
+        //spawn player pos
+        this.pos = new Point(spawn.x-((float) this.texture_width /2), spawn.y);
+        this.lastPos = this.pos;
 
         //default values
         this.hp=100;
