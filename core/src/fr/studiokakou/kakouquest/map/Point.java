@@ -78,4 +78,8 @@ public class Point {
         float y = (float) (pos.y + distance * Math.sin(Math.toRadians(angleInDegree)));
         return new Point(x, y);
     }
+
+    public Point mult(float n){
+        return new Point(this.x*n, this.y*n);
+    }
 }

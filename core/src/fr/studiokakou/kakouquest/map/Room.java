@@ -1,25 +1,30 @@
 package fr.studiokakou.kakouquest.map;
 
 public class Room {
-	public Point upLeft;
-	public Point upRight;
-	public Point downLeft;
-	public Point downRight;
 
-	//constructor for room with given points (for map generation)
-	public Room(Point upLeft, Point upRight, Point downLeft, Point downRight) {
-		this.upLeft = upLeft;
-		this.upRight = upRight;
-		this.downLeft = downLeft;
-		this.downRight = downRight;
+	Point start;
+	Point end;
+
+	public Room(int startX, int startY, int endX, int endY, boolean hasStairs){
+		this.start = new Point(startX, startY);
+		this.end = new Point(endX, endY);
 	}
 
-	public Room(int mapWidth, int mapHeight) {
-		this.upLeft = new Point((int)(Math.random() * (mapWidth - 10) + 1), (int)(Math.random() * (mapHeight - 10) + 1));
-		this.upRight = new Point(this.upLeft.x + (int)(Math.random() * 10 + 1), this.upLeft.y);
-		this.downLeft = new Point(this.upLeft.x, this.upLeft.y + (int)(Math.random() * 10 + 1));
-		this.downRight = new Point(this.upRight.x, this.downLeft.y);
+	public boolean collideRoom(Room r){
+		if (isWithinBounds(this.start, r.start, r.end) || isWithinBounds(this.end, r.start, r.end)){
+			return true;
+		}
+		if (isWithinBounds(new Point(this.start.x, this.end.y), r.start, r.end)){
+			return true;
+		}
+		return isWithinBounds(new Point(this.end.x, this.start.y), r.start, r.end);
 	}
 
+	public Point getCenter(){
+		return new Point(this.start.x+(this.end.x-this.start.x)/2 +1, this.start.y+(this.end.y-this.start.y)/2 +1);
+	}
 
+	private boolean isWithinBounds(Point point, Point start, Point end) {
+		return point.x >= start.x && point.x <= end.x && point.y >= start.y && point.y <= end.y;
+	}
 }

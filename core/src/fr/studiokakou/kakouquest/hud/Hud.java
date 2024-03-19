@@ -39,7 +39,6 @@ public class Hud {
     }
 
     public void draw(SpriteBatch batch){
-        System.out.println(this.player.stamina);
         int healthAmount = ((this.player.hp*6)/100) - 1;
         if (healthAmount < 0) {
             healthAmount=0;

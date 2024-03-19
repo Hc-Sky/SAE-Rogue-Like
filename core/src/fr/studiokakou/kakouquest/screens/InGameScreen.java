@@ -49,8 +49,8 @@ public class InGameScreen implements Screen {
         this.cam = new Camera(this.player);
 
         //map size
-        this.map_height = 50;
-        this.map_width = 50;
+        this.map_height = 80;
+        this.map_width = 80;
 
         this.currentLevel = 1;
     }
