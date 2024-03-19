@@ -133,4 +133,8 @@ public class Utils {
         //retourne un angle en degree (float) qu'il y a du point p1 au point p2 par l'axe des abscisses dans le sens des aiguilles d'une montre
         return (float) Math.toDegrees(Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
+
+    public static int distance(Point pos, Point playerPos) {
+        return (int) Math.sqrt(Math.pow(playerPos.x - pos.x, 2) + Math.pow(playerPos.y - pos.y, 2));
+    }
 }
