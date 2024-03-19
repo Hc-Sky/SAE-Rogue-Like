@@ -19,8 +19,8 @@ public class Map {
     //room settings
     public static int ROOM_MIN_HEIGHT=5;
     public static int ROOM_MIN_WIDTH=5;
-    public static int ROOM_MAX_HEIGHT=17;
-    public static int ROOM_MAX_WIDTH=17;
+    public static int ROOM_MAX_HEIGHT=19;
+    public static int ROOM_MAX_WIDTH=19;
 
     public Map(int width, int height){
         this.map_height = height;
@@ -62,7 +62,7 @@ public class Map {
 
 
     public void generateRooms(){
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 50; i++) {
             int startX = Utils.randint(0, this.map_width-Map.ROOM_MAX_WIDTH);
             int startY = Utils.randint(0, this.map_height-Map.ROOM_MAX_HEIGHT);
             int endX = startX+Utils.randint(Map.ROOM_MIN_WIDTH,Map.ROOM_MAX_WIDTH);
@@ -91,6 +91,6 @@ public class Map {
     }
 
     public Point getPlayerSpawn(){
-        return this.rooms.get(3).getCenterOutOfMap();
+        return this.rooms.get(0).getCenterOutOfMap();
     }
 }

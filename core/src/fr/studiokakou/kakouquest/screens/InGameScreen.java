@@ -50,8 +50,8 @@ public class InGameScreen implements Screen {
         this.currentLevel = 1;
 
         //map init
-        this.map_height = 80;
-        this.map_width = 80;
+        this.map_height = 100;
+        this.map_width = 100;
         this.map = new Map(this.map_width, this.map_height);
 
         //player init
