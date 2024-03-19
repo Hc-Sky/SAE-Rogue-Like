@@ -78,12 +78,12 @@ public class Player {
     Animation<TextureRegion> spawnAnimation;
     static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
-    public Player(float x, float y,String name){
+    public Player(Point spawn,String name){
 
         this.name = name;
 
         //spawn player pos
-        this.pos = new Point(x-((float) this.texture_width /2), y);
+        this.pos = new Point(spawn.x-((float) this.texture_width /2), spawn.y);
         this.lastPos = this.pos;
 
         //player animations

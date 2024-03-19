@@ -5,7 +5,6 @@ import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Map {
     public ArrayList<Floor> floors = new ArrayList<Floor>();
@@ -89,5 +88,9 @@ public class Map {
                 }
             }
         }
+    }
+
+    public Point getPlayerSpawn(){
+        return this.rooms.get(3).getCenterOutOfMap();
     }
 }

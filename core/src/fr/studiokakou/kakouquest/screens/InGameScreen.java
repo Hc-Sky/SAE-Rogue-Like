@@ -45,19 +45,22 @@ public class InGameScreen implements Screen {
         this.game=game;
         this.batch = game.batch;
         this.hudBatch = game.hudBatch;
-        this.player = new Player(100, 100,"player");
-        this.cam = new Camera(this.player);
 
-        //map size
-        this.map_height = 80;
-        this.map_width = 80;
 
         this.currentLevel = 1;
+
+        //map init
+        this.map_height = 80;
+        this.map_width = 80;
+        this.map = new Map(this.map_width, this.map_height);
+
+        //player init
+        this.player = new Player(map.getPlayerSpawn(),"player");
+        this.cam = new Camera(this.player);
     }
 
     @Override
     public void show() {
-        this.map = new Map(this.map_width, this.map_height);
 
         //set cursor
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));

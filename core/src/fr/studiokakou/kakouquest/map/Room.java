@@ -30,6 +30,10 @@ public class Room {
 		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2);
 	}
 
+	public Point getCenterOutOfMap(){
+		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2).mult(Floor.TEXTURE_WIDTH);
+	}
+
 	private boolean isWithinBounds(Point point, Point start, Point end) {
 		return point.x >= start.x && point.x <= end.x && point.y >= start.y && point.y <= end.y;
 	}
