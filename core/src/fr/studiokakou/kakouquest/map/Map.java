@@ -14,8 +14,6 @@ public class Map {
     public int map_height;
     public int map_width;
 
-    String[][] mapScheme;
-
     //map gen var
     ArrayList<Room> rooms =  new ArrayList<>();
 
@@ -33,13 +31,10 @@ public class Map {
         Map.tests.add(new Test(140, 140, "test2"));
 
         this.initMap();
-
-        this.printMapScheme();
     }
+
     public void initMap(){
         generateRooms();
-        this.mapScheme = getPlaneMap();
-        Map.rotateMapToNormal(this.mapScheme);
         this.genFloors();
     }
 
@@ -64,10 +59,6 @@ public class Map {
         for (Test t : Map.tests) {
             t.sprite.draw(batch);
         }
-
-        for (Room r : rooms){
-            Utils.markPoint(r.getCenter().mult(Floor.TEXTURE_WIDTH), batch);
-        }
     }
 
 
@@ -90,66 +81,13 @@ public class Map {
         }
     }
 
-    public String[][] getPlaneMap(){
-        String[][] showMap = new String[this.map_height][this.map_width];
-
-        for (int i = 0; i < this.map_height; i++) {
-            for (int j = 0; j < this.map_width; j++) {
-                showMap[i][j]=" ";
-            }
-        }
-        for (Room r : this.rooms){
-            for (int i = (int) r.start.y; i < r.end.y; i++) {
-                for (int j = (int) r.start.x; j < r.end.x; j++) {
-                    showMap[i][j]=".";
-                }
-            }
-        }
-
-        return showMap;
-    }
-
-    public static void rotateMapToNormal(String[][] tableau) {
-        for (int i = 0; i < 3; i++) {
-            rotateRight90(tableau);
-        }
-    }
-
-    public static void rotateRight90(String[][] tableau) {
-        int n = tableau.length;
-        String[][] rotated = new String[n][n];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                rotated[j][n - 1 - i] = tableau[i][j];
-            }
-        }
-
-        for (int i = 0; i < n; i++) {
-            System.arraycopy(rotated[i], 0, tableau[i], 0, n);
-        }
-    }
-
     public void genFloors(){
-        for (int i = 0; i < this.map_height; i++) {
-            for (int j = 0; j < this.map_width; j++) {
-                if (Objects.equals(this.mapScheme[j][i], ".")){
-                    this.floors.add(new Floor(j*Floor.TEXTURE_WIDTH, i*Floor.TEXTURE_HEIGHT));
-
+        for (Room r : this.rooms){
+            for (int i = (int) r.start.x ; i < r.end.x ; i++) {
+                for (int j = (int) r.start.y; j < r.end.y; j++) {
+                    this.floors.add(new Floor(i*Floor.TEXTURE_WIDTH, j*Floor.TEXTURE_HEIGHT));
                 }
             }
-        }
-    }
-
-    public void printMapScheme(){
-
-        StringBuilder line;
-        for (int i = 0; i < this.map_height; i++) {
-            line = new StringBuilder();
-            for (int j = 0; j < this.map_width; j++) {
-                line.append(this.mapScheme[i][j]+" ");
-            }
-            System.out.println(line);
         }
     }
 }

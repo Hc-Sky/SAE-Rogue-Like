@@ -6,6 +6,12 @@ public class Room {
 	Point end;
 
 	public Room(int startX, int startY, int endX, int endY, boolean hasStairs){
+		if ((endX-startX)%2 ==0){
+			endX-=1;
+		}
+		if ((endY-startY)%2 ==0){
+			endY-=1;
+		}
 		this.start = new Point(startX, startY);
 		this.end = new Point(endX, endY);
 	}
@@ -21,7 +27,7 @@ public class Room {
 	}
 
 	public Point getCenter(){
-		return new Point(this.start.x+(this.end.x-this.start.x)/2 +1, this.start.y+(this.end.y-this.start.y)/2 +1);
+		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2);
 	}
 
 	private boolean isWithinBounds(Point point, Point start, Point end) {
