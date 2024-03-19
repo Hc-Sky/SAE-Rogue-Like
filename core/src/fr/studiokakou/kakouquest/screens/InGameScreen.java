@@ -15,32 +15,79 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 
+/**
+ * le type InGameScreen.
+ * Cette classe est utilisée pour créer un objet InGameScreen.
+ *
+ * @version 1.0
+ */
 public class InGameScreen implements Screen {
 
-    //defaults
+    /**
+     * le temps entre chaque frame.
+     */
+//defaults
     public static float FRAME_DURATION=0.20f;
 
-    //screen info
+    /**
+     * le jeu.
+     */
+//screen info
     GameSpace game;
+    /**
+     * le batch.
+     */
     SpriteBatch batch;
+    /**
+     * le batch de l'HUD.
+     */
     SpriteBatch hudBatch;
 
-    //player
+    /**
+     * le joueur.
+     */
+//player
     Player player;
+    /**
+     * la caméra.
+     */
     Camera cam;
 
-    //hud
+    /**
+     * l'HUD.
+     */
+//hud
     Hud hud;
 
-    //map info
+    /**
+     * le niveau actuel.
+     */
+//map info
     int currentLevel;
+    /**
+     * la map.
+     */
     Map map;
+    /**
+     * la hauteur de la map.
+     */
     public int map_height;
+    /**
+     * la largeur de la map.
+     */
     public int map_width;
 
+    /**
+     * le temps de départ.
+     */
     long startTime;
 
 
+    /**
+     * Constructeur de InGameScreen.
+     *
+     * @param game the game
+     */
     public InGameScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
@@ -59,6 +106,9 @@ public class InGameScreen implements Screen {
         this.cam = new Camera(this.player);
     }
 
+    /**
+     * Affiche l'écran de jeu.
+     */
     @Override
     public void show() {
 
@@ -72,6 +122,12 @@ public class InGameScreen implements Screen {
         startTime = TimeUtils.millis();
     }
 
+    /**
+     * Update l'écran de jeu.
+     * Permet de mettre à jour l'écran de jeu.
+     *
+     * @param flaot delta
+     */
     @Override
     public void render(float delta) {
 
@@ -111,6 +167,13 @@ public class InGameScreen implements Screen {
         hudBatch.end();
     }
 
+    /**
+     * Resize l'écran de jeu.
+     * Permet de redimensionner l'écran de jeu.
+     *
+     * @param int width
+     * @param int height
+     */
     @Override
     public void resize(int width, int height) {
         this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width,height);
@@ -118,17 +181,17 @@ public class InGameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        // TODO
     }
 
     @Override
     public void resume() {
-
+        // TODO
     }
 
     @Override
     public void hide() {
-
+        // TODO
     }
 
     @Override

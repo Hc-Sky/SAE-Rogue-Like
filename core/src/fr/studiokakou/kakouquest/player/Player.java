@@ -16,68 +16,213 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
 
+/**
+ * le type Player.
+ * Cette classe est utilisée pour créer un objet Player.
+ *
+ * @version 1.0
+ */
 public class Player {
 
-    //player pos
+    /**
+     * la position du joueur.
+     */
+//player pos
     Point pos;
+    /**
+     * la dernière position du joueur.
+     */
     Point lastPos;
 
-    //player stats
+    /**
+     * le nom du joueur.
+     */
+//player stats
     public String name;
+    /**
+     * les points de vie.
+     */
     public int hp;
+    /**
+     * la force.
+     */
     public int strength;
+    /**
+     * la vitesse.
+     */
     public float speed;
+    /**
+     * la stamina.
+     */
     public int stamina;
 
-    //weapon
+    /**
+     * l'arme actuelle.
+     */
+//weapon
     public MeleeWeapon currentWeapon;
 
-    //dash infos
+    /**
+     * si le joueur est en train de dash.
+     */
+//dash infos
     boolean isDashing = false;
+    /**
+     * si le joueur peut dash.
+     */
     boolean canDash = true;
+    /**
+     * le point final du dash.
+     */
     Point dashFinalPoint;
+    /**
+     * le point de départ du dash.
+     */
     Point dashStartPoint;
+    /**
+     * l'orientation du dash.
+     */
     Point dashOrientation;
+    /**
+     * le timer du dash.
+     */
     LocalDateTime dashTimer;
+    /**
+     * le temps du dash.
+     */
     float dashStateTime;
 
-    //attack var
+    /**
+     * la distance de l'arme de mêlée du joueur.
+     */
+//attack var
     public static float PLAYER_MELEE_WEAPON_DISTANCE=10f;
+    /**
+     * la pause entre les attaques.
+     */
     public static float ATTACK_PAUSE = 200f; //en millisecondes
+    /**
+     * la stamina utilisée pour attaquer.
+     */
     static int ATTACK_STAMINA_USAGE = 2;
+    /**
+     * le timer de l'attaque.
+     */
     LocalDateTime attackTimer;
+    /**
+     * si le joueur est en train d'attaquer.
+     */
     public boolean isAttacking=false;
+    /**
+     * si le joueur peut attaquer.
+     */
     public boolean canAttack = true;
+    /**
+     * la direction de l'attaque.
+     */
     Point attackDirection;
+    /**
+     * la position de l'attaque.
+     */
     Point attackPos;
+    /**
+     * la rotation de l'attaque.
+     */
     float attackEndRotation;
+    /**
+     * la rotation de l'attaque.
+     */
     float attackRotation;
 
-    //dash stats
+    /**
+     * la distance du dash.
+     */
+//dash stats
     static float DASH_DISTANCE = 50f;
+    /**
+     * la vitesse du dash.
+     */
     static float DASH_SPEED = 500f;
+    /**
+     * la pause entre les dashs.
+     */
     static long DASH_PAUSE = 3;   //en secondes
+    /**
+     * la stamina utilisée pour dash.
+     */
     static int DASH_STAMINA_USAGE = 10;
 
-    //player texture size
+    /**
+     * la taille de la texture du joueur.
+     */
+//player texture size
     public int texture_height;
+    /**
+     * la largeur de la texture du joueur.
+     */
     public int texture_width;
 
-    //animation var
+    /**
+     * le temps de l'animation.
+     */
+//animation var
     float stateTime;
+    /**
+     *
+     */
     boolean flip=false;       //false = regard à droite
+    /**
+     * si le joueur est en train de courir.
+     */
     boolean isRunning=false;
+    /**
+     * si le joueur est en train de spawn.
+     */
     public boolean isPlayerSpawning=false;
+    /**
+     * si le joueur a spawn.
+     */
     public boolean hasPlayerSpawn=false;
 
-    //animations
+    /**
+     * la texture de l'animation de spawn.
+     */
+//animations
     Animation<TextureRegion> idleAnimation;
+    /**
+     * l'animation de course.
+     */
     Animation<TextureRegion> runAnimation;
+    /**
+     * l'animation de course.
+     */
     Animation<TextureRegion> runAnimationRevert;
+    /**
+     * l'animation de dash.
+     */
     Animation<TextureRegion> dashAnimation;
+    /**
+     * l'animation de spawn.
+     */
     Animation<TextureRegion> spawnAnimation;
-    static final int FRAME_COLS = 1, FRAME_ROWS = 4;
 
+    /**
+     * le nombre de colonne de l'animation.
+     */
+    static final int FRAME_COLS = 1,
+
+    /**
+     * le nombre de lignes de l'animation.
+     */
+    FRAME_ROWS = 4;
+
+    /**
+     * Constructeur de Player.
+     * Sert à créer un objet Player.
+     *
+     * @param spawn the spawn
+     * @param name  the name
+     */
     public Player(Point spawn,String name){
 
         this.name = name;
@@ -109,27 +254,56 @@ public class Player {
         this.currentWeapon = MeleeWeapon.DEV_SWORD();
     }
 
+    /**
+     * Permet de faire spawn le joueur.
+     */
     public void spawnPlayer(){   //used to play the spawning animation
         this.stateTime=0f;
         this.isPlayerSpawning=true;
     }
 
+    /**
+     * Center point.
+     *
+     * @return the point
+     */
     public Point center(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /4));
     }
+
+    /**
+     * Texture center point.
+     *
+     * @return the point
+     */
     public Point textureCenter(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
+    /**
+     *
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void move(float x, float y){
         this.lastPos = this.pos;
         this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
     }
 
+    /**
+     * Can action with stamina boolean.
+     *
+     * @param amount the amount
+     * @return the boolean
+     */
     public boolean canActionWithStamina(int amount){
         return this.stamina-amount >=0;
     }
 
+    /**
+     * Dash.
+     */
     public void dash(){    //used for the dash animation
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
@@ -160,6 +334,9 @@ public class Player {
 
     }
 
+    /**
+     * permet de faire attaquer le joueur.
+     */
     public void attack() {
         if (canAttack && !this.isAttacking && this.canActionWithStamina(Player.ATTACK_STAMINA_USAGE)){
             this.isAttacking=true;
@@ -171,6 +348,11 @@ public class Player {
         }
     }
 
+    /**
+     * permet de vérifier si le joueur a touché un monstre.
+     *
+     * @param meleeWeapon the melee weapon
+     */
     public void checkHit(Sprite meleeWeapon){
         Rectangle meleeWeaponRectangle = meleeWeapon.getBoundingRectangle();
         for (Test t : Map.tests){
@@ -184,6 +366,11 @@ public class Player {
         }
     }
 
+    /**
+     * Permet d'afficher l'attaque du joueur.
+     *
+     * @param batch the batch
+     */
     public void showAttack(SpriteBatch batch){
         if (this.attackRotation <= this.attackEndRotation){
             this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
@@ -207,11 +394,19 @@ public class Player {
         }
     }
 
+    /**
+     *
+     * ermet de récupérer l'orientation du joueur.
+     */
     public void getOrientation(){
         Point mousePos = Utils.mousePosUnproject(Camera.camera);
         this.flip= mousePos.x < this.center().x;
     }
 
+    /**
+     * Permet de récupérer les mouvements du clavier.
+     *
+     */
     public void getKeyboardMove(){
         if (!this.isDashing){
             if (Gdx.input.isKeyPressed(Keybinds.UP_KEY)){
@@ -234,6 +429,11 @@ public class Player {
         }
     }
 
+    /**
+     * Dessine le joueur.
+     *
+     * @param batch the batch
+     */
     public void draw(SpriteBatch batch){
         stateTime += Gdx.graphics.getDeltaTime();
 

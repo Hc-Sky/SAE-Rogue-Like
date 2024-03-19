@@ -10,17 +10,50 @@ import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.util.ArrayList;
 
+/**
+ * Le type Hud. Cette classe est utilisée pour créer un objet Hud.
+ *
+ * @version 1.0
+ *
+ *
+ */
 public class Hud {
+    /**
+     * The Player.
+     */
     Player player;
 
+    /**
+     * The Health bar.
+     */
     ArrayList<Texture> healthBar = new ArrayList<>();
+    /**
+     * The Health bar outside.
+     */
     Texture healthBarOutside;
 
+    /**
+     * The Stamina bar.
+     */
     ArrayList<Texture> staminaBar = new ArrayList<>();
 
+    /**
+     * The Current level.
+     */
     int currentLevel;
+    /**
+     * The Hud size.
+     */
     float hudSize;
 
+    /**
+     * Constructeur de l'HUD.
+     * Sert à créer un objet Hud.
+     *
+     * @param player       the player
+     * @param currentLevel the current level
+     * @param hudSizeMult  the hud size mult
+     */
     public Hud(Player player, int currentLevel, float hudSizeMult){
         this.player = player;
         this.currentLevel = currentLevel;
@@ -38,6 +71,11 @@ public class Hud {
         }
     }
 
+    /**
+     * Dessine l'HUD.
+     *
+     * @param batch the batch
+     */
     public void draw(SpriteBatch batch){
         int healthAmount = ((this.player.hp*6)/100) - 1;
         if (healthAmount < 0) {

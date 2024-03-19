@@ -8,18 +8,49 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 
+/**
+ * le type SplashScreen
+ * Cette classe est utilisée pour créer un objet SplashScreen.
+ * splash screen = écran de démarrage
+ * @version 1.0
+ */
 public class SplashScreen implements Screen {
 
-    //screen info
+    /**
+     * le jeu.
+     */
+//screen info
     GameSpace game;
+    /**
+     * le batch = une collection de sprites.
+     */
     SpriteBatch batch;
 
+    /**
+     * l'icone.
+     * C'est l'image qui s'affiche à l'écran.
+     */
     Texture icon;
+    /**
+     * La hauteur.
+     */
     float height;
+    /**
+     * La largeur.
+     */
     float width;
 
+    /**
+     * Le temps de démarrage.
+     */
     long startTime;
 
+    /**
+     * Constructeur de SplashScreen.
+     * Sert à créer un objet SplashScreen.
+     *
+     * @param game the game
+     */
     public SplashScreen(GameSpace game){
         this.game=game;
         this.batch = game.batch;
@@ -30,11 +61,19 @@ public class SplashScreen implements Screen {
         startTime = TimeUtils.millis();
     }
 
+    /**
+     * Affiche l'icone.
+     */
     @Override
     public void show() {
         this.icon = new Texture("assets/window/icon.png");
     }
 
+    /**
+     * Affiche l'écran de démarrage.
+     *
+     * @param v
+     */
     @Override
     public void render(float v) {
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);

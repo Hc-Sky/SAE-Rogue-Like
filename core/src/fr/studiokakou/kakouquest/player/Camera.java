@@ -3,16 +3,45 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+/**
+ * Le type Camera. Cette classe est utilisée pour créer un objet Camera.
+ *
+ * @version 1.0
+ */
 public class Camera {
+    /**
+     * La caméra.
+     */
     public static OrthographicCamera camera;
+    /**
+     * le joueur.
+     */
     Player player;
 
+    /**
+     * paramètres de la caméra par défaut
+     */
     public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) /720;
+    /**
+     * la distance en y de la caméra par rapport au joueur.
+     */
     public static float CAM_Y_DISTANCE = 53;
+    /**
+     * la distance en x de la caméra par rapport au joueur.
+     */
     public static float CAM_X_DISTANCE = 95;
 
+    /**
+     * le zoom de la caméra.
+     */
     public float zoom;
 
+    /**
+     * Constructeur de Camera.
+     * Sert à créer un objet Camera.
+     *
+     * @param player the player
+     */
     public Camera(Player player){
         this.player = player;
 
@@ -25,11 +54,17 @@ public class Camera {
         Camera.camera.position.y = this.player.center().y;
     }
 
+    /**
+     * Centre le joueur.
+     */
     public void centerPlayer(){
         Camera.camera.position.x = this.player.center().x;
         Camera.camera.position.y = this.player.center().y;
     }
 
+    /**
+     * Update la caméra.
+     */
     public void update(){
         if (Camera.camera.position.x+Camera.CAM_X_DISTANCE < this.player.center().x){
             Camera.camera.position.x=this.player.center().x-Camera.CAM_X_DISTANCE;

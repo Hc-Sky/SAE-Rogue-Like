@@ -14,26 +14,72 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * The type Test.
+ */
 public class Test {
+    /**
+     * La position.
+     */
     Point pos;
+    /**
+     * La hauteur.
+     */
     float height;
+    /**
+     * La largeur.
+     */
     float width;
 
+    /**
+     * Le nom.
+     */
     String name;
 
+    /**
+     * La couleur par defaut.
+     */
     Color defaultColor;
+    /**
+     * Boolean si c'est rouge.
+     */
     boolean isRed;
 
+    /**
+     * Le lancement du temps.
+     */
     LocalDateTime hitStart=null;
 
+    /**
+     * Les effets de sang.
+     */
     Animation<TextureRegion> bloodEffect;
+    /**
+     * The Blood state time.
+     */
     float bloodStateTime=-1;
 
+    /**
+     * La texture.
+     */
     Texture texture;
+    /**
+     * Le sprite .
+     */
     public Sprite sprite;
 
+    /**
+     * Joeur Touchée .
+     */
     public ArrayList<String> player_hitted = new ArrayList<>();
 
+    /**
+     * Instantiates a new Test.
+     *
+     * @param x    the x
+     * @param y    the y
+     * @param name the name
+     */
     public Test(float x, float y, String name){
         this.name = name;
         this.pos = new Point(x, y);
@@ -51,6 +97,15 @@ public class Test {
         this.defaultColor = this.sprite.getColor();
     }
 
+    /**
+     * Update hit animation.
+     * Affiche l'animation de sang.
+     * Si le monstre est touché, il devient rouge.
+     * Si le monstre est rouge, il redevient normal après 200ms.
+     * Si le monstre est rouge, il ne peut pas être touché.
+     *
+     * @param batch the batch
+     */
     public void updateHitAnimation(SpriteBatch batch){
         if (bloodStateTime>=0){
             bloodStateTime+= Gdx.graphics.getDeltaTime();
@@ -75,6 +130,16 @@ public class Test {
         }
     }
 
+    /**
+     * Si le joueur est touché.
+     * Si le joueur n'est pas déjà touché, il devient rouge.
+     * Si le joueur est rouge, il redevient normal après 200ms.
+     * Si le joueur est rouge, il ne peut pas être touché.
+     * Si le joueur est touché, il est ajouté à la liste des joueurs touchés.
+     *
+     * @param player the player
+     * @return the boolean
+     */
     public boolean hit(Player player){
         if (!this.player_hitted.contains(player.name)){
             this.sprite.setColor(1, 0, 0, 1f);
