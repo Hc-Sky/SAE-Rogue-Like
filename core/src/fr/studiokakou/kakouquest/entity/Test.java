@@ -37,10 +37,6 @@ public class Test {
     String name;
 
     /**
-     * La couleur par defaut.
-     */
-    Color defaultColor;
-    /**
      * Boolean si c'est rouge.
      */
     boolean isRed;
@@ -93,8 +89,6 @@ public class Test {
         this.sprite = new Sprite(this.texture);
         this.sprite.setX(this.pos.x);
         this.sprite.setY(this.pos.y);
-
-        this.defaultColor = this.sprite.getColor();
     }
 
     /**
@@ -110,8 +104,6 @@ public class Test {
         if (bloodStateTime>=0){
             bloodStateTime+= Gdx.graphics.getDeltaTime();
             TextureRegion currentBloodFrame = this.bloodEffect.getKeyFrame(bloodStateTime, false);
-//            currentBloodFrame.setRegionHeight(10);
-//            currentBloodFrame.setRegionWidth(10);
             batch.draw(currentBloodFrame,
                     this.pos.x - (float) currentBloodFrame.getRegionWidth() /4 + (float) this.width/2,
                     this.pos.y - (float) currentBloodFrame.getRegionHeight() /4 + (float) this.height/2,

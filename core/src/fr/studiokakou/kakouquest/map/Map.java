@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
@@ -21,6 +22,7 @@ public class Map {
      * la liste des tests
      */
     public static ArrayList<Test> tests = new ArrayList<>();
+    public static ArrayList<Monster> monsters = new ArrayList<>();
 
     /**
      * La hauteur de la map.
@@ -105,8 +107,8 @@ public class Map {
      * @param batch the batch
      */
     public void updateHitsAnimation(SpriteBatch batch){
-        for (Test t : tests){
-            t.updateHitAnimation(batch);
+        for (Monster m : Map.monsters){
+            m.updateHitAnimation(batch);
         }
     }
 
@@ -123,6 +125,25 @@ public class Map {
         for (Test t : Map.tests) {
             t.sprite.draw(batch);
         }
+    }
+
+    public void drawMonsters(SpriteBatch batch){
+        for (Monster m : Map.monsters){
+            m.draw(batch);
+        }
+    }
+
+    public void checkDeadMonster(){
+        ArrayList<Monster> tmp = new ArrayList<>();
+        for (Monster m : Map.monsters){
+            if (!m.isDead){
+                tmp.add(m);
+            }
+        }
+
+        Map.monsters.clear();
+        Map.monsters = tmp;
+
     }
 
 
@@ -168,5 +189,23 @@ public class Map {
      */
     public Point getPlayerSpawn(){
         return this.rooms.get(0).getCenterOutOfMap();
+    }
+
+    public void spawnMonsters(int currentLevel){
+        Map.monsters.clear();
+
+        for (Room r : rooms){
+            Map.monsters.add(Monster.BIG_DEMON(currentLevel, r.getCenterOutOfMap()));
+        }
+    }
+
+    public void moveMonsters(Player player){
+        for (Monster m : Map.monsters){
+            m.move(player);
+        }
+    }
+
+    public static void removeMonster(Monster monster){
+        Map.monsters.remove(monster);
     }
 }

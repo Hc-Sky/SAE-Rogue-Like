@@ -63,6 +63,6 @@ public class MeleeWeapon {
 	public static MeleeWeapon WARAXE () {return new MeleeWeapon("Waraxe", "assets/weapon/weapon_waraxe.png", 15, 0, 90, 0.5f, 1);}
 
 	//dev weapon
-	public static MeleeWeapon DEV_SWORD () {return new MeleeWeapon("Dev sword", "assets/weapon/weapon_golden_sword.png", 9999999, -1, 120, 0.7f, 1);}
+	public static MeleeWeapon DEV_SWORD () {return new MeleeWeapon("Dev sword", "assets/weapon/weapon_golden_sword.png", 50, -1, 120, 0.7f, 1);}
 
 }

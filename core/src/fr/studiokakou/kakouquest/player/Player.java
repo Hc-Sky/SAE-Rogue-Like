@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Map;
@@ -28,7 +29,7 @@ public class Player {
      * la position du joueur.
      */
 //player pos
-    Point pos;
+    public Point pos;
     /**
      * la dernière position du joueur.
      */
@@ -351,14 +352,13 @@ public class Player {
     /**
      * permet de vérifier si le joueur a touché un monstre.
      *
-     * @param meleeWeapon the melee weapon
      */
-    public void checkHit(Sprite meleeWeapon){
-        Rectangle meleeWeaponRectangle = meleeWeapon.getBoundingRectangle();
-        for (Test t : Map.tests){
-            Rectangle tRectangle = t.sprite.getBoundingRectangle();
-            if (meleeWeaponRectangle.overlaps(tRectangle)){
-                boolean damaged = t.hit(this);
+    public void checkHit(){
+        Rectangle meleeWeaponRectangle = this.currentWeapon.sprite.getBoundingRectangle();
+        for (Monster m : Map.monsters){
+            Rectangle mRectangle = m.sprite.getBoundingRectangle();
+            if (meleeWeaponRectangle.overlaps(mRectangle)){
+                boolean damaged = m.hit(this);
                 if (damaged){
                     this.currentWeapon.resistance-=1;
                 }
@@ -380,7 +380,7 @@ public class Player {
 
             this.currentWeapon.sprite.draw(batch);
 
-            this.checkHit(this.currentWeapon.sprite);
+            this.checkHit();
 
             this.attackRotation += this.currentWeapon.attackSpeed*Gdx.graphics.getDeltaTime()*1000;
             this.attackPos = Point.getPosWithAngle(this.center(), Player.PLAYER_MELEE_WEAPON_DISTANCE, this.attackRotation);
@@ -475,5 +475,9 @@ public class Player {
         if (!this.canAttack) {
             this.showAttack(batch);
         }
+    }
+
+    public void takeDamage(int damage, Point impactPoint){
+        this.hp -= damage;
     }
 }

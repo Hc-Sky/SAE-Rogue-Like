@@ -10,10 +10,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
-import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.utils.Utils;
 
 /**
  * le type InGameScreen.
@@ -120,13 +118,15 @@ public class InGameScreen implements Screen {
         this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
 
         startTime = TimeUtils.millis();
+
+        this.map.spawnMonsters(currentLevel);
     }
 
     /**
      * Update l'écran de jeu.
      * Permet de mettre à jour l'écran de jeu.
      *
-     * @param flaot delta
+     * @param float delta
      */
     @Override
     public void render(float delta) {
@@ -149,17 +149,24 @@ public class InGameScreen implements Screen {
         }
 
         cam.update();
+
+        //update monsters pos
+        this.map.moveMonsters(this.player);
+
         batch.setProjectionMatrix(Camera.camera.combined);
 
         batch.begin();
 
         //map draw
         this.map.drawMap(this.batch);
+        this.map.drawMonsters(batch);
         this.map.updateHitsAnimation(this.batch);
 
         player.draw(this.batch);
 
         batch.end();
+
+        this.map.checkDeadMonster();
 
 
         hudBatch.begin();
@@ -171,8 +178,6 @@ public class InGameScreen implements Screen {
      * Resize l'écran de jeu.
      * Permet de redimensionner l'écran de jeu.
      *
-     * @param int width
-     * @param int height
      */
     @Override
     public void resize(int width, int height) {
