@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
@@ -42,6 +43,7 @@ public class Player {
      * les points de vie.
      */
     public int hp;
+    public int max_hp;
     /**
      * la force.
      */
@@ -53,7 +55,8 @@ public class Player {
     /**
      * la stamina.
      */
-    public int stamina;
+    public float stamina;
+    public int max_stamina;
 
     /**
      * l'arme actuelle.
@@ -104,6 +107,8 @@ public class Player {
      * la stamina utilisée pour attaquer.
      */
     static int ATTACK_STAMINA_USAGE = 2;
+
+    LocalDateTime staminaTimer;
     /**
      * le timer de l'attaque.
      */
@@ -161,11 +166,6 @@ public class Player {
      */
     public int texture_width;
 
-    /**
-     * le temps de l'animation.
-     */
-//animation var
-    float stateTime;
     /**
      *
      */
@@ -229,6 +229,7 @@ public class Player {
      * @param spawn the spawn
      * @param name  the name
      */
+
     public Player(Point spawn,String name){
 
         this.name = name;
@@ -238,9 +239,9 @@ public class Player {
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
-        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
+        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 2.5f);
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
-        this.stateTime=0f;
+        InGameScreen.stateTime=0f;
 
         //get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
@@ -252,9 +253,11 @@ public class Player {
         this.lastPos = this.pos;
 
         //default values
+        this.max_hp=100;
         this.hp=100;
         this.strength=10;
         this.speed=40f;
+        this.max_stamina=100;
         this.stamina = 100;
 
         //default weapon
@@ -265,7 +268,7 @@ public class Player {
      * Permet de faire spawn le joueur.
      */
     public void spawnPlayer(){   //used to play the spawning animation
-        this.stateTime=0f;
+        InGameScreen.stateTime=0f;
         this.isPlayerSpawning=true;
     }
 
@@ -337,6 +340,7 @@ public class Player {
             this.canDash=false;
             this.isDashing=true;
             this.stamina-=Player.DASH_STAMINA_USAGE;
+            this.staminaTimer = LocalDateTime.now();
         }
 
     }
@@ -348,10 +352,24 @@ public class Player {
         if (canAttack && !this.isAttacking && this.canActionWithStamina(Player.ATTACK_STAMINA_USAGE)){
             this.isAttacking=true;
             this.canAttack = false;
+
             this.stamina-=Player.ATTACK_STAMINA_USAGE;
+            this.staminaTimer = LocalDateTime.now();
+
             this.attackDirection = Utils.mousePosUnproject(Camera.camera);
             this.attackRotation = Utils.getAngleWithPoint(this.center(), this.attackDirection)-this.currentWeapon.attackRange/2;
             this.attackEndRotation = this.attackRotation+this.currentWeapon.attackRange;
+        }
+    }
+
+    public void regainStamina(){
+        if (this.staminaTimer==null || this.staminaTimer.plusSeconds(5).isBefore(LocalDateTime.now())){
+            if (this.stamina < this.max_stamina){
+                this.stamina = this.stamina + 20*Gdx.graphics.getDeltaTime();
+                if (this.stamina>100){
+                    this.stamina=100;
+                }
+            }
         }
     }
 
@@ -440,20 +458,20 @@ public class Player {
      * @param batch the batch
      */
     public void draw(SpriteBatch batch){
-        stateTime += Gdx.graphics.getDeltaTime();
+        InGameScreen.stateTime += Gdx.graphics.getDeltaTime();
 
         if (hasPlayerSpawn) {
             TextureRegion currentFrame;
             if (this.isRunning){
                 if (!flip && this.lastPos.x > this.pos.x){
-                    currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
+                    currentFrame = this.runAnimationRevert.getKeyFrame(InGameScreen.stateTime, true);
                 } else if (flip && this.lastPos.x < this.pos.x) {
-                    currentFrame = this.runAnimationRevert.getKeyFrame(stateTime, true);
+                    currentFrame = this.runAnimationRevert.getKeyFrame(InGameScreen.stateTime, true);
                 } else {
-                    currentFrame = this.runAnimation.getKeyFrame(stateTime, true);
+                    currentFrame = this.runAnimation.getKeyFrame(InGameScreen.stateTime, true);
                 }
             }else {
-                currentFrame = this.idleAnimation.getKeyFrame(stateTime, true);
+                currentFrame = this.idleAnimation.getKeyFrame(InGameScreen.stateTime, true);
             }
 
             //dash animation
@@ -483,12 +501,12 @@ public class Player {
         }
 
         if (isPlayerSpawning){
-            TextureRegion currentSpawnFrame = this.spawnAnimation.getKeyFrame(stateTime, false);
+            TextureRegion currentSpawnFrame = this.spawnAnimation.getKeyFrame(InGameScreen.stateTime, false);
             batch.draw(currentSpawnFrame, this.center().x- (float) currentSpawnFrame.getRegionWidth() /2, this.pos.y);
-            if (this.spawnAnimation.getKeyFrameIndex(stateTime) == 3){
+            if (this.spawnAnimation.getKeyFrameIndex(InGameScreen.stateTime) == 3){
                 this.hasPlayerSpawn=true;
             }
-            if (this.spawnAnimation.isAnimationFinished(stateTime)){
+            if (this.spawnAnimation.isAnimationFinished(InGameScreen.stateTime)){
                 this.isPlayerSpawning = false;
             }
         }
@@ -500,6 +518,7 @@ public class Player {
 
     public void takeDamage(int damage, Point impactPoint){
         this.hp -= damage;
+        System.out.println(this.hp);
         this.bloodStateTime=0f;
     }
 }

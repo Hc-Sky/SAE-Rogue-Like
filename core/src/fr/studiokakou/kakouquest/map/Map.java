@@ -5,6 +5,7 @@ import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * le type Map.
@@ -172,24 +173,32 @@ public class Map {
         Map.monsters.clear();
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        for (int i = 1; i <= currentLevel; i++) {
-            for (int j = 0; j <= currentLevel-i; j++) {
+        float tmp_current_level = (float) currentLevel /3;
+        if (tmp_current_level<1){
+            tmp_current_level=1;
+        }
+
+        for (int i = 1; i <= tmp_current_level; i++) {
+            for (int j = 0; j <= tmp_current_level-i; j++) {
                 randomRarity.add(i);
             }
         }
 
-        System.out.println(randomRarity);
-
-        for (Room r : this.rooms){
-            int rarity = randomRarity.get(Utils.randint(0, randomRarity.size()-1));
-            ArrayList<Monster> toAddPossible = Monster.possibleMonsters.get(rarity);
-            while (toAddPossible.size()<1){
-                rarity = randomRarity.get(Utils.randint(0, randomRarity.size()-1));
-                toAddPossible = Monster.possibleMonsters.get(rarity);
+        for (Room r : this.rooms.subList(1, this.rooms.size())){
+            for (int i = (int) r.start.x; i < r.end.x; i++) {
+                if (Utils.randint(0, 7)==0){
+                    int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
+                    ArrayList<Monster> mList = Monster.possibleMonsters.get(rarity);
+                    while (mList.isEmpty()){
+                        rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
+                        mList = Monster.possibleMonsters.get(rarity);
+                    }
+                    Monster m = mList.get(Utils.randint(0, mList.size()-1));
+                    m.place(new Point(i*Floor.TEXTURE_WIDTH, Utils.randint((int) r.start.y, (int) r.end.y)*Floor.TEXTURE_HEIGHT));
+                    Map.monsters.add(m);
+                    Monster.createPossibleMonsters(currentLevel);
+                }
             }
-            Monster toAdd = toAddPossible.get(Utils.randint(0, toAddPossible.size()-1));
-            toAdd.place(r.getCenterOutOfMap());
-            Map.monsters.add(toAdd);
         }
     }
 

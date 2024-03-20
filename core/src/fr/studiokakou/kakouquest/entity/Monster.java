@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -72,8 +73,6 @@ public class Monster {
     boolean isFlip=Utils.randint(0, 1)==0;
     public Sprite sprite;
 
-    float stateTime=0f;
-
     public boolean isDying=false;
     public boolean isDead = false;
 
@@ -124,7 +123,7 @@ public class Monster {
         this.height = idleAnimation.getKeyFrame(0f).getRegionHeight();
         this.width = idleAnimation.getKeyFrame(0f).getRegionWidth();
         this.sprite = new Sprite();
-        this.stateTime=0f;
+        InGameScreen.stateTime=0f;
 
         this.upgradeStats(currentLevel);
     }
@@ -134,8 +133,8 @@ public class Monster {
     }
 
     public void upgradeStats(int currentLevel){
-        this.hp = this.hp +(this.hp * currentLevel/3);
-        this.damage = this.damage + (this.hp * currentLevel /3);
+        this.hp = this.hp +(this.hp * currentLevel/4);
+        this.damage = this.damage + (this.damage * currentLevel /4);
     }
 
     public Point center(){
@@ -158,7 +157,7 @@ public class Monster {
                 this.isRunning = true;
                 this.getOrientation(player);
                 this.orientation = Point.getOrientation(this.pos, playerPos);
-                this.pos = this.pos.add(this.orientation.x*(this.speed/4)*Gdx.graphics.getDeltaTime(), this.orientation.y*(this.speed/4)*Gdx.graphics.getDeltaTime());
+                this.pos = this.pos.add(this.orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), this.orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
             }else {
                 this.isRunning=false;
             }
@@ -208,9 +207,9 @@ public class Monster {
     public void draw(SpriteBatch batch){
         TextureRegion currentFrame;
         if(isRunning){
-            currentFrame = this.runAnimation.getKeyFrame(this.stateTime, true);
+            currentFrame = this.runAnimation.getKeyFrame(InGameScreen.stateTime, true);
         } else {
-            currentFrame = this.idleAnimation.getKeyFrame(this.stateTime, true);
+            currentFrame = this.idleAnimation.getKeyFrame(InGameScreen.stateTime, true);
         }
 
 
@@ -227,7 +226,7 @@ public class Monster {
 
         this.sprite.draw(batch);
 
-        this.stateTime+= Gdx.graphics.getDeltaTime();
+        InGameScreen.stateTime+= Gdx.graphics.getDeltaTime();
     }
 
     public void updateHitAnimation(SpriteBatch batch){
@@ -237,8 +236,8 @@ public class Monster {
             batch.draw(currentBloodFrame,
                 this.pos.x - (float) currentBloodFrame.getRegionWidth() /4 + (float) this.width/2,
                 this.pos.y - (float) currentBloodFrame.getRegionHeight() /4 + (float) this.height/2,
-                (float) currentBloodFrame.getRegionWidth() /2,
-                (float) currentBloodFrame.getRegionHeight() /2
+                (float) currentBloodFrame.getRegionWidth(),
+                (float) currentBloodFrame.getRegionHeight()
             );
         }
 
@@ -302,43 +301,43 @@ public class Monster {
     }
 
     static Monster BIG_DEMON(int currentLevel){
-        return new Monster("Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 400, 40, 1200, 40f, 150, currentLevel);
+        return new Monster("Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 400, 25, 1200, 40f, 150, currentLevel);
     }
     static Monster BIG_ZOMBIE(int currentLevel){
-        return new Monster("Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 450, 50, 1500, 45f, 200, currentLevel);
+        return new Monster("Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 450, 35, 1500, 45f, 200, currentLevel);
     }
     static Monster CHORT(int currentLevel){
-        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 50, 5, 300, 60f, 80, currentLevel);
+        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 50, 5, 700, 60f, 80, currentLevel);
     }
     static Monster GOBLIN(int currentLevel){
-        return new Monster("Goblin", "assets/entities/goblin_idle.png", "assets/entities/goblin_run.png", 60, 10, 400, 50f, 100, currentLevel);
+        return new Monster("Goblin", "assets/entities/goblin_idle.png", "assets/entities/goblin_run.png", 60, 10, 700, 50f, 100, currentLevel);
     }
     static Monster IMP(int currentLevel){
-        return new Monster("Imp", "assets/entities/imp_idle.png", "assets/entities/imp_run.png", 35, 15, 100, 70f, 100, currentLevel);
+        return new Monster("Imp", "assets/entities/imp_idle.png", "assets/entities/imp_run.png", 35, 15, 600, 60f, 100, currentLevel);
     }
     static Monster MASKED_ORC(int currentLevel){
         return new Monster("Masked Orc", "assets/entities/masked_orc_idle.png", "assets/entities/masked_orc_run.png", 150, 20, 600, 40f, 120, currentLevel);
     }
     static Monster MUDDY(int currentLevel){
-        return new Monster("Muddy", "assets/entities/muddy.png", "assets/entities/muddy.png", 250, 40, 600, 25f, 200, currentLevel);
+        return new Monster("Muddy", "assets/entities/muddy.png", "assets/entities/muddy.png", 250, 40, 600, 15f, 200, currentLevel);
     }
     static Monster OGRE(int currentLevel){
-        return new Monster("Ogre", "assets/entities/ogre_idle.png", "assets/entities/ogre_run.png", 500, 50, 2000, 35f, 200, currentLevel);
+        return new Monster("Ogre", "assets/entities/ogre_idle.png", "assets/entities/ogre_run.png", 500, 25, 2000, 35f, 200, currentLevel);
     }
     static Monster ORC_WARRIOR(int currentLevel){
-        return new Monster("Orc Warrior", "assets/entities/orc_warrior_idle.png", "assets/entities/orc_warrior_run.png", 120, 20, 400, 40f, 120, currentLevel);
+        return new Monster("Orc Warrior", "assets/entities/orc_warrior_idle.png", "assets/entities/orc_warrior_run.png", 120, 20, 600, 40f, 120, currentLevel);
     }
     static Monster SKELET(int currentLevel){
-        return new Monster("Skelet", "assets/entities/skelet_idle.png", "assets/entities/skelet_run.png", 30, 50, 300, 50f, 120, currentLevel);
+        return new Monster("Skelet", "assets/entities/skelet_idle.png", "assets/entities/skelet_run.png", 30, 30, 300, 50f, 120, currentLevel);
     }
     static Monster SWAMPY(int currentLevel){
-        return new Monster("Swampy", "assets/entities/swampy.png", "assets/entities/swampy.png", 400, 50, 600, 30f, 200, currentLevel);
+        return new Monster("Swampy", "assets/entities/swampy.png", "assets/entities/swampy.png", 400, 50, 800, 18f, 200, currentLevel);
     }
     static Monster TINY_ZOMBIE(int currentLevel){
-        return new Monster("Tiny Zombie", "assets/entities/tiny_zombie_idle.png", "assets/entities/tiny_zombie_run.png", 20, 25, 300, 55f, 100, currentLevel);
+        return new Monster("Tiny Zombie", "assets/entities/tiny_zombie_idle.png", "assets/entities/tiny_zombie_run.png", 20, 25, 600, 55f, 100, currentLevel);
     }
     static Monster WOGOL(int currentLevel){
-        return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 400, 40f, 150, currentLevel);
+        return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 600, 40f, 150, currentLevel);
     }
 
 }

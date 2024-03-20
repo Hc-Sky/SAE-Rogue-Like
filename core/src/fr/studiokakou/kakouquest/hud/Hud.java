@@ -77,21 +77,50 @@ public class Hud {
      * @param batch the batch
      */
     public void draw(SpriteBatch batch){
-        int healthAmount = ((this.player.hp*6)/100) - 1;
-        if (healthAmount < 0) {
-            healthAmount=0;
-        } else if (healthAmount==0 && this.player.hp>=0) {
-            healthAmount=1;
+        int healthAmount = getHealthAmount();
+        if (healthAmount>=0){
+            batch.draw(this.healthBar.get(healthAmount), 100, Gdx.graphics.getHeight()-100, this.healthBar.get(0).getWidth()*this.hudSize, this.healthBar.get(0).getHeight()*this.hudSize);
         }
-        batch.draw(this.healthBar.get(healthAmount), 100, Gdx.graphics.getHeight()-100, this.healthBar.get(0).getWidth()*this.hudSize, this.healthBar.get(0).getHeight()*this.hudSize);
         batch.draw(this.healthBarOutside, 100, Gdx.graphics.getHeight()-100, this.healthBarOutside.getWidth()*this.hudSize, this.healthBarOutside.getHeight()*this.hudSize);
 
-        int staminaAmount = (((this.player.stamina+16)*6)/100) - 1;
-        if (staminaAmount < 0) {
-            staminaAmount=0;
-        } else if (staminaAmount==0 && this.player.stamina>=0) {
+        batch.draw(this.staminaBar.get(getStaminaAmount()), 78, Gdx.graphics.getHeight()-100-this.staminaBar.get(0).getHeight()*this.hudSize/2, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
+    }
+
+    private int getStaminaAmount() {
+        int staminaAmount;
+        if ((this.player.stamina*100)/this.player.max_stamina >= 98) {
+            staminaAmount=5;
+        } else if ((this.player.stamina*100)/this.player.max_stamina >= 70) {
+            staminaAmount=4;
+        } else if ((this.player.stamina*100)/this.player.max_stamina >= 50) {
+            staminaAmount=3;
+        }else if ((this.player.stamina*100)/this.player.max_stamina >= 30) {
+            staminaAmount=2;
+        }else if ((this.player.stamina*100)/this.player.max_stamina > 4) {
             staminaAmount=1;
+        }else {
+            staminaAmount=0;
         }
-        batch.draw(this.staminaBar.get(staminaAmount), 78, Gdx.graphics.getHeight()-100-this.staminaBar.get(0).getHeight()*this.hudSize/2, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
+        return staminaAmount;
+    }
+
+    private int getHealthAmount() {
+        int healthAmount;
+        if ((this.player.hp*100)/this.player.max_hp >= 98) {
+            healthAmount=5;
+        } else if ((this.player.hp*100)/this.player.max_hp >= 83) {
+            healthAmount=4;
+        } else if ((this.player.hp*100)/this.player.max_hp >= 66) {
+            healthAmount=3;
+        }else if ((this.player.hp*100)/this.player.max_hp >= 49) {
+            healthAmount=2;
+        }else if ((this.player.hp*100)/this.player.max_hp >= 32) {
+            healthAmount=1;
+        }else if ((this.player.hp*100)/this.player.max_hp > 15){
+            healthAmount=0;
+        } else {
+            healthAmount=-1;
+        }
+        return healthAmount;
     }
 }

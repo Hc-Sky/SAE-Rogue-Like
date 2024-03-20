@@ -26,7 +26,7 @@ public class InGameScreen implements Screen {
      * le temps entre chaque frame.
      */
 //defaults
-    public static float FRAME_DURATION=0.20f;
+    public static float FRAME_DURATION=5f;
 
     /**
      * le jeu.
@@ -41,6 +41,8 @@ public class InGameScreen implements Screen {
      * le batch de l'HUD.
      */
     SpriteBatch hudBatch;
+
+    public static float stateTime=0f;
 
     /**
      * le joueur.
@@ -93,7 +95,7 @@ public class InGameScreen implements Screen {
         this.hudBatch = game.hudBatch;
 
 
-        this.currentLevel = 10;
+        this.currentLevel = 3;
 
         Monster.createPossibleMonsters(currentLevel);
 
@@ -113,6 +115,8 @@ public class InGameScreen implements Screen {
     @Override
     public void show() {
 
+        InGameScreen.stateTime=0f;
+
         //set cursor
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
@@ -125,14 +129,9 @@ public class InGameScreen implements Screen {
         this.map.spawnMonsters(currentLevel);
     }
 
-    /**
-     * Update l'écran de jeu.
-     * Permet de mettre à jour l'écran de jeu.
-     *
-     * @param float delta
-     */
     @Override
     public void render(float delta) {
+        InGameScreen.stateTime = InGameScreen.stateTime + delta;
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
@@ -165,6 +164,7 @@ public class InGameScreen implements Screen {
         this.map.drawMonsters(batch);
         this.map.updateHitsAnimation(this.batch);
 
+        player.regainStamina();
         player.draw(this.batch);
 
         batch.end();
