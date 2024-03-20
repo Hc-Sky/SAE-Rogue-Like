@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
@@ -143,7 +142,7 @@ public class Monster {
             return;
         }
         Point playerPos = player.pos;
-        if (Utils.distance(playerPos, this.pos)<=5){
+        if (Utils.distance(playerPos, this.pos)<=10){
             this.attack(player);
         } else {
             if (detectPlayer(playerPos)){
@@ -270,5 +269,8 @@ public class Monster {
     //monsters static
     public static Monster BIG_DEMON(int currentLevel, Point pos){
         return new Monster(pos, "Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 300, 40, 1000, 40f, 100, currentLevel);
+    }
+    public static Monster BIG_ZOMBIE(int currentLevel, Point pos){
+        return new Monster(pos, "Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 300, 40, 1000, 40f, 100, currentLevel);
     }
 }

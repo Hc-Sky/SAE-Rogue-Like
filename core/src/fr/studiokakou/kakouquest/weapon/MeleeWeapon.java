@@ -41,9 +41,9 @@ public class MeleeWeapon {
 		this.sprite.setOrigin(this.width/2, 0);
 	}
 
-	public static MeleeWeapon ANIME_SWORD () {return new MeleeWeapon("Anime sword", "assets/weapon/weapon_anime_sword.png", 10, 0, 90, 0.5f, 1);}
-	public static MeleeWeapon BATON_WITH_SPIKES () {return new MeleeWeapon("Baton with spikes", "assets/weapon/weapon_baton_with_spikes.png", 10, 0, 90, 0.5f, 1);}
-	public static MeleeWeapon BIG_HAMMER () {return new MeleeWeapon("Big hammer", "assets/weapon/weapon_big_hammer.png", 20, 0, 120, 0.3f, 3);}
+	public static MeleeWeapon ANIME_SWORD () {return new MeleeWeapon("Anime sword", "assets/weapon/weapon_anime_sword.png", 10, -1, 90, 0.5f, 1);}
+	public static MeleeWeapon BATON_WITH_SPIKES () {return new MeleeWeapon("Baton with spikes", "assets/weapon/weapon_baton_with_spikes.png", 30, 35, 150, 0.2f, 1.2f);}
+	public static MeleeWeapon BIG_HAMMER () {return new MeleeWeapon("Big hammer", "assets/weapon/weapon_big_hammer.png", 40, 50, 120, 0.3f, 1.5f);}
 	public static MeleeWeapon CLEAVER () {return new MeleeWeapon("Cleaver", "assets/weapon/weapon_cleaver.png", 15, 0, 90, 0.5f, 1);}
 	public static MeleeWeapon DOUBLE_AXE () {return new MeleeWeapon("Double axe", "assets/weapon/weapon_double_axe.png", 20, 0, 90, 0.5f, 1);}
 	public static MeleeWeapon DUEL_SWORD () {return new MeleeWeapon("Duel sword", "assets/weapon/weapon_duel_sword.png", 10, 0, 90, 0.5f, 1);}

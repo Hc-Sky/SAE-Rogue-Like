@@ -207,6 +207,13 @@ public class Player {
      */
     Animation<TextureRegion> spawnAnimation;
 
+
+    Animation<TextureRegion> bloodEffect;
+    /**
+     * The Blood state time.
+     */
+    float bloodStateTime=0f;
+
     /**
      * le nombre de colonne de l'animation.
      */
@@ -234,6 +241,7 @@ public class Player {
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
         this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
+        this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
         this.stateTime=0f;
 
         //get player texture height and width
@@ -252,7 +260,7 @@ public class Player {
         this.stamina = 100;
 
         //default weapon
-        this.currentWeapon = MeleeWeapon.DEV_SWORD();
+        this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
     }
 
     /**
@@ -330,7 +338,7 @@ public class Player {
         } else if (Gdx.input.isKeyJustPressed(Keybinds.DASH_KEY) && this.canDash && this.canActionWithStamina(10)) {
             this.canDash=false;
             this.isDashing=true;
-            this.stamina-=10;
+            this.stamina-=Player.DASH_STAMINA_USAGE;
         }
 
     }
@@ -457,8 +465,24 @@ public class Player {
                 TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
                 batch.draw(currentDashFrame, this.dashOrientation.x >= 0 ? this.dashStartPoint.x- (float) currentDashFrame.getRegionWidth() /4 : this.dashStartPoint.x+ (float) currentDashFrame.getRegionWidth()/2, this.dashStartPoint.y, this.dashOrientation.x >= 0 ? (float) currentDashFrame.getRegionWidth() /2 : (float) -currentDashFrame.getRegionWidth() /2, (float) currentDashFrame.getRegionHeight() /2);
             }
-
             batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
+
+            //blood animation
+            if (bloodStateTime>=0){
+                bloodStateTime+= Gdx.graphics.getDeltaTime();
+                TextureRegion currentBloodFrame = this.bloodEffect.getKeyFrame(bloodStateTime, false);
+                batch.draw(currentBloodFrame,
+                        this.pos.x - (float) currentBloodFrame.getRegionWidth() /4 + (float) this.texture_width/2,
+                        this.pos.y - (float) currentBloodFrame.getRegionHeight() /4 + (float) this.texture_height/2,
+                        (float) currentBloodFrame.getRegionWidth() /2,
+                        (float) currentBloodFrame.getRegionHeight() /2
+                );
+            }
+
+            if (this.bloodEffect.isAnimationFinished(bloodStateTime)){
+                this.bloodStateTime=-1;
+            }
+
         }
 
         if (isPlayerSpawning){
@@ -479,5 +503,6 @@ public class Player {
 
     public void takeDamage(int damage, Point impactPoint){
         this.hp -= damage;
+        this.bloodStateTime=0f;
     }
 }
