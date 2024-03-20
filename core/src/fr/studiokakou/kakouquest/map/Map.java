@@ -37,6 +37,7 @@ public class Map {
      */
 //map gen var
     ArrayList<Room> rooms =  new ArrayList<>();
+    ArrayList<Bridge> bridges = new ArrayList<>();
 
     /**
      * la hauteur minimale d'une salle.
@@ -80,6 +81,7 @@ public class Map {
      */
     public void initMap(){
         generateRooms();
+        generateBriges();
         this.genFloors();
     }
 
@@ -147,6 +149,15 @@ public class Map {
         }
     }
 
+    public void generateBriges(){
+        if (this.rooms.size()==1){
+            return;
+        }
+        for (int i = 0; i < this.rooms.size() - 1; i++) {
+            this.bridges.add(new Bridge(this.rooms.get(i), this.rooms.get(i+1)));
+        }
+    }
+
     /**
      * Génère les sols.
      */
@@ -156,6 +167,11 @@ public class Map {
                 for (int j = (int) r.start.y; j < r.end.y; j++) {
                     this.floors.add(new Floor(i*Floor.TEXTURE_WIDTH, j*Floor.TEXTURE_HEIGHT));
                 }
+            }
+        }
+        for (Bridge b : this.bridges){
+            for (Point p : b.points){
+                this.floors.add(new Floor(p.x*Floor.TEXTURE_WIDTH-(Floor.TEXTURE_WIDTH/2), p.y*Floor.TEXTURE_HEIGHT-(Floor.TEXTURE_HEIGHT/2)));
             }
         }
     }
