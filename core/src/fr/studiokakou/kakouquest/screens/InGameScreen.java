@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
@@ -92,11 +93,13 @@ public class InGameScreen implements Screen {
         this.hudBatch = game.hudBatch;
 
 
-        this.currentLevel = 1;
+        this.currentLevel = 10;
+
+        Monster.createPossibleMonsters(currentLevel);
 
         //map init
-        this.map_height = 100;
-        this.map_width = 100;
+        this.map_height = 150;
+        this.map_width = 150;
         this.map = new Map(this.map_width, this.map_height);
 
         //player init

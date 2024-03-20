@@ -2,7 +2,6 @@ package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
@@ -21,9 +20,8 @@ public class Map {
     /**
      * la liste des tests
      */
-    public static ArrayList<Test> tests = new ArrayList<>();
-    public static ArrayList<Monster> monsters = new ArrayList<>();
 
+    public static ArrayList<Monster> monsters = new ArrayList<>();
     /**
      * La hauteur de la map.
      */
@@ -43,19 +41,19 @@ public class Map {
      * la hauteur minimale d'une salle.
      */
 //room settings
-    public static int ROOM_MIN_HEIGHT=5;
+    public static int ROOM_MIN_HEIGHT=7;
     /**
      * la largeur minimale d'une salle.
      */
-    public static int ROOM_MIN_WIDTH=5;
+    public static int ROOM_MIN_WIDTH=7;
     /**
      * la hauteur maximale d'une salle.
      */
-    public static int ROOM_MAX_HEIGHT=19;
+    public static int ROOM_MAX_HEIGHT=21;
     /**
      * la largeur maximale d'une salle.
      */
-    public static int ROOM_MAX_WIDTH=19;
+    public static int ROOM_MAX_WIDTH=21;
 
     /**
      * Constructeur de Map.
@@ -67,9 +65,6 @@ public class Map {
     public Map(int width, int height){
         this.map_height = height;
         this.map_width = width;
-
-        Map.tests.add(new Test(120, 120, "test1"));
-        Map.tests.add(new Test(140, 140, "test2"));
 
         this.initMap();
     }
@@ -85,20 +80,6 @@ public class Map {
     public void initMap(){
         generateRooms();
         this.genFloors();
-    }
-
-
-    /**
-     * permet de mettre à jour les tests.
-     * Elle permet de mettre à jour les animations de coups.
-     * Elle permet aussi de mettre à jour les joueurs touchés.
-     *
-     * @param player the player
-     */
-    public static void clearAttackedPlayers(Player player){
-        for (Test t : tests){
-            t.player_hitted.remove(player.name);
-        }
     }
 
     /**
@@ -120,10 +101,6 @@ public class Map {
     public void drawMap(SpriteBatch batch){
         for (Floor f : this.floors){
             batch.draw(f.texture, f.pos.x, f.pos.y);
-        }
-
-        for (Test t : Map.tests) {
-            t.sprite.draw(batch);
         }
     }
 
@@ -193,9 +170,26 @@ public class Map {
 
     public void spawnMonsters(int currentLevel){
         Map.monsters.clear();
+        ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        for (Room r : rooms){
-            Map.monsters.add(Monster.BIG_DEMON(currentLevel, r.getCenterOutOfMap()));
+        for (int i = 1; i <= currentLevel; i++) {
+            for (int j = 0; j <= currentLevel-i; j++) {
+                randomRarity.add(i);
+            }
+        }
+
+        System.out.println(randomRarity);
+
+        for (Room r : this.rooms){
+            int rarity = randomRarity.get(Utils.randint(0, randomRarity.size()-1));
+            ArrayList<Monster> toAddPossible = Monster.possibleMonsters.get(rarity);
+            while (toAddPossible.size()<1){
+                rarity = randomRarity.get(Utils.randint(0, randomRarity.size()-1));
+                toAddPossible = Monster.possibleMonsters.get(rarity);
+            }
+            Monster toAdd = toAddPossible.get(Utils.randint(0, toAddPossible.size()-1));
+            toAdd.place(r.getCenterOutOfMap());
+            Map.monsters.add(toAdd);
         }
     }
 

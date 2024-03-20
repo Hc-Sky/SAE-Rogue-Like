@@ -3,12 +3,10 @@ package fr.studiokakou.kakouquest.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
@@ -395,7 +393,6 @@ public class Player {
         }else if (this.attackTimer==null){
             this.isAttacking = false;
             this.attackTimer = LocalDateTime.now();
-            Map.clearAttackedPlayers(this);
         } else if (this.attackTimer.plusNanos((long) (Player.ATTACK_PAUSE*1000000)).isBefore(LocalDateTime.now())) {
             this.canAttack=true;
             this.attackTimer=null;
