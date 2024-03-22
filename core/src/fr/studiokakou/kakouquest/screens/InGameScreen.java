@@ -114,6 +114,8 @@ public class InGameScreen implements Screen {
     public void nextLevel(){
         InGameScreen.stateTime=0f;
         System.out.println("next level");
+        this.currentLevel+=1;
+
         this.map = new Map(this.map_width, this.map_height);
         this.player.hasPlayerSpawn=false;
         this.player.setPos(map.getPlayerSpawn());
