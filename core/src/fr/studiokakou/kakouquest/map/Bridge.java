@@ -66,6 +66,9 @@ public class Bridge {
     }
 
     public boolean isTurn(int pointIndex){
+        if (pointIndex==0 || pointIndex==this.points.size()-1){
+            return false;
+        }
         if (this.points.get(pointIndex).x == this.points.get(pointIndex+1).x && this.points.get(pointIndex).y == this.points.get(pointIndex-1).y){
             return true;
         }
@@ -90,7 +93,7 @@ public class Bridge {
                         result.add(new Wall(this.points.get(i).add(1, 0), "assets/map/wall_outer_mid_right.png"));
                         result.add(new Wall(this.points.get(i).add(-1, 0), "assets/map/wall_outer_mid_left.png"));
                     }
-                } else {
+                } if (i!=this.points.size()-1){
                     if (this.points.get(i).y == this.points.get(i+1).y){
                         result.add(new Wall(this.points.get(i).add(0, 1), "assets/map/wall_mid.png"));
                         result.add(new Wall(this.points.get(i).add(0, 2), "assets/map/wall_top_mid.png"));

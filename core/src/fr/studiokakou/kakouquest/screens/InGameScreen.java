@@ -26,7 +26,7 @@ public class InGameScreen implements Screen {
      * le temps entre chaque frame.
      */
 //defaults
-    public static float FRAME_DURATION=5f;
+    public static float FRAME_DURATION=6f;
 
     /**
      * le jeu.

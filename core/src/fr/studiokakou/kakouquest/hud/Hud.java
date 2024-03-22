@@ -78,12 +78,16 @@ public class Hud {
      */
     public void draw(SpriteBatch batch){
         int healthAmount = getHealthAmount();
-        if (healthAmount>=0){
-            batch.draw(this.healthBar.get(healthAmount), 100, Gdx.graphics.getHeight()-100, this.healthBar.get(0).getWidth()*this.hudSize, this.healthBar.get(0).getHeight()*this.hudSize);
-        }
-        batch.draw(this.healthBarOutside, 100, Gdx.graphics.getHeight()-100, this.healthBarOutside.getWidth()*this.hudSize, this.healthBarOutside.getHeight()*this.hudSize);
 
-        batch.draw(this.staminaBar.get(getStaminaAmount()), 78, Gdx.graphics.getHeight()-100-this.staminaBar.get(0).getHeight()*this.hudSize/2, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
+        Point healthBarPos = new Point(100, Gdx.graphics.getHeight()-100);
+        Point staminaBarPos = new Point(78, Gdx.graphics.getHeight()-120);
+
+        if (healthAmount>=0){
+            batch.draw(this.healthBar.get(healthAmount), healthBarPos.x, healthBarPos.y, this.healthBar.get(0).getWidth()*this.hudSize, this.healthBar.get(0).getHeight()*this.hudSize);
+        }
+        batch.draw(this.healthBarOutside, healthBarPos.x, healthBarPos.y, this.healthBarOutside.getWidth()*this.hudSize, this.healthBarOutside.getHeight()*this.hudSize);
+
+        batch.draw(this.staminaBar.get(getStaminaAmount()), staminaBarPos.x, staminaBarPos.y, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
     }
 
     private int getStaminaAmount() {

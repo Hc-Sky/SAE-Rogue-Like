@@ -256,7 +256,7 @@ public class Player {
         this.max_hp=100;
         this.hp=100;
         this.strength=10;
-        this.speed=100f;
+        this.speed=40f;
         this.max_stamina=100;
         this.stamina = 100;
 
