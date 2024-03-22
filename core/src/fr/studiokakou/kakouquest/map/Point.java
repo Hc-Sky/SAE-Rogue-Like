@@ -148,4 +148,8 @@ public class Point {
     public Point mult(float n){
         return new Point(this.x*n, this.y*n);
     }
+
+    public boolean equals(Point p){
+        return (this.x==p.x && this.y==p.y);
+    }
 }

@@ -256,7 +256,7 @@ public class Player {
         this.max_hp=100;
         this.hp=100;
         this.strength=10;
-        this.speed=40f;
+        this.speed=100f;
         this.max_stamina=100;
         this.stamina = 100;
 
@@ -518,7 +518,6 @@ public class Player {
 
     public void takeDamage(int damage, Point impactPoint){
         this.hp -= damage;
-        System.out.println(this.hp);
         this.bloodStateTime=0f;
     }
 }

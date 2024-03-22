@@ -205,5 +205,6 @@ public class InGameScreen implements Screen {
     @Override
     public void dispose() {
         this.game.dispose();
+        this.map.dispose();
     }
 }

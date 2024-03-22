@@ -38,7 +38,7 @@ public class Map {
 //map gen var
     ArrayList<Room> rooms =  new ArrayList<>();
     ArrayList<Bridge> bridges = new ArrayList<>();
-
+    ArrayList<Wall> walls = new ArrayList<>();
     /**
      * la hauteur minimale d'une salle.
      */
@@ -81,8 +81,16 @@ public class Map {
      */
     public void initMap(){
         generateRooms();
+
+        this.sortRooms();
+
         generateBriges();
+
         this.genFloors();
+
+        this.genWalls();
+
+        this.getRealSize();
     }
 
     /**
@@ -96,6 +104,24 @@ public class Map {
         }
     }
 
+    public void getRealSize(){
+        for (Floor f : this.floors){
+            f.pos = f.pos.mult(Floor.TEXTURE_WIDTH);
+        }
+    }
+
+    public void genWalls(){
+        for (Floor f : this.floors){
+            ArrayList<Wall> surroundWalls = f.getSurrounding(this.floors);
+            this.walls.addAll(surroundWalls);
+        }
+
+        for (Bridge b : this.bridges){
+            ArrayList<Wall> toAddWalls = b.genBridgeWall();
+            this.walls.addAll(toAddWalls);
+        }
+    }
+
     /**
      * Dessine la map.
      *
@@ -104,6 +130,10 @@ public class Map {
     public void drawMap(SpriteBatch batch){
         for (Floor f : this.floors){
             batch.draw(f.texture, f.pos.x, f.pos.y);
+        }
+
+        for (Wall w : this.walls){
+            w.draw(batch);
         }
     }
 
@@ -137,13 +167,7 @@ public class Map {
             int endX = startX+Utils.randint(Map.ROOM_MIN_WIDTH,Map.ROOM_MAX_WIDTH);
             int endY = startY+Utils.randint(Map.ROOM_MIN_HEIGHT,Map.ROOM_MAX_HEIGHT);
             Room r = new Room(startX, startY, endX, endY, false);
-            boolean canAdd = true;
-            for (Room room : this.rooms){
-                if (r.collideRoom(room)){
-                    canAdd = false;
-                }
-            }
-            if (canAdd){
+            if (! r.isColliding(this.rooms)){
                 this.rooms.add(r);
             }
         }
@@ -165,13 +189,13 @@ public class Map {
         for (Room r : this.rooms){
             for (int i = (int) r.start.x ; i < r.end.x ; i++) {
                 for (int j = (int) r.start.y; j < r.end.y; j++) {
-                    this.floors.add(new Floor(i*Floor.TEXTURE_WIDTH, j*Floor.TEXTURE_HEIGHT));
+                    this.floors.add(new Floor(i, j));
                 }
             }
         }
         for (Bridge b : this.bridges){
             for (Point p : b.points){
-                this.floors.add(new Floor(p.x*Floor.TEXTURE_WIDTH-(Floor.TEXTURE_WIDTH/2), p.y*Floor.TEXTURE_HEIGHT-(Floor.TEXTURE_HEIGHT/2)));
+                this.floors.add(new Floor(p.x, p.y));
             }
         }
     }
@@ -224,7 +248,26 @@ public class Map {
         }
     }
 
-    public static void removeMonster(Monster monster){
-        Map.monsters.remove(monster);
+    public void sortRooms(){
+        ArrayList<Room> sortedRooms = new ArrayList<>();
+        sortedRooms.add(this.rooms.get(0));
+        this.rooms.remove(0);
+
+        while (this.rooms.size()>1){
+            Room toAdd = sortedRooms.get(sortedRooms.size()-1).getNearestRoom(this.rooms);
+            sortedRooms.add(toAdd);
+            this.rooms.remove(toAdd);
+        }
+
+        sortedRooms.add(this.rooms.get(0));
+        this.rooms.clear();
+
+        this.rooms = sortedRooms;
+    }
+
+    public void dispose(){
+        for (Floor f : this.floors){
+            f.texture.dispose();
+        }
     }
 }
