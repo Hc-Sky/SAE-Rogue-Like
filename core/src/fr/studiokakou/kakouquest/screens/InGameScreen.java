@@ -127,6 +127,7 @@ public class InGameScreen implements Screen {
         startTime = TimeUtils.millis();
 
         this.map.spawnMonsters(currentLevel);
+        this.map.genInteractive(currentLevel);
     }
 
     @Override
@@ -154,6 +155,7 @@ public class InGameScreen implements Screen {
 
         //update monsters pos
         this.map.moveMonsters(this.player);
+        this.map.updateInteractive(this.player);
 
         batch.setProjectionMatrix(Camera.camera.combined);
 
@@ -161,6 +163,7 @@ public class InGameScreen implements Screen {
 
         //map draw
         this.map.drawMap(this.batch);
+        this.map.drawInteractive(this.batch);
         this.map.drawMonsters(batch);
         this.map.updateHitsAnimation(this.batch);
 

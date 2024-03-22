@@ -2,6 +2,7 @@ package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Map {
      */
 
     public static ArrayList<Monster> monsters = new ArrayList<>();
+    ArrayList<Chest> chests = new ArrayList<>();
     /**
      * La hauteur de la map.
      */
@@ -140,6 +142,12 @@ public class Map {
     public void drawMonsters(SpriteBatch batch){
         for (Monster m : Map.monsters){
             m.draw(batch);
+        }
+    }
+
+    public void drawInteractive(SpriteBatch batch){
+        for (Chest chest : this.chests){
+            chest.draw(batch);
         }
     }
 
@@ -263,6 +271,19 @@ public class Map {
         this.rooms.clear();
 
         this.rooms = sortedRooms;
+    }
+
+    public void genInteractive(int currentLevel){
+        this.chests.clear();
+        for (Room r : rooms.subList(1, rooms.size())){
+            this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+        }
+    }
+
+    public void updateInteractive(Player player){
+        for (Chest chest : this.chests){
+            chest.refreshInteract(player);
+        }
     }
 
     public void dispose(){
