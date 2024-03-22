@@ -22,192 +22,224 @@ import fr.studiokakou.kakouquest.player.Player;
  */
 public class InGameScreen implements Screen {
 
-    /**
-     * le temps entre chaque frame.
-     */
+	/**
+	 * le temps entre chaque frame.
+	 */
 //defaults
-    public static float FRAME_DURATION=6f;
+	public static float FRAME_DURATION = 6f;
 
-    /**
-     * le jeu.
-     */
+	/**
+	 * le jeu.
+	 */
 //screen info
-    GameSpace game;
-    /**
-     * le batch.
-     */
-    SpriteBatch batch;
-    /**
-     * le batch de l'HUD.
-     */
-    SpriteBatch hudBatch;
+	GameSpace game;
+	/**
+	 * le batch.
+	 */
+	SpriteBatch batch;
+	/**
+	 * le batch de l'HUD.
+	 */
+	SpriteBatch hudBatch;
 
-    public static float stateTime=0f;
+	public static float stateTime = 0f;
 
-    /**
-     * le joueur.
-     */
+	/**
+	 * le joueur.
+	 */
 //player
-    Player player;
-    /**
-     * la caméra.
-     */
-    Camera cam;
+	Player player;
+	/**
+	 * la caméra.
+	 */
+	Camera cam;
 
-    /**
-     * l'HUD.
-     */
+	/**
+	 * l'HUD.
+	 */
 //hud
-    Hud hud;
+	Hud hud;
 
-    /**
-     * le niveau actuel.
-     */
+	/**
+	 * le niveau actuel.
+	 */
 //map info
-    int currentLevel;
-    /**
-     * la map.
-     */
-    Map map;
-    /**
-     * la hauteur de la map.
-     */
-    public int map_height;
-    /**
-     * la largeur de la map.
-     */
-    public int map_width;
+	public static int currentLevel;
+	/**
+	 * la map.
+	 */
+	Map map;
+	/**
+	 * la hauteur de la map.
+	 */
+	public static int map_height;
+	/**
+	 * la largeur de la map.
+	 */
+	public static int map_width;
 
-    /**
-     * le temps de départ.
-     */
-    long startTime;
-
-
-    /**
-     * Constructeur de InGameScreen.
-     *
-     * @param game the game
-     */
-    public InGameScreen(GameSpace game){
-        this.game=game;
-        this.batch = game.batch;
-        this.hudBatch = game.hudBatch;
+	/**
+	 * le temps de départ.
+	 */
+	long startTime;
 
 
-        this.currentLevel = 3;
+	/**
+	 * Constructeur de InGameScreen.
+	 *
+	 * @param game the game
+	 */
+	public InGameScreen(GameSpace game) {
+		this.game = game;
+		this.batch = game.batch;
+		this.hudBatch = game.hudBatch;
+
+
+		this.currentLevel = 3;
+
+		Monster.createPossibleMonsters(currentLevel);
+
+		//map init
+		this.map_height = 150;
+		this.map_width = 150;
+		this.map = new Map(this.map_width, this.map_height);
+
+		//player init
+		this.player = new Player(map.getPlayerSpawn(), "player");
+		this.cam = new Camera(this.player);
+	}
+
+	//Créer fonction nextLevel qui s’occupe de générer une nouvelle map, de faire Spawn le Joueur sur la nouvelle map au milleu de la première Room et de faire spawn les monstres
+    /**
+     * Passe au niveau suivant.
+     */
+    public static void nextLevel() {
+        InGameScreen.stateTime = 0f;
 
         Monster.createPossibleMonsters(currentLevel);
 
-        //map init
-        this.map_height = 150;
-        this.map_width = 150;
-        this.map = new Map(this.map_width, this.map_height);
+		// Créer une instance de Map
+		Map map = new Map(map_width, map_height);
 
-        //player init
-        this.player = new Player(map.getPlayerSpawn(),"player");
-        this.cam = new Camera(this.player);
+		// Appeler les méthodes sur l'instance de Map
+		map.generateRooms();
+		map.sortRooms();
+		map.generateBridges();
+		map.genFloors();
+		map.genWalls();
+		map.getRealSize();
+
+		// Créer une instance de Player
+		Player player = new Player(map.getPlayerSpawn(), "player");
+
+		// Appeler les méthodes sur l'instance de Player
+		player.spawnPlayer();
+
+		// Appeler les méthodes sur l'instance de Map
+		map.spawnMonsters(currentLevel);
+		map.genInteractive(currentLevel);
+
     }
 
-    /**
-     * Affiche l'écran de jeu.
-     */
-    @Override
-    public void show() {
 
-        InGameScreen.stateTime=0f;
+	/**
+	 * Affiche l'écran de jeu.
+	 */
+	@Override
+	public void show() {
 
-        //set cursor
-        Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
-        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
-        pm.dispose();
+		InGameScreen.stateTime = 0f;
 
-        this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
+		//set cursor
+		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
+		pm.dispose();
 
-        startTime = TimeUtils.millis();
+		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
 
-        this.map.spawnMonsters(currentLevel);
-        this.map.genInteractive(currentLevel);
-    }
+		startTime = TimeUtils.millis();
 
-    @Override
-    public void render(float delta) {
-        InGameScreen.stateTime = InGameScreen.stateTime + delta;
+		this.map.spawnMonsters(currentLevel);
+		this.map.genInteractive(currentLevel);
+	}
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-            Gdx.app.exit();
-        }
+	@Override
+	public void render(float delta) {
+		InGameScreen.stateTime = InGameScreen.stateTime + delta;
 
-        Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			Gdx.app.exit();
+		}
 
-        if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
-            player.spawnPlayer();
-        }
+		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (player.hasPlayerSpawn && !player.isPlayerSpawning){
-            player.getKeyboardMove();
-            player.getOrientation();
-            player.dash();
-        }
+		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
+			player.spawnPlayer();
+		}
 
-        cam.update();
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning) {
+			player.getKeyboardMove();
+			player.getOrientation();
+			player.dash();
+		}
 
-        //update monsters pos
-        this.map.moveMonsters(this.player);
-        this.map.updateInteractive(this.player);
+		cam.update();
 
-        batch.setProjectionMatrix(Camera.camera.combined);
+		//update monsters pos
+		this.map.moveMonsters(this.player);
+		this.map.updateInteractive(this.player);
 
-        batch.begin();
+		batch.setProjectionMatrix(Camera.camera.combined);
 
-        //map draw
-        this.map.drawMap(this.batch);
-        this.map.drawInteractive(this.batch);
-        this.map.drawMonsters(batch);
-        this.map.updateHitsAnimation(this.batch);
+		batch.begin();
 
-        player.regainStamina();
-        player.draw(this.batch);
+		//map draw
+		this.map.drawMap(this.batch);
+		this.map.drawInteractive(this.batch);
+		this.map.drawMonsters(batch);
+		this.map.updateHitsAnimation(this.batch);
 
-        batch.end();
+		player.regainStamina();
+		player.draw(this.batch);
 
-        this.map.checkDeadMonster();
+		batch.end();
+
+		this.map.checkDeadMonster();
 
 
-        hudBatch.begin();
-        this.hud.draw(hudBatch);
-        hudBatch.end();
-    }
+		hudBatch.begin();
+		this.hud.draw(hudBatch);
+		hudBatch.end();
+	}
 
-    /**
-     * Resize l'écran de jeu.
-     * Permet de redimensionner l'écran de jeu.
-     *
-     */
-    @Override
-    public void resize(int width, int height) {
-        this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width,height);
-    }
+	/**
+	 * Resize l'écran de jeu.
+	 * Permet de redimensionner l'écran de jeu.
+	 */
+	@Override
+	public void resize(int width, int height) {
+		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+	}
 
-    @Override
-    public void pause() {
-        // TODO
-    }
+	@Override
+	public void pause() {
+		// TODO
+	}
 
-    @Override
-    public void resume() {
-        // TODO
-    }
+	@Override
+	public void resume() {
+		// TODO
+	}
 
-    @Override
-    public void hide() {
-        // TODO
-    }
+	@Override
+	public void hide() {
+		// TODO
+	}
 
-    @Override
-    public void dispose() {
-        this.game.dispose();
-        this.map.dispose();
-    }
+	@Override
+	public void dispose() {
+		this.game.dispose();
+		this.map.dispose();
+	}
 }

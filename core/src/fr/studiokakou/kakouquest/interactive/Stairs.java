@@ -59,10 +59,10 @@ public class Stairs {
 		}
 	}
 
-	public void render(SpriteBatch batch){
-		batch.draw(this.stairs, this.pos.x*Floor.TILE_SIZE, this.pos.y*Floor.TILE_SIZE);
-		if (this.canInteract){
-			batch.draw(this.interactKeyAnimation.getKeyFrame(0), this.pos.x*Floor.TILE_SIZE, this.pos.y*Floor.TILE_SIZE+Floor.TILE_SIZE);
+	public void draw(SpriteBatch batch){
+		if (canInteract){
+			TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
+			batch.draw(currentKeyFrame, this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
 		}
 	}
 }
