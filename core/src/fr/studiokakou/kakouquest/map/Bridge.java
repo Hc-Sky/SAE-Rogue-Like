@@ -65,6 +65,19 @@ public class Bridge {
         return false;
     }
 
+    public boolean isPointsInBridges(Point point, ArrayList<Bridge> bridges){
+        for (Bridge b : bridges){
+            if (!b.equals(this)){
+                for (Point p : b.points){
+                    if (p.equals(point)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isTurn(int pointIndex){
         if (pointIndex==0 || pointIndex==this.points.size()-1){
             return false;
@@ -75,14 +88,14 @@ public class Bridge {
         return false;
     }
 
-    public ArrayList<Wall> genBridgeWall(ArrayList<Room> rooms){
+    public ArrayList<Wall> genBridgeWall(ArrayList<Room> rooms, ArrayList<Bridge> bridges){
         ArrayList<Wall> result = new ArrayList<>();
 
         for (int i = 0; i < this.points.size()-1; i++) {
 //            if (i!=0 && i!=this.points.size()-1 && this.points.get(i-1).y != this.points.get(i).y && this.points.get(i+1).x != this.points.get(i).x){
 //
 //            }
-            if (! isPointInRoomsTouching(this.points.get(i), rooms) && !isTurn(i)){
+            if (! isPointInRoomsTouching(this.points.get(i), rooms) && !isTurn(i) && !isPointsInBridges(this.points.get(i), bridges)){
                 if (i==this.points.size()-1){
                     if (this.points.get(i).y == this.points.get(i-1).y){
                         result.add(new Wall(this.points.get(i).add(0, 1), "assets/map/wall_mid.png"));
