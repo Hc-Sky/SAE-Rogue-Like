@@ -316,7 +316,7 @@ public class Map {
         this.stairs.refreshInteract(player, this.stairs.equals(closestObject));
 
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            weapon.refreshInteract(player, weapon.equals(closestObject));
+            weapon.refreshInteract(player, true);
         }
     }
 
