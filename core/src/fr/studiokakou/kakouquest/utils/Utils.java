@@ -173,6 +173,13 @@ public class Utils {
         batch.draw(new Texture("assets/mark.png"), position.x, position.y);
     }
 
+    public static void bigMarkPoint(Point position, SpriteBatch batch){
+        batch.draw(new Texture("assets/mark.png"), position.x, position.y);
+        batch.draw(new Texture("assets/mark.png"), position.x+1, position.y);
+        batch.draw(new Texture("assets/mark.png"), position.x, position.y+1);
+        batch.draw(new Texture("assets/mark.png"), position.x+1, position.y+1);
+    }
+
     /**
      * La position de la souris.
      *

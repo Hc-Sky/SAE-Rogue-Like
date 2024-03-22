@@ -1,5 +1,9 @@
 package fr.studiokakou.kakouquest.map;
 
+import fr.studiokakou.kakouquest.utils.Utils;
+
+import java.util.ArrayList;
+
 /**
  * le type Room.
  * Cette classe est utilisée pour créer un objet Room.
@@ -42,18 +46,89 @@ public class Room {
     /**
      * colision avec une salle.
 	 * Sert à vérifier si une salle est en collision avec une autre salle.
-     *
-     * @param r the r
      * @return the boolean
      */
-    public boolean collideRoom(Room r){
-		if (isWithinBounds(this.start, r.start, r.end) || isWithinBounds(this.end, r.start, r.end)){
+	public boolean isColliding(ArrayList<Room> rooms){
+		for (Room r : rooms){
+			if (this.collideRoom(r)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean collideRoom(Room r){
+		Point bottomLeft = this.start;
+		Point topLeft = new Point(this.start.x, this.end.y);
+		Point topRight = this.end;
+		Point bottomRight = new Point(this.end.x, this.start.y);
+
+		if (Room.isPointInRoom(bottomLeft, r)){
 			return true;
 		}
-		if (isWithinBounds(new Point(this.start.x, this.end.y), r.start, r.end)){
+		if (Room.isPointInRoom(topLeft, r)){
 			return true;
 		}
-		return isWithinBounds(new Point(this.end.x, this.start.y), r.start, r.end);
+		if (Room.isPointInRoom(topRight, r)){
+			return true;
+		}
+		if (Room.isPointInRoom(bottomRight, r)){
+			return true;
+		}
+
+		if (isLineInRoom(topLeft, bottomLeft, r)){
+			return true;
+		}
+
+		if (isLineInRoom(topRight, bottomRight, r)){
+			return true;
+		}
+
+		if (isLineInRoom(topLeft, topRight, r)){
+			return true;
+		}
+
+		if (isLineInRoom(bottomLeft, bottomRight, r)){
+			return true;
+		}
+
+		return false;
+
+
+	}
+
+	public static boolean isLineInRoom(Point p1, Point p2, Room r){
+		if (p1.x>=r.start.x && p1.x <= r.end.x){
+			if (p1.y<=r.start.y && p2.y>=r.end.y){
+				return true;
+			}
+		}
+
+		if (p1.y>=r.start.y && p1.y <= r.end.y){
+			if (p1.x<=r.start.x && p2.x>=r.end.x){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean isPointInRoom(Point p, Room r){
+		if (p.x>r.start.x && p.x<r.end.x){
+			if (p.y>r.start.y && p.y<r.end.y){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isPointInRoomTouching(Point p, Room r){
+		if (p.x>=r.start.x && p.x<r.end.x){
+			if (p.y>=r.start.y && p.y<=r.end.y){
+				return true;
+			}
+		}
+		return false;
 	}
 
     /**
@@ -74,7 +149,17 @@ public class Room {
 		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2).mult(Floor.TEXTURE_WIDTH);
 	}
 
-	private boolean isWithinBounds(Point point, Point start, Point end) {
-		return point.x >= start.x && point.x <= end.x && point.y >= start.y && point.y <= end.y;
+	public Room getNearestRoom(ArrayList<Room> rooms){
+		Room nearestRoom = rooms.get(0);
+		float nearestDistance = Utils.getDistance(this.getCenter(), nearestRoom.getCenter());
+
+		for (Room r : rooms.subList(1, rooms.size())){
+			if (Utils.getDistance(this.getCenter(), r.getCenter()) < nearestDistance){
+				nearestDistance = Utils.getDistance(this.getCenter(), r.getCenter());
+				nearestRoom = r;
+			}
+		}
+
+		return nearestRoom;
 	}
 }

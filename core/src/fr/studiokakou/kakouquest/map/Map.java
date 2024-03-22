@@ -2,10 +2,10 @@ package fr.studiokakou.kakouquest.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * le type Map.
@@ -21,9 +21,8 @@ public class Map {
     /**
      * la liste des tests
      */
-    public static ArrayList<Test> tests = new ArrayList<>();
-    public static ArrayList<Monster> monsters = new ArrayList<>();
 
+    public static ArrayList<Monster> monsters = new ArrayList<>();
     /**
      * La hauteur de la map.
      */
@@ -38,24 +37,25 @@ public class Map {
      */
 //map gen var
     ArrayList<Room> rooms =  new ArrayList<>();
-
+    ArrayList<Bridge> bridges = new ArrayList<>();
+    ArrayList<Wall> walls = new ArrayList<>();
     /**
      * la hauteur minimale d'une salle.
      */
 //room settings
-    public static int ROOM_MIN_HEIGHT=5;
+    public static int ROOM_MIN_HEIGHT=7;
     /**
      * la largeur minimale d'une salle.
      */
-    public static int ROOM_MIN_WIDTH=5;
+    public static int ROOM_MIN_WIDTH=7;
     /**
      * la hauteur maximale d'une salle.
      */
-    public static int ROOM_MAX_HEIGHT=19;
+    public static int ROOM_MAX_HEIGHT=21;
     /**
      * la largeur maximale d'une salle.
      */
-    public static int ROOM_MAX_WIDTH=19;
+    public static int ROOM_MAX_WIDTH=21;
 
     /**
      * Constructeur de Map.
@@ -67,9 +67,6 @@ public class Map {
     public Map(int width, int height){
         this.map_height = height;
         this.map_width = width;
-
-        Map.tests.add(new Test(120, 120, "test1"));
-        Map.tests.add(new Test(140, 140, "test2"));
 
         this.initMap();
     }
@@ -84,21 +81,16 @@ public class Map {
      */
     public void initMap(){
         generateRooms();
+
+        this.sortRooms();
+
+        generateBriges();
+
         this.genFloors();
-    }
 
+        this.genWalls();
 
-    /**
-     * permet de mettre à jour les tests.
-     * Elle permet de mettre à jour les animations de coups.
-     * Elle permet aussi de mettre à jour les joueurs touchés.
-     *
-     * @param player the player
-     */
-    public static void clearAttackedPlayers(Player player){
-        for (Test t : tests){
-            t.player_hitted.remove(player.name);
-        }
+        this.getRealSize();
     }
 
     /**
@@ -112,6 +104,24 @@ public class Map {
         }
     }
 
+    public void getRealSize(){
+        for (Floor f : this.floors){
+            f.pos = f.pos.mult(Floor.TEXTURE_WIDTH);
+        }
+    }
+
+    public void genWalls(){
+        for (Floor f : this.floors){
+            ArrayList<Wall> surroundWalls = f.getSurrounding(this.floors);
+            this.walls.addAll(surroundWalls);
+        }
+
+        for (Bridge b : this.bridges){
+            ArrayList<Wall> toAddWalls = b.genBridgeWall(this.rooms, this.bridges);
+            this.walls.addAll(toAddWalls);
+        }
+    }
+
     /**
      * Dessine la map.
      *
@@ -122,8 +132,8 @@ public class Map {
             batch.draw(f.texture, f.pos.x, f.pos.y);
         }
 
-        for (Test t : Map.tests) {
-            t.sprite.draw(batch);
+        for (Wall w : this.walls){
+            w.draw(batch);
         }
     }
 
@@ -157,15 +167,18 @@ public class Map {
             int endX = startX+Utils.randint(Map.ROOM_MIN_WIDTH,Map.ROOM_MAX_WIDTH);
             int endY = startY+Utils.randint(Map.ROOM_MIN_HEIGHT,Map.ROOM_MAX_HEIGHT);
             Room r = new Room(startX, startY, endX, endY, false);
-            boolean canAdd = true;
-            for (Room room : this.rooms){
-                if (r.collideRoom(room)){
-                    canAdd = false;
-                }
-            }
-            if (canAdd){
+            if (! r.isColliding(this.rooms)){
                 this.rooms.add(r);
             }
+        }
+    }
+
+    public void generateBriges(){
+        if (this.rooms.size()==1){
+            return;
+        }
+        for (int i = 0; i < this.rooms.size() - 1; i++) {
+            this.bridges.add(new Bridge(this.rooms.get(i), this.rooms.get(i+1), this.rooms));
         }
     }
 
@@ -176,8 +189,13 @@ public class Map {
         for (Room r : this.rooms){
             for (int i = (int) r.start.x ; i < r.end.x ; i++) {
                 for (int j = (int) r.start.y; j < r.end.y; j++) {
-                    this.floors.add(new Floor(i*Floor.TEXTURE_WIDTH, j*Floor.TEXTURE_HEIGHT));
+                    this.floors.add(new Floor(i, j));
                 }
+            }
+        }
+        for (Bridge b : this.bridges){
+            for (Point p : b.points){
+                this.floors.add(new Floor(p.x, p.y));
             }
         }
     }
@@ -193,9 +211,34 @@ public class Map {
 
     public void spawnMonsters(int currentLevel){
         Map.monsters.clear();
+        ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        for (Room r : rooms){
-            Map.monsters.add(Monster.BIG_DEMON(currentLevel, r.getCenterOutOfMap()));
+        float tmp_current_level = (float) currentLevel /3;
+        if (tmp_current_level<1){
+            tmp_current_level=1;
+        }
+
+        for (int i = 1; i <= tmp_current_level; i++) {
+            for (int j = 0; j <= tmp_current_level-i; j++) {
+                randomRarity.add(i);
+            }
+        }
+
+        for (Room r : this.rooms.subList(1, this.rooms.size())){
+            for (int i = (int) r.start.x; i < r.end.x; i++) {
+                if (Utils.randint(0, 7)==0){
+                    int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
+                    ArrayList<Monster> mList = Monster.possibleMonsters.get(rarity);
+                    while (mList.isEmpty()){
+                        rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
+                        mList = Monster.possibleMonsters.get(rarity);
+                    }
+                    Monster m = mList.get(Utils.randint(0, mList.size()-1));
+                    m.place(new Point(i*Floor.TEXTURE_WIDTH, Utils.randint((int) r.start.y, (int) r.end.y)*Floor.TEXTURE_HEIGHT));
+                    Map.monsters.add(m);
+                    Monster.createPossibleMonsters(currentLevel);
+                }
+            }
         }
     }
 
@@ -205,7 +248,26 @@ public class Map {
         }
     }
 
-    public static void removeMonster(Monster monster){
-        Map.monsters.remove(monster);
+    public void sortRooms(){
+        ArrayList<Room> sortedRooms = new ArrayList<>();
+        sortedRooms.add(this.rooms.get(0));
+        this.rooms.remove(0);
+
+        while (this.rooms.size()>1){
+            Room toAdd = sortedRooms.get(sortedRooms.size()-1).getNearestRoom(this.rooms);
+            sortedRooms.add(toAdd);
+            this.rooms.remove(toAdd);
+        }
+
+        sortedRooms.add(this.rooms.get(0));
+        this.rooms.clear();
+
+        this.rooms = sortedRooms;
+    }
+
+    public void dispose(){
+        for (Floor f : this.floors){
+            f.texture.dispose();
+        }
     }
 }

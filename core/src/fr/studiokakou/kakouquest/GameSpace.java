@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
 
 import java.sql.Time;
@@ -47,7 +48,8 @@ public class GameSpace extends Game {
 		hudBatch = new SpriteBatch();
 		startTime = TimeUtils.millis();
 
-		this.setScreen(new SplashScreen(this));
+		//this.setScreen(new SplashScreen(this));
+		this.setScreen(new InGameScreen(this));
 
 	}
 

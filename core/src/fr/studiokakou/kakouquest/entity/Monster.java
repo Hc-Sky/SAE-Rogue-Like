@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 /**
  * The type Monster.
@@ -33,6 +36,7 @@ public class Monster {
     /**
      * The Speed.
      */
+    public int rarity; //chance of spawn at x level
     public float speed;
     /**
      * The Damage.
@@ -69,8 +73,6 @@ public class Monster {
     boolean isFlip=Utils.randint(0, 1)==0;
     public Sprite sprite;
 
-    float stateTime=0f;
-
     public boolean isDying=false;
     public boolean isDead = false;
 
@@ -102,9 +104,12 @@ public class Monster {
      */
     float bloodStateTime=0f;
 
-    public Monster(Point pos, String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel){
+    public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
+
+
+
+    public Monster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel){
         this.name=name;
-        this.pos = pos;
         this.orientation = new Point(0, 0);
         this.speed = speed;
         this.damage = damage;
@@ -118,15 +123,18 @@ public class Monster {
         this.height = idleAnimation.getKeyFrame(0f).getRegionHeight();
         this.width = idleAnimation.getKeyFrame(0f).getRegionWidth();
         this.sprite = new Sprite();
-        this.stateTime=0f;
+        InGameScreen.stateTime=0f;
 
         this.upgradeStats(currentLevel);
     }
 
+    public void place(Point pos){
+        this.pos = pos;
+    }
+
     public void upgradeStats(int currentLevel){
-        this.speed = this.speed * currentLevel/2;
-        this.hp = this.hp * currentLevel/2;
-        this.damage = this.damage * currentLevel /2;
+        this.hp = this.hp +(this.hp * currentLevel/4);
+        this.damage = this.damage + (this.damage * currentLevel /4);
     }
 
     public Point center(){
@@ -149,7 +157,7 @@ public class Monster {
                 this.isRunning = true;
                 this.getOrientation(player);
                 this.orientation = Point.getOrientation(this.pos, playerPos);
-                this.pos = this.pos.add(this.orientation.x*this.speed*Gdx.graphics.getDeltaTime(), this.orientation.y*this.speed*Gdx.graphics.getDeltaTime());
+                this.pos = this.pos.add(this.orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), this.orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
             }else {
                 this.isRunning=false;
             }
@@ -157,7 +165,7 @@ public class Monster {
     }
 
     public void getOrientation(Player player){
-        if (player.center().x<this.center().x){
+        if (player.center().x-1<this.center().x){
             this.isFlip = true;
         }else {
             this.isFlip=false;
@@ -199,9 +207,9 @@ public class Monster {
     public void draw(SpriteBatch batch){
         TextureRegion currentFrame;
         if(isRunning){
-            currentFrame = this.runAnimation.getKeyFrame(this.stateTime, true);
+            currentFrame = this.runAnimation.getKeyFrame(InGameScreen.stateTime, true);
         } else {
-            currentFrame = this.idleAnimation.getKeyFrame(this.stateTime, true);
+            currentFrame = this.idleAnimation.getKeyFrame(InGameScreen.stateTime, true);
         }
 
 
@@ -218,7 +226,7 @@ public class Monster {
 
         this.sprite.draw(batch);
 
-        this.stateTime+= Gdx.graphics.getDeltaTime();
+        InGameScreen.stateTime+= Gdx.graphics.getDeltaTime();
     }
 
     public void updateHitAnimation(SpriteBatch batch){
@@ -226,10 +234,10 @@ public class Monster {
             bloodStateTime+= Gdx.graphics.getDeltaTime();
             TextureRegion currentBloodFrame = this.bloodEffect.getKeyFrame(bloodStateTime, false);
             batch.draw(currentBloodFrame,
-                this.pos.x - (float) currentBloodFrame.getRegionWidth() /4 + (float) this.width/2,
-                this.pos.y - (float) currentBloodFrame.getRegionHeight() /4 + (float) this.height/2,
-                (float) currentBloodFrame.getRegionWidth() /2,
-                (float) currentBloodFrame.getRegionHeight() /2
+                this.center().x - (float) currentBloodFrame.getRegionWidth() /2 + (float) this.width/2,
+                this.center().y - (float) currentBloodFrame.getRegionHeight() /2 + (float) this.height/2,
+                (float) currentBloodFrame.getRegionWidth(),
+                (float) currentBloodFrame.getRegionHeight()
             );
         }
 
@@ -261,16 +269,75 @@ public class Monster {
 
 
 
+    public static void createPossibleMonsters(int currentLevel){
+        possibleMonsters = new Hashtable<>();
+        possibleMonsters.put(1, new ArrayList<>());
+        possibleMonsters.put(2, new ArrayList<>());
+        possibleMonsters.put(3, new ArrayList<>());
+        possibleMonsters.put(4, new ArrayList<>());
+        possibleMonsters.put(5, new ArrayList<>());
+        possibleMonsters.put(6, new ArrayList<>());
+        possibleMonsters.put(7, new ArrayList<>());
+        possibleMonsters.put(8, new ArrayList<>());
+        possibleMonsters.put(9, new ArrayList<>());
+        possibleMonsters.put(10, new ArrayList<>());
+        possibleMonsters.put(11, new ArrayList<>());
+        possibleMonsters.put(12, new ArrayList<>());
 
 
-
-
-
-    //monsters static
-    public static Monster BIG_DEMON(int currentLevel, Point pos){
-        return new Monster(pos, "Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 300, 40, 1000, 40f, 100, currentLevel);
+        possibleMonsters.get(10).add(BIG_DEMON(currentLevel));
+        possibleMonsters.get(12).add(BIG_ZOMBIE(currentLevel));
+        possibleMonsters.get(5).add(CHORT(currentLevel));
+        possibleMonsters.get(1).add(GOBLIN(currentLevel));
+        possibleMonsters.get(3).add(IMP(currentLevel));
+        possibleMonsters.get(2).add(MASKED_ORC(currentLevel));
+        possibleMonsters.get(5).add(MUDDY(currentLevel));
+        possibleMonsters.get(12).add( OGRE(currentLevel));
+        possibleMonsters.get(1).add(ORC_WARRIOR(currentLevel));
+        possibleMonsters.get(2).add(SKELET(currentLevel));
+        possibleMonsters.get(7).add(SWAMPY(currentLevel));
+        possibleMonsters.get(1).add(TINY_ZOMBIE(currentLevel));
+        possibleMonsters.get(4).add(WOGOL(currentLevel));
     }
-    public static Monster BIG_ZOMBIE(int currentLevel, Point pos){
-        return new Monster(pos, "Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 300, 40, 1000, 40f, 100, currentLevel);
+
+    static Monster BIG_DEMON(int currentLevel){
+        return new Monster("Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 400, 25, 1200, 40f, 150, currentLevel);
     }
+    static Monster BIG_ZOMBIE(int currentLevel){
+        return new Monster("Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 450, 35, 1500, 45f, 200, currentLevel);
+    }
+    static Monster CHORT(int currentLevel){
+        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 50, 5, 700, 60f, 80, currentLevel);
+    }
+    static Monster GOBLIN(int currentLevel){
+        return new Monster("Goblin", "assets/entities/goblin_idle.png", "assets/entities/goblin_run.png", 60, 10, 700, 50f, 100, currentLevel);
+    }
+    static Monster IMP(int currentLevel){
+        return new Monster("Imp", "assets/entities/imp_idle.png", "assets/entities/imp_run.png", 35, 15, 600, 60f, 100, currentLevel);
+    }
+    static Monster MASKED_ORC(int currentLevel){
+        return new Monster("Masked Orc", "assets/entities/masked_orc_idle.png", "assets/entities/masked_orc_run.png", 150, 20, 600, 40f, 120, currentLevel);
+    }
+    static Monster MUDDY(int currentLevel){
+        return new Monster("Muddy", "assets/entities/muddy.png", "assets/entities/muddy.png", 250, 40, 600, 15f, 200, currentLevel);
+    }
+    static Monster OGRE(int currentLevel){
+        return new Monster("Ogre", "assets/entities/ogre_idle.png", "assets/entities/ogre_run.png", 500, 25, 2000, 35f, 200, currentLevel);
+    }
+    static Monster ORC_WARRIOR(int currentLevel){
+        return new Monster("Orc Warrior", "assets/entities/orc_warrior_idle.png", "assets/entities/orc_warrior_run.png", 120, 20, 600, 40f, 120, currentLevel);
+    }
+    static Monster SKELET(int currentLevel){
+        return new Monster("Skelet", "assets/entities/skelet_idle.png", "assets/entities/skelet_run.png", 30, 30, 300, 50f, 120, currentLevel);
+    }
+    static Monster SWAMPY(int currentLevel){
+        return new Monster("Swampy", "assets/entities/swampy.png", "assets/entities/swampy.png", 400, 50, 800, 18f, 200, currentLevel);
+    }
+    static Monster TINY_ZOMBIE(int currentLevel){
+        return new Monster("Tiny Zombie", "assets/entities/tiny_zombie_idle.png", "assets/entities/tiny_zombie_run.png", 20, 25, 600, 55f, 100, currentLevel);
+    }
+    static Monster WOGOL(int currentLevel){
+        return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 600, 40f, 150, currentLevel);
+    }
+
 }
