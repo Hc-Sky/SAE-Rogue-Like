@@ -117,7 +117,7 @@ public class Map {
         }
 
         for (Bridge b : this.bridges){
-            ArrayList<Wall> toAddWalls = b.genBridgeWall();
+            ArrayList<Wall> toAddWalls = b.genBridgeWall(this.rooms);
             this.walls.addAll(toAddWalls);
         }
     }
@@ -178,7 +178,7 @@ public class Map {
             return;
         }
         for (int i = 0; i < this.rooms.size() - 1; i++) {
-            this.bridges.add(new Bridge(this.rooms.get(i), this.rooms.get(i+1)));
+            this.bridges.add(new Bridge(this.rooms.get(i), this.rooms.get(i+1), this.rooms));
         }
     }
 

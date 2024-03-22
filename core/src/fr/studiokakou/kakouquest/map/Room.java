@@ -122,6 +122,15 @@ public class Room {
 		return false;
 	}
 
+	public static boolean isPointInRoomTouching(Point p, Room r){
+		if (p.x>=r.start.x && p.x<r.end.x){
+			if (p.y>=r.start.y && p.y<=r.end.y){
+				return true;
+			}
+		}
+		return false;
+	}
+
     /**
      * Permet de connaître le centre d'une salle.
      *
