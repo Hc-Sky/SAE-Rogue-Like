@@ -8,6 +8,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * le type Map.
@@ -234,7 +235,9 @@ public class Map {
 
         for (int i = 1; i <= tmp_current_level; i++) {
             for (int j = 0; j <= tmp_current_level-i; j++) {
-                randomRarity.add(i);
+                if (Monster.possibleMonsters.get(i)!=null){
+                    randomRarity.add(i);
+                }
             }
         }
 
@@ -243,7 +246,7 @@ public class Map {
                 if (Utils.randint(0, 7)==0){
                     int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
                     ArrayList<Monster> mList = Monster.possibleMonsters.get(rarity);
-                    while (mList.isEmpty()){
+                    while ( mList==null || mList.isEmpty()){
                         rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
                         mList = Monster.possibleMonsters.get(rarity);
                     }
@@ -282,7 +285,9 @@ public class Map {
     public void genInteractive(int currentLevel){
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size())){
-            this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+            if (Utils.randint(0, 6) == 0){
+                this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+            }
         }
 
         for (Room r : rooms.subList(1, rooms.size())){
@@ -293,11 +298,29 @@ public class Map {
     }
 
     public void updateInteractive(Player player){
+        Chest closestChest = getClosestChest(player);
+
         for (Chest chest : this.chests){
-            chest.refreshInteract(player);
+            if (chest == closestChest){
+                chest.refreshInteract(player, true);
+            } else {
+                chest.refreshInteract(player, false);
+            }
         }
 
         stairs.refreshInteract(player);
+    }
+
+    public Chest getClosestChest(Player player){
+        Chest closestChest = chests.get(0);
+
+        for (Chest chest : this.chests){
+            if (Utils.getDistance(player.pos, chest.pos) < Utils.getDistance(player.pos, closestChest.pos)){
+                closestChest = chest;
+            }
+        }
+
+        return closestChest;
     }
 
     public void dispose(){
