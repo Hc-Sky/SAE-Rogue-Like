@@ -7,6 +7,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * le type Map.
@@ -278,14 +279,34 @@ public class Map {
     public void genInteractive(int currentLevel){
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size())){
-            this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+            if (Utils.randint(0, 6) == 0){
+                this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+            }
         }
     }
 
     public void updateInteractive(Player player){
+        Chest closestChest = getClosestChest(player);
+
         for (Chest chest : this.chests){
-            chest.refreshInteract(player);
+            if (chest == closestChest){
+                chest.refreshInteract(player, true);
+            } else {
+                chest.refreshInteract(player, false);
+            }
         }
+    }
+
+    public Chest getClosestChest(Player player){
+        Chest closestChest = chests.get(0);
+
+        for (Chest chest : this.chests){
+            if (Utils.getDistance(player.pos, chest.pos) < Utils.getDistance(player.pos, closestChest.pos)){
+                closestChest = chest;
+            }
+        }
+
+        return closestChest;
     }
 
     public void dispose(){

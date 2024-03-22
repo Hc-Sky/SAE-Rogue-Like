@@ -96,7 +96,7 @@ public class InGameScreen implements Screen {
         this.hudBatch = game.hudBatch;
 
 
-        this.currentLevel = 40;
+        this.currentLevel = 1;
 
         Monster.createPossibleMonsters(currentLevel);
         MeleeWeapon.createPossibleMeleeWeapons(currentLevel);

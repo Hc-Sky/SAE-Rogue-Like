@@ -17,12 +17,12 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import java.util.ArrayList;
 
 public class Chest {
-    Point pos;
+    public Point pos;
     MeleeWeapon meleeWeaponLoot;
 
     boolean isOpened=false;
     boolean isOpenning = false;
-    boolean canInteract = false;
+    public boolean canInteract = false;
 
     TextureRegion closed;
     TextureRegion opened;
@@ -86,8 +86,9 @@ public class Chest {
         player.currentWeapon = this.meleeWeaponLoot;
     }
 
-    public void refreshInteract(Player player){
-        if (this.isOpened || this.isOpenning){
+    public void refreshInteract(Player player, boolean isClosest){
+
+        if (this.isOpened || this.isOpenning || !isClosest){
             this.canInteract=false;
             return;
         }
@@ -99,7 +100,7 @@ public class Chest {
 
         if (Utils.getDistance(this.pos, player.pos) <= 40){
             this.canInteract = true;
-        } else {
+        } else if (isClosest){
             this.canInteract = false;
         }
     }
