@@ -111,7 +111,21 @@ public class InGameScreen implements Screen {
 		this.cam = new Camera(this.player);
 	}
 
-	//Créer fonction nextLevel qui s’occupe de générer une nouvelle map, de faire Spawn le Joueur sur la nouvelle map au milleu de la première Room et de faire spawn les monstres
+    public void nextLevel(){
+        InGameScreen.stateTime=0f;
+        System.out.println("next level");
+        this.currentLevel+=1;
+
+        this.map = new Map(this.map_width, this.map_height);
+        this.player.hasPlayerSpawn=false;
+        this.player.setPos(map.getPlayerSpawn());
+
+        startTime = TimeUtils.millis();
+
+        this.map.spawnMonsters(currentLevel);
+        this.map.genInteractive(currentLevel, this);
+    }
+
     /**
      * Passe au niveau suivant.
      */
@@ -134,13 +148,8 @@ public class InGameScreen implements Screen {
 		// Créer une instance de Player
 		Player player = new Player(map.getPlayerSpawn(), "player");
 
-		// Appeler les méthodes sur l'instance de Player
-		player.spawnPlayer();
-
-		// Appeler les méthodes sur l'instance de Map
-		map.spawnMonsters(currentLevel);
-		map.genInteractive(currentLevel);
-
+        this.map.spawnMonsters(currentLevel);
+        this.map.genInteractive(currentLevel, this);
     }
 
 

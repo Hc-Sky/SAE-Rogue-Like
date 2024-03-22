@@ -5,6 +5,7 @@ import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,7 @@ public class Map {
 
     public static ArrayList<Monster> monsters = new ArrayList<>();
     ArrayList<Chest> chests = new ArrayList<>();
-
-    ArrayList<Stairs> stairsArrayList = new ArrayList<>();
-
-    Stairs stairs = new Stairs(new Point(0,0));
-
+    public Stairs stairs;
     /**
      * La hauteur de la map.
      */
@@ -156,6 +153,8 @@ public class Map {
         for (Chest chest : this.chests){
             chest.draw(batch);
         }
+
+        this.stairs.draw(batch);
     }
 
     public void checkDeadMonster(){
@@ -282,26 +281,33 @@ public class Map {
         this.rooms = sortedRooms;
     }
 
-    public void genInteractive(int currentLevel){
+    public void genInteractive(int currentLevel, InGameScreen gameScreen){
+
+        this.stairs = new Stairs(this.rooms.get(this.rooms.size()-1).getCenterOutOfMapPos(), gameScreen);
+
+
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size())){
             if (Utils.randint(0, 6) == 0){
-                this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+                if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
+                    this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+                }
             }
         }
-
-        for (Room r : rooms.subList(1, rooms.size())){
-            this.stairs = new Stairs(r.getCenterOutOfMapPos());
-        }
-
 
     }
 
     public void updateInteractive(Player player){
         Chest closestChest = getClosestChest(player);
+        if (Utils.getDistance(player.pos, this.stairs.pos) < Utils.getDistance(closestChest.pos, player.pos)){
+            closestChest = null;
+            this.stairs.refreshInteract(player, true);
+        } else {
+            this.stairs.refreshInteract(player, false);
+        }
 
         for (Chest chest : this.chests){
-            if (chest == closestChest){
+            if (closestChest!=null && chest == closestChest){
                 chest.refreshInteract(player, true);
             } else {
                 chest.refreshInteract(player, false);

@@ -18,54 +18,59 @@ import fr.studiokakou.kakouquest.utils.Utils;
 // La position des stairs doit etre au centre de la dernière room dans la liste des rooms de map. sa Texture est l’échelle qui rentre dans le sol (assets/map/floor_ladder.png).
 
 public class Stairs {
-	Point pos;
+    public Point pos;
 
-	boolean canInteract = false;
+    boolean canInteract = false;
 
-	TextureRegion stairs;
+    Texture texture;
 
-	//interact var
-	String interactKey;
-	int interactKeyCode;
-	Animation<TextureRegion> interactKeyAnimation;
+    InGameScreen gameScreen;
 
-	public Stairs(Point pos){
-		this.pos = pos;
+    //interact var
+    String interactKey;
+    int interactKeyCode;
+    Animation<TextureRegion> interactKeyAnimation;
 
-		this.stairs = new TextureRegion(new Texture("assets/map/floor_ladder.png"));
+    public Stairs(Point pos, InGameScreen gameScreen){
+        this.pos = pos;
 
-		this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
-		this.interactKey = Input.Keys.toString(this.interactKeyCode);
+        this.gameScreen = gameScreen;
 
-		this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 40f);
-	}
+        this.texture = new Texture("assets/map/floor_ladder.png");
 
-	public void refreshInteract(Player player){
-		if (!this.canInteract){
-			if (player.pos.equals(this.pos)){
-				this.canInteract = true;
-			}
-		}else{
-			if (!player.pos.equals(this.pos)){
-				this.canInteract = false;
-			}
-		}
-	}
+        this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
+        this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
-	public void interact(Player player){
-		if (this.canInteract){
-			InGameScreen.currentLevel++;
-			InGameScreen.nextLevel();
-		}
-	}
+        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 40f);
+    }
 
-	public void draw(SpriteBatch batch){
-		if (canInteract){
-			TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
-			batch.draw(currentKeyFrame, this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
-		}
-	}
+    public void refreshInteract(Player player, boolean isClosest){
+
+        if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
+            this.interact();
+        }
+
+        if (Utils.getDistance(this.pos, player.pos) <= 40 &&  isClosest){
+            this.canInteract = true;
+        } else {
+            this.canInteract = false;
+        }
+    }
+
+    public void interact(){
+        if (this.canInteract){
+            this.gameScreen.nextLevel();
+        }
+    }
+
+    public void draw(SpriteBatch batch){
+        if (canInteract){
+            TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
+            batch.draw(currentKeyFrame, this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
+        }
+
+        batch.draw(this.texture, this.pos.x, this.pos.y);
+    }
 }
-
 
 
