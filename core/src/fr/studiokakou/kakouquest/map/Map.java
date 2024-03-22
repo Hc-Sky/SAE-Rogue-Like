@@ -5,7 +5,6 @@ import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.entity.Test;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
-import fr.studiokakou.kakouquest.map.Bridge;
 import java.util.ArrayList;
 
 /**
@@ -24,9 +23,6 @@ public class Map {
      */
     public static ArrayList<Test> tests = new ArrayList<>();
     public static ArrayList<Monster> monsters = new ArrayList<>();
-
-    ArrayList<Bridge> bridges = new ArrayList<>(); // Déclarez bridges comme une ArrayList<Bridge>
-
 
     /**
      * La hauteur de la map.
@@ -155,7 +151,6 @@ public class Map {
      * Génère les salles.
      */
     public void generateRooms(){
-        Room previousRoom = null; // Variable pour stocker la salle précédente
         for (int i = 0; i < 50; i++) {
             int startX = Utils.randint(0, this.map_width-Map.ROOM_MAX_WIDTH);
             int startY = Utils.randint(0, this.map_height-Map.ROOM_MAX_HEIGHT);
@@ -170,14 +165,10 @@ public class Map {
             }
             if (canAdd){
                 this.rooms.add(r);
-                if (previousRoom != null) { // Si une salle précédente existe
-                    Bridge bridge = new Bridge(previousRoom, r); // Créez un pont entre la salle précédente et la nouvelle
-                    this.bridges.add(bridge); // Ajoutez le pont à la liste des ponts
-                }
-                previousRoom = r; // Mettez à jour la salle précédente
             }
         }
     }
+
     /**
      * Génère les sols.
      */
