@@ -111,6 +111,19 @@ public class InGameScreen implements Screen {
         this.cam = new Camera(this.player);
     }
 
+    public void nextLevel(){
+        InGameScreen.stateTime=0f;
+        System.out.println("next level");
+        this.map = new Map(this.map_width, this.map_height);
+        this.player.hasPlayerSpawn=false;
+        this.player.setPos(map.getPlayerSpawn());
+
+        startTime = TimeUtils.millis();
+
+        this.map.spawnMonsters(currentLevel);
+        this.map.genInteractive(currentLevel, this);
+    }
+
     /**
      * Affiche l'écran de jeu.
      */
@@ -129,7 +142,7 @@ public class InGameScreen implements Screen {
         startTime = TimeUtils.millis();
 
         this.map.spawnMonsters(currentLevel);
-        this.map.genInteractive(currentLevel);
+        this.map.genInteractive(currentLevel, this);
     }
 
     @Override

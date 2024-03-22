@@ -272,6 +272,10 @@ public class Player {
         this.isPlayerSpawning=true;
     }
 
+    public void setPos(Point pos){
+        this.pos = pos;
+    }
+
     /**
      * Center point.
      *
