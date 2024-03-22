@@ -13,6 +13,7 @@ import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 /**
  * le type InGameScreen.
@@ -95,9 +96,10 @@ public class InGameScreen implements Screen {
         this.hudBatch = game.hudBatch;
 
 
-        this.currentLevel = 3;
+        this.currentLevel = 40;
 
         Monster.createPossibleMonsters(currentLevel);
+        MeleeWeapon.createPossibleMeleeWeapons(currentLevel);
 
         //map init
         this.map_height = 150;

@@ -228,7 +228,9 @@ public class Map {
 
         for (int i = 1; i <= tmp_current_level; i++) {
             for (int j = 0; j <= tmp_current_level-i; j++) {
-                randomRarity.add(i);
+                if (Monster.possibleMonsters.get(i)!=null){
+                    randomRarity.add(i);
+                }
             }
         }
 
@@ -237,7 +239,7 @@ public class Map {
                 if (Utils.randint(0, 7)==0){
                     int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
                     ArrayList<Monster> mList = Monster.possibleMonsters.get(rarity);
-                    while (mList.isEmpty()){
+                    while ( mList==null || mList.isEmpty()){
                         rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
                         mList = Monster.possibleMonsters.get(rarity);
                     }
