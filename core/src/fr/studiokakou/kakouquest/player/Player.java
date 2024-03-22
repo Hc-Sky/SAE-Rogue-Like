@@ -272,6 +272,20 @@ public class Player {
         this.isPlayerSpawning=true;
     }
 
+    public void playerDeath(){
+
+        //default values
+        this.max_hp=100;
+        this.hp=100;
+        this.strength=10;
+        this.speed=40f;
+        this.max_stamina=100;
+        this.stamina = 100;
+
+        //default weapon
+        this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+    }
+
     public void setPos(Point pos){
         this.pos = pos;
     }
@@ -389,6 +403,9 @@ public class Player {
                 boolean damaged = m.hit(this);
                 if (damaged){
                     this.currentWeapon.resistance-=1;
+                    if (currentWeapon.resistance<=0 && currentWeapon.resistance>-100){
+                        this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+                    }
                 }
             }
         }
@@ -520,7 +537,7 @@ public class Player {
         }
     }
 
-    public void takeDamage(int damage, Point impactPoint){
+    public void takeDamage(int damage){
         this.hp -= damage;
         this.bloodStateTime=0f;
     }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GetProperties;
 import fr.studiokakou.kakouquest.map.Floor;
+import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
@@ -81,9 +82,8 @@ public class Chest {
         return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1));
     }
 
-    public void dropLoot(Player player){
-        System.out.println("player got : "+this.meleeWeaponLoot.name);
-        player.currentWeapon = this.meleeWeaponLoot;
+    public void dropLoot(){
+        Map.onGroundMeleeWeapons.add(new OnGroundMeleeWeapon(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.meleeWeaponLoot));
     }
 
     public void refreshInteract(Player player, boolean isClosest){
@@ -95,7 +95,7 @@ public class Chest {
 
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.isOpened = true;
-            this.dropLoot(player);
+            this.dropLoot();
         }
 
         if (Utils.getDistance(this.pos, player.pos) <= 40){
