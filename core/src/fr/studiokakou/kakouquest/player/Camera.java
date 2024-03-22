@@ -21,8 +21,7 @@ public class Camera {
     /**
      * paramètres de la caméra par défaut
      */
-    //public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) /720;
-    public static float DEFAULT_ZOOM = 0.7f;
+    public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) /720;
     /**
      * la distance en y de la caméra par rapport au joueur.
      */
