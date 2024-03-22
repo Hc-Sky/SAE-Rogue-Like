@@ -149,6 +149,10 @@ public class Room {
 		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2).mult(Floor.TEXTURE_WIDTH);
 	}
 
+	public Point getCenterOutOfMapPos(){
+		return new Point( this.start.x+(this.end.x-this.start.x)/2,  this.start.y+(this.end.y-this.start.y)/2).mult(Floor.TEXTURE_WIDTH).add(-Floor.TEXTURE_WIDTH/2, -Floor.TEXTURE_HEIGHT/2);
+	}
+
 	public Room getNearestRoom(ArrayList<Room> rooms){
 		Room nearestRoom = rooms.get(0);
 		float nearestDistance = Utils.getDistance(this.getCenter(), nearestRoom.getCenter());
