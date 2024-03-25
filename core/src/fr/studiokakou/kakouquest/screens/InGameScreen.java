@@ -27,7 +27,7 @@ public class InGameScreen implements Screen {
 	 * le temps entre chaque frame.
 	 */
 //defaults
-    public static float FRAME_DURATION=7f;
+	public static float FRAME_DURATION=7f;
 
 	/**
 	 * le jeu.
@@ -43,7 +43,7 @@ public class InGameScreen implements Screen {
 	 */
 	SpriteBatch hudBatch;
 
-	public static float stateTime = 0f;
+	public static float stateTime=0f;
 
 	/**
 	 * le joueur.
@@ -65,7 +65,7 @@ public class InGameScreen implements Screen {
 	 * le niveau actuel.
 	 */
 //map info
-	public static int currentLevel;
+	int currentLevel;
 	/**
 	 * la map.
 	 */
@@ -73,11 +73,11 @@ public class InGameScreen implements Screen {
 	/**
 	 * la hauteur de la map.
 	 */
-	public static int map_height;
+	public int map_height;
 	/**
 	 * la largeur de la map.
 	 */
-	public static int map_width;
+	public int map_width;
 
 	/**
 	 * le temps de départ.
@@ -90,16 +90,16 @@ public class InGameScreen implements Screen {
 	 *
 	 * @param game the game
 	 */
-	public InGameScreen(GameSpace game) {
-		this.game = game;
+	public InGameScreen(GameSpace game){
+		this.game=game;
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
 
 
-        this.currentLevel = 1;
+		this.currentLevel = 1;
 
-        Monster.createPossibleMonsters(currentLevel);
-        MeleeWeapon.createPossibleMeleeWeapons(currentLevel);
+		Monster.createPossibleMonsters(currentLevel);
+		MeleeWeapon.createPossibleMeleeWeapons(currentLevel);
 
 		//map init
 		this.map_height = 150;
@@ -107,51 +107,24 @@ public class InGameScreen implements Screen {
 		this.map = new Map(this.map_width, this.map_height);
 
 		//player init
-		this.player = new Player(map.getPlayerSpawn(), "player");
+		this.player = new Player(map.getPlayerSpawn(),"player");
 		this.cam = new Camera(this.player);
 	}
 
-    public void nextLevel(){
-        InGameScreen.stateTime=0f;
-        System.out.println("next level");
-        this.currentLevel+=1;
+	public void nextLevel(){
+		InGameScreen.stateTime=0f;
+		System.out.println("next level");
+		this.currentLevel+=1;
 
-        this.map = new Map(this.map_width, this.map_height);
-        this.player.hasPlayerSpawn=false;
-        this.player.setPos(map.getPlayerSpawn());
+		this.map = new Map(this.map_width, this.map_height);
+		this.player.hasPlayerSpawn=false;
+		this.player.setPos(map.getPlayerSpawn());
 
-        startTime = TimeUtils.millis();
+		startTime = TimeUtils.millis();
 
-        this.map.spawnMonsters(currentLevel);
-        this.map.genInteractive(currentLevel, this);
-    }
-
-    /**
-     * Passe au niveau suivant.
-     */
-    public static void nextLevel() {
-        InGameScreen.stateTime = 0f;
-
-        Monster.createPossibleMonsters(currentLevel);
-
-		// Créer une instance de Map
-		Map map = new Map(map_width, map_height);
-
-		// Appeler les méthodes sur l'instance de Map
-		map.generateRooms();
-		map.sortRooms();
-		map.generateBridges();
-		map.genFloors();
-		map.genWalls();
-		map.getRealSize();
-
-		// Créer une instance de Player
-		Player player = new Player(map.getPlayerSpawn(), "player");
-
-        this.map.spawnMonsters(currentLevel);
-        this.map.genInteractive(currentLevel, this);
-    }
-
+		this.map.spawnMonsters(currentLevel);
+		this.map.genInteractive(currentLevel, this);
+	}
 
 	/**
 	 * Affiche l'écran de jeu.
@@ -159,11 +132,11 @@ public class InGameScreen implements Screen {
 	@Override
 	public void show() {
 
-		InGameScreen.stateTime = 0f;
+		InGameScreen.stateTime=0f;
 
 		//set cursor
 		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
-		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
 		pm.dispose();
 
 		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
@@ -171,25 +144,25 @@ public class InGameScreen implements Screen {
 		startTime = TimeUtils.millis();
 
 		this.map.spawnMonsters(currentLevel);
-		this.map.genInteractive(currentLevel);
+		this.map.genInteractive(currentLevel, this);
 	}
 
 	@Override
 	public void render(float delta) {
 		InGameScreen.stateTime = InGameScreen.stateTime + delta;
 
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			Gdx.app.exit();
 		}
 
-		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
+		Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
+		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.spawnPlayer();
 		}
 
-		if (player.hasPlayerSpawn && !player.isPlayerSpawning) {
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.getKeyboardMove();
 			player.getOrientation();
 			player.dash();
@@ -201,18 +174,7 @@ public class InGameScreen implements Screen {
 		this.map.moveMonsters(this.player);
 		this.map.updateInteractive(this.player);
 
-        hudBatch.begin();
-        this.hud.draw(hudBatch);
-        hudBatch.end();
-
-        if (player.hp<=0){
-            this.currentLevel=0;
-            this.player.playerDeath();
-            this.nextLevel();
-        }
-
-        this.map.updateRemoveInteractive();
-    }
+		batch.setProjectionMatrix(Camera.camera.combined);
 
 		batch.begin();
 
@@ -233,15 +195,24 @@ public class InGameScreen implements Screen {
 		hudBatch.begin();
 		this.hud.draw(hudBatch);
 		hudBatch.end();
+
+		if (player.hp<=0){
+			this.currentLevel=0;
+			this.player.playerDeath();
+			this.nextLevel();
+		}
+
+		this.map.updateRemoveInteractive();
 	}
 
 	/**
 	 * Resize l'écran de jeu.
 	 * Permet de redimensionner l'écran de jeu.
+	 *
 	 */
 	@Override
 	public void resize(int width, int height) {
-		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width,height);
 	}
 
 	@Override
