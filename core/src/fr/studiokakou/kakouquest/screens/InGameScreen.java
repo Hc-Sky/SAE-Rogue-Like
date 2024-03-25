@@ -27,7 +27,7 @@ public class InGameScreen implements Screen {
 	 * le temps entre chaque frame.
 	 */
 //defaults
-	public static float FRAME_DURATION = 6f;
+    public static float FRAME_DURATION=7f;
 
 	/**
 	 * le jeu.
@@ -201,7 +201,18 @@ public class InGameScreen implements Screen {
 		this.map.moveMonsters(this.player);
 		this.map.updateInteractive(this.player);
 
-		batch.setProjectionMatrix(Camera.camera.combined);
+        hudBatch.begin();
+        this.hud.draw(hudBatch);
+        hudBatch.end();
+
+        if (player.hp<=0){
+            this.currentLevel=0;
+            this.player.playerDeath();
+            this.nextLevel();
+        }
+
+        this.map.updateRemoveInteractive();
+    }
 
 		batch.begin();
 

@@ -188,7 +188,7 @@ public class Monster {
             return;
         }
         if (this.currentAttackTime==null || this.currentAttackTime.plusNanos((long) (1000000*this.attackPause)).isBefore(LocalDateTime.now())){
-            player.takeDamage(this.damage, this.center());
+            player.takeDamage(this.damage);
             this.currentAttackTime = LocalDateTime.now();
         }
     }
