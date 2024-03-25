@@ -239,9 +239,8 @@ public class Player {
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
-        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 2.5f);
+        this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
-        InGameScreen.stateTime=0f;
 
         //get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
@@ -479,7 +478,6 @@ public class Player {
      * @param batch the batch
      */
     public void draw(SpriteBatch batch){
-        InGameScreen.stateTime += Gdx.graphics.getDeltaTime();
 
         if (hasPlayerSpawn) {
             TextureRegion currentFrame;

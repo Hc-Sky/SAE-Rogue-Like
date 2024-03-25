@@ -295,14 +295,12 @@ public class Map {
 
 
         this.chests.clear();
-        for (Room r : rooms.subList(1, rooms.size())){
-//            if (Utils.randint(0, 6) == 0){
-//                if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
-//                    this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
-//                }
-//            }
-            this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
-            this.chests.add(new Chest(r.getCenterOutOfMapPos().add(Floor.TEXTURE_WIDTH, 0), currentLevel));
+        for (Room r : rooms.subList(1, rooms.size()-1)){
+            if (Utils.randint(0, 6) == 0){
+                if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
+                    this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+                }
+            }
         }
 
     }

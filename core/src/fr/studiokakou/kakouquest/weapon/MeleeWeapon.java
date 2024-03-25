@@ -22,6 +22,7 @@ public class MeleeWeapon {
 	public int resistance;
 	public float attackRange;
 	public float attackSpeed;
+	public int maxResistance;
 
 	//weapon dimensions
 	public float size;
@@ -34,6 +35,7 @@ public class MeleeWeapon {
 		//weapon stats
 		this.name = name;
 		this.damage = damage;
+		this.maxResistance = resistance;
 		this.resistance = resistance;
 		this.attackRange = attackRange;
 		this.attackSpeed = attackSpeed;
@@ -47,6 +49,10 @@ public class MeleeWeapon {
 		this.width = this.sprite.getWidth();
 		this.sprite.setOrigin(this.width/2, 0);
 		this.sprite.flip(true, false);
+	}
+
+	public void regen(){
+		this.resistance = maxResistance;
 	}
 
 	public static void createPossibleMeleeWeapons(int currentLevel){
