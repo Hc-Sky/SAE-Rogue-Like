@@ -364,7 +364,7 @@ public class Player {
     }
 
     /**
-     * permet de faire attaquer le joueur.
+     * Permet de faire attaquer le joueur.
      */
     public void attack() {
         if (canAttack && !this.isAttacking && this.canActionWithStamina(Player.ATTACK_STAMINA_USAGE)){
@@ -392,7 +392,7 @@ public class Player {
     }
 
     /**
-     * permet de vérifier si le joueur a touché un monstre.
+     * Permet de vérifier si le joueur a touché un monstre.
      *
      */
     public void checkHit(){
@@ -440,7 +440,7 @@ public class Player {
 
     /**
      *
-     * ermet de récupérer l'orientation du joueur.
+     * Permet de récupérer l'orientation du joueur.
      */
     public void getOrientation(){
         Point mousePos = Utils.mousePosUnproject(Camera.camera);
