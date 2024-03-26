@@ -225,8 +225,6 @@ public class Monster {
         }
 
         this.sprite.draw(batch);
-
-        InGameScreen.stateTime+= Gdx.graphics.getDeltaTime();
     }
 
     public void updateHitAnimation(SpriteBatch batch){

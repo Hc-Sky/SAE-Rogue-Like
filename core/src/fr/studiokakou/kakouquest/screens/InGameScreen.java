@@ -27,7 +27,7 @@ public class InGameScreen implements Screen {
 	 * le temps entre chaque frame.
 	 */
 //defaults
-	public static float FRAME_DURATION=7f;
+    public static float FRAME_DURATION=0.2f;
 
 	/**
 	 * le jeu.
@@ -147,9 +147,9 @@ public class InGameScreen implements Screen {
 		this.map.genInteractive(currentLevel, this);
 	}
 
-	@Override
-	public void render(float delta) {
-		InGameScreen.stateTime = InGameScreen.stateTime + delta;
+    @Override
+    public void render(float delta) {
+        InGameScreen.stateTime += delta;
 
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			Gdx.app.exit();
