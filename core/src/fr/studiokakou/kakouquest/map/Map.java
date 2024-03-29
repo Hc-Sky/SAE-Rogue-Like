@@ -339,6 +339,7 @@ public class Map {
     }
 
     public Object getClosestInteractive(Player player) {
+
         Chest closestChest = getClosestChest(player);
         OnGroundMeleeWeapon closestMeleeWeapon = getClosestMeleeWeapon(player);
         Stairs stairs = this.stairs;

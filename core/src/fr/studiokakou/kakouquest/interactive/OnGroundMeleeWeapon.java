@@ -36,7 +36,7 @@ public class OnGroundMeleeWeapon {
         this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
         this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
-        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 40f);
+        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
 
     }
 

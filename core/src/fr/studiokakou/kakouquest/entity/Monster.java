@@ -305,7 +305,7 @@ public class Monster {
         return new Monster("Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 450, 35, 1500, 45f, 200, currentLevel);
     }
     static Monster CHORT(int currentLevel){
-        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 50, 5, 700, 60f, 80, currentLevel);
+        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 70, 15, 700, 60f, 80, currentLevel);
     }
     static Monster GOBLIN(int currentLevel){
         return new Monster("Goblin", "assets/entities/goblin_idle.png", "assets/entities/goblin_run.png", 60, 10, 700, 50f, 100, currentLevel);
