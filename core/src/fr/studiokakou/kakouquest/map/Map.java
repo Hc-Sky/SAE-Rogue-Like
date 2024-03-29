@@ -8,9 +8,8 @@ import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 
 /**
  * le type Map.
@@ -64,6 +63,10 @@ public class Map {
      * la largeur maximale d'une salle.
      */
     public static int ROOM_MAX_WIDTH=21;
+
+
+    public Hashtable<Float, Object> distances = new Hashtable<>();
+
 
     /**
      * Constructeur de Map.
@@ -293,29 +296,60 @@ public class Map {
 
         this.stairs = new Stairs(this.rooms.get(this.rooms.size()-1).getCenterOutOfMapPos(), gameScreen);
 
-
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(0, 6) == 0){
-                if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
-                    this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
-                }
-            }
+//            if (Utils.randint(0, 6) == 0){
+//                if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
+//                    this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+//                }
+//            }
+            this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
+            this.chests.add(new Chest(r.getCenterOutOfMapPos().add(Floor.TEXTURE_WIDTH, 0), currentLevel));
         }
 
     }
 
     public void updateInteractive(Player player){
-        Object closestObject = getClosestInteractive(player);
+        this.distances.clear();
 
+        TreeMap<Float, Object> sorted = getDistances(player);
+
+        Object closestObject = sorted.get(sorted.firstKey());
+
+        //update functions
         for (Chest chest : this.chests){
-            chest.refreshInteract(player, chest.equals(closestObject));
+            chest.refreshInteract(player, chest == closestObject);
         }
-        this.stairs.refreshInteract(player, this.stairs.equals(closestObject));
-
+        this.stairs.refreshInteract(player, this.stairs == closestObject);
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            weapon.refreshInteract(player, true);
+            weapon.refreshInteract(player, weapon == closestObject);
         }
+
+        //updateClosest(closestObject, player);
+    }
+
+    public void updateClosest(Object object, Player player){
+        if (object.getClass() == Chest.class){
+            Chest chest = (Chest) object;
+            chest.refreshInteract(player, true);
+        } else if (object.getClass() == Stairs.class) {
+            this.stairs.refreshInteract(player, true);
+        } else if (object.getClass() == OnGroundMeleeWeapon.class){
+            OnGroundMeleeWeapon meleeWeapon = (OnGroundMeleeWeapon) object;
+            meleeWeapon.refreshInteract(player, true);
+        }
+    }
+
+    public TreeMap<Float, Object> getDistances(Player player){
+        for (Chest chest : this.chests){
+            this.distances.put(Utils.getDistance(chest.pos, player.pos), chest);
+        }
+        this.distances.put(Utils.getDistance(this.stairs.pos, player.pos), this.stairs);
+        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
+            this.distances.put(Utils.getDistance(weapon.pos, player.pos), weapon);
+        }
+
+        return new TreeMap<>(this.distances);
     }
 
     public void updateRemoveInteractive(){
@@ -336,53 +370,6 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : toRemove){
             Map.onGroundMeleeWeapons.remove(weapon);
         }
-    }
-
-    public Object getClosestInteractive(Player player) {
-
-        Chest closestChest = getClosestChest(player);
-        OnGroundMeleeWeapon closestMeleeWeapon = getClosestMeleeWeapon(player);
-        Stairs stairs = this.stairs;
-
-        double chestDistance = closestChest != null ? Utils.getDistance(player.pos, closestChest.pos) : Double.MAX_VALUE;
-        double weaponDistance = closestMeleeWeapon != null ? Utils.getDistance(player.pos, closestMeleeWeapon.pos) : Double.MAX_VALUE;
-        double stairsDistance = stairs != null ? Utils.getDistance(player.pos, stairs.pos) : Double.MAX_VALUE;
-
-        if (chestDistance <= weaponDistance && chestDistance <= stairsDistance) {
-            return closestChest;
-        } else if (weaponDistance <= chestDistance && weaponDistance <= stairsDistance) {
-            return closestMeleeWeapon;
-        } else {
-            return stairs;
-        }
-    }
-
-    public OnGroundMeleeWeapon getClosestMeleeWeapon(Player player){
-        if (Map.onGroundMeleeWeapons.isEmpty()){
-            return null;
-        }
-
-        OnGroundMeleeWeapon closestWeapon = Map.onGroundMeleeWeapons.get(0);
-
-        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
-            if (Utils.getDistance(player.pos, closestWeapon.pos) < Utils.getDistance(player.pos, closestWeapon.pos)){
-                closestWeapon = weapon;
-            }
-        }
-
-        return closestWeapon;
-    }
-
-    public Chest getClosestChest(Player player){
-        Chest closestChest = chests.get(0);
-
-        for (Chest chest : this.chests){
-            if (Utils.getDistance(player.pos, chest.pos) < Utils.getDistance(player.pos, closestChest.pos)){
-                closestChest = chest;
-            }
-        }
-
-        return closestChest;
     }
 
     public void dispose(){
