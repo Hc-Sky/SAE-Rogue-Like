@@ -252,7 +252,7 @@ public class Map {
         }
 
         for (Room r : this.rooms.subList(1, this.rooms.size())){
-            for (int i = (int) r.start.x; i < r.end.x; i++) {
+            for (int i = (int) r.start.x+1; i < r.end.x-1; i++) {
                 if (Utils.randint(0, 7)==0){
                     int rarity = randomRarity.get(Utils.randint(0, randomRarity.size() - 1));
                     ArrayList<Monster> mList = Monster.possibleMonsters.get(rarity);
@@ -261,7 +261,7 @@ public class Map {
                         mList = Monster.possibleMonsters.get(rarity);
                     }
                     Monster m = mList.get(Utils.randint(0, mList.size()-1));
-                    m.place(new Point(i*Floor.TEXTURE_WIDTH, Utils.randint((int) r.start.y, (int) r.end.y)*Floor.TEXTURE_HEIGHT));
+                    m.place(new Point(i*Floor.TEXTURE_WIDTH, Utils.randint((int) r.start.y+1, (int) r.end.y-1)*Floor.TEXTURE_HEIGHT));
                     Map.monsters.add(m);
                     Monster.createPossibleMonsters(currentLevel);
                 }
@@ -271,7 +271,7 @@ public class Map {
 
     public void moveMonsters(Player player){
         for (Monster m : Map.monsters){
-            m.move(player);
+            m.move(player, this);
         }
     }
 
@@ -355,6 +355,55 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : toRemove){
             Map.onGroundMeleeWeapons.remove(weapon);
         }
+    }
+
+    public boolean arePointsOnFloor(Point[] points){
+        boolean[] areIn = new boolean[points.length];
+        Arrays.fill(areIn, false);
+
+        for (int i = 0; i < points.length; i++) {
+            Point point = points[i];
+            for (Floor floor : this.floors) {
+                Point p1 = floor.pos;
+                Point p2 = floor.pos.add(Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
+                if (point.isPointIn(p1, p2)) {
+                    areIn[i]=true;
+                }
+            }
+        }
+
+        for (boolean isIn : areIn){
+            if (!isIn){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean arePointsOnBrigde(Point[] points){
+        boolean[] areIn = new boolean[points.length];
+        Arrays.fill(areIn, false);
+
+        for (int i = 0; i < points.length; i++) {
+            Point point = points[i];
+            for (Bridge bridge : this.bridges) {
+                for (Point bp : bridge.points) {
+                    Point p1 = bp.mult(Floor.TEXTURE_WIDTH);
+                    Point p2 = bp.mult(Floor.TEXTURE_WIDTH).add(Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
+                    if (point.isPointIn(p1, p2)) {
+                        areIn[i]=true;
+                    }
+                }
+            }
+        }
+
+        for (boolean isIn : areIn){
+            if (!isIn){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void dispose(){

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.map.Floor;
+import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
@@ -30,13 +32,8 @@ public class Monster {
      */
     public Point pos;
     /**
-     * The Orientation.
-     */
-    public Point orientation;
-    /**
      * The Speed.
      */
-    public int rarity; //chance of spawn at x level
     public float speed;
     /**
      * The Damage.
@@ -110,7 +107,6 @@ public class Monster {
 
     public Monster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel){
         this.name=name;
-        this.orientation = new Point(0, 0);
         this.speed = speed;
         this.damage = damage;
         this.attackPause=attackPause;
@@ -141,26 +137,43 @@ public class Monster {
         return new Point(this.pos.x+ this.width /2,this.pos.y+ this.height /4);
     }
 
+    public boolean canMove(Point orientation, Map map){
+        Point newPos = this.pos.add(orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
+        Point hitboxTopLeft = newPos.add(3, this.height - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomLeft = newPos.add(3, 0);
+        Point hitboxTopRight = newPos.add(this.width-3, this.height - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomRight = newPos.add(this.width-3, 0);
+
+        Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
+
+        return map.arePointsOnFloor(points);
+
+    }
+
     /**
      * Move.
      *
      */
-    public void move(Player player){
+    public void move(Player player, Map map){
         if (isDying || isRed || !player.hasPlayerSpawn){
             return;
         }
         Point playerPos = player.pos;
         if (Utils.distance(playerPos, this.pos)<=10){
             this.attack(player);
-        } else {
-            if (detectPlayer(playerPos)){
-                this.isRunning = true;
-                this.getOrientation(player);
-                this.orientation = Point.getOrientation(this.pos, playerPos);
-                this.pos = this.pos.add(this.orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), this.orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
-            }else {
-                this.isRunning=false;
+        }
+        if (detectPlayer(playerPos)){
+            this.isRunning = true;
+            this.getOrientation(player);
+            Point orientation = Point.getOrientation(this.pos, playerPos);
+            if (canMove(new Point(orientation.x, 0), map)){
+                this.pos = this.pos.add(orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), 0);
             }
+            if (canMove(new Point(0, orientation.y), map)){
+                this.pos = this.pos.add(0, orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
+            }
+        }else {
+            this.isRunning=false;
         }
     }
 
@@ -225,6 +238,7 @@ public class Monster {
         }
 
         this.sprite.draw(batch);
+
     }
 
     public void updateHitAnimation(SpriteBatch batch){

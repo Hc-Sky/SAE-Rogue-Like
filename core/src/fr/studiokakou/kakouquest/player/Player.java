@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
+import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
@@ -307,15 +308,28 @@ public class Player {
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
+    public boolean canMove(Point newPos, Map map){
+        Point hitboxTopLeft = newPos.add(3, this.texture_height-5 - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomLeft = newPos.add(3, 0);
+        Point hitboxTopRight = newPos.add(this.texture_width-3, this.texture_height-5 - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomRight = newPos.add(this.texture_width-3, 0);
+
+        Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
+
+        return map.arePointsOnFloor(points);
+    }
+
     /**
      *
      *
      * @param x the x
      * @param y the y
      */
-    public void move(float x, float y){
-        this.lastPos = this.pos;
-        this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
+    public void move(float x, float y, Map map){
+        if (canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map)){
+            this.lastPos = this.pos;
+            this.pos = this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed);
+        }
     }
 
     /**
@@ -331,7 +345,7 @@ public class Player {
     /**
      * Dash.
      */
-    public void dash(){    //used for the dash animation
+    public void dash(Map map){    //used for the dash animation
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
                 Point mousePos = Utils.mousePosUnproject(Camera.camera);
@@ -343,7 +357,21 @@ public class Player {
             }else {
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     assert this.dashFinalPoint != null;
-                    this.pos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
+                    Point nextPos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
+
+                    boolean canMove1 = true;
+
+                    if (canMove(new Point(this.pos.x, nextPos.y), map)){
+                        this.pos = new Point(this.pos.x, nextPos.y);
+                    } else {
+                        canMove1=false;
+                    }
+                    if (canMove(new Point(nextPos.x, this.pos.y), map)){
+                        this.pos = new Point(nextPos.x, this.pos.y);
+                    } else if (!canMove1) {
+                        this.isDashing=false;
+                        this.dashFinalPoint=null;
+                    }
                 } else {
                     this.isDashing=false;
                     this.dashFinalPoint=null;
@@ -451,19 +479,19 @@ public class Player {
      * Permet de récupérer les mouvements du clavier.
      *
      */
-    public void getKeyboardMove(){
+    public void getKeyboardMove(Map map){
         if (!this.isDashing){
             if (Gdx.input.isKeyPressed(Keybinds.UP_KEY)){
-                this.move(0, 1);
+                this.move(0, 1, map);
                 this.isRunning=true;
             } else if (Gdx.input.isKeyPressed(Keybinds.DOWN_KEY)){
-                this.move(0, -1);
+                this.move(0, -1, map);
                 this.isRunning=true;
             } if (Gdx.input.isKeyPressed(Keybinds.LEFT_KEY)){
-                this.move(-1, 0);
+                this.move(-1, 0, map);
                 this.isRunning=true;
             } else if (Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY)){
-                this.move(1, 0);
+                this.move(1, 0, map);
                 this.isRunning=true;
             } if (!(Gdx.input.isKeyPressed(Keybinds.UP_KEY) || Gdx.input.isKeyPressed(Keybinds.DOWN_KEY) || Gdx.input.isKeyPressed(Keybinds.LEFT_KEY) || Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY))){
                 this.isRunning=false;

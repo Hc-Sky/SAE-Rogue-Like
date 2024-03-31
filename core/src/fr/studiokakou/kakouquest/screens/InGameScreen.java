@@ -163,9 +163,9 @@ public class InGameScreen implements Screen {
 		}
 
 		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
-			player.getKeyboardMove();
+			player.getKeyboardMove(this.map);
 			player.getOrientation();
-			player.dash();
+			player.dash(this.map);
 		}
 
 		cam.update();

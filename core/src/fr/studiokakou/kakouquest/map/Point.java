@@ -152,4 +152,13 @@ public class Point {
     public boolean equals(Point p){
         return (this.x==p.x && this.y==p.y);
     }
+
+    public boolean isPointIn(Point p1, Point p2){
+        if (this.x>=p1.x && this.x<=p2.x){
+            if (this.y>=p1.y && this.y<=p2.y){
+                return true;
+            }
+        }
+        return false;
+    }
 }
