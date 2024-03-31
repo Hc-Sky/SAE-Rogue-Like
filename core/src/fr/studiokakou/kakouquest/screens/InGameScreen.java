@@ -99,7 +99,7 @@ public class InGameScreen implements Screen {
 		this.currentLevel = 1;
 
 		Monster.createPossibleMonsters(currentLevel);
-		MeleeWeapon.createPossibleMeleeWeapons(currentLevel);
+		MeleeWeapon.createPossibleMeleeWeapons();
 
 		//map init
 		this.map_height = 150;

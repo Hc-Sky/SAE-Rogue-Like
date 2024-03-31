@@ -21,7 +21,7 @@ public class Map {
     /**
      * le sol de la map. C'est une liste de sol.
      */
-    public ArrayList<Floor> floors = new ArrayList<Floor>();
+    public ArrayList<Floor> floors = new ArrayList<>();
     /**
      * la liste des tests
      */
