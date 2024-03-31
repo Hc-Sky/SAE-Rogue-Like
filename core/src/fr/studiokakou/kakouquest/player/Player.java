@@ -402,6 +402,7 @@ public class Player {
                 boolean damaged = m.hit(this);
                 if (damaged){
                     this.currentWeapon.resistance-=1;
+                    System.out.println(this.currentWeapon.resistance);
                     if (currentWeapon.resistance<=0 && currentWeapon.resistance>-100){
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
                     }

@@ -304,7 +304,6 @@ public class Map {
 //                }
 //            }
             this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
-            this.chests.add(new Chest(r.getCenterOutOfMapPos().add(Floor.TEXTURE_WIDTH, 0), currentLevel));
         }
 
     }
@@ -323,20 +322,6 @@ public class Map {
         this.stairs.refreshInteract(player, this.stairs == closestObject);
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             weapon.refreshInteract(player, weapon == closestObject);
-        }
-
-        //updateClosest(closestObject, player);
-    }
-
-    public void updateClosest(Object object, Player player){
-        if (object.getClass() == Chest.class){
-            Chest chest = (Chest) object;
-            chest.refreshInteract(player, true);
-        } else if (object.getClass() == Stairs.class) {
-            this.stairs.refreshInteract(player, true);
-        } else if (object.getClass() == OnGroundMeleeWeapon.class){
-            OnGroundMeleeWeapon meleeWeapon = (OnGroundMeleeWeapon) object;
-            meleeWeapon.refreshInteract(player, true);
         }
     }
 

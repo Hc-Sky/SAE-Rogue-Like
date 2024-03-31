@@ -14,6 +14,7 @@ public class MeleeWeapon {
 	public String name;
 
 	//weapon texture
+	public String texturePath;
 	public Texture texture;
 	public Sprite sprite;
 
@@ -42,6 +43,7 @@ public class MeleeWeapon {
 		this.size = size;
 
 		//weapon texture
+		this.texturePath = texturePath;
 		this.texture = new Texture(texturePath);
 		this.sprite = new Sprite(this.texture);
 		this.sprite.setScale(this.size);
@@ -51,10 +53,9 @@ public class MeleeWeapon {
 		this.sprite.flip(true, false);
 	}
 
-	public void regen(){
-		this.resistance = maxResistance;
+	public MeleeWeapon getNew(){
+		return new MeleeWeapon(this.name, this.texturePath, damage, maxResistance, attackRange, attackSpeed, size);
 	}
-
 	public static void createPossibleMeleeWeapons(int currentLevel){
 		possibleMeleeWeapon = new Hashtable<>();
 		possibleMeleeWeapon.put(1, new ArrayList<>());

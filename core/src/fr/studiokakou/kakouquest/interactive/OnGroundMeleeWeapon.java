@@ -56,7 +56,6 @@ public class OnGroundMeleeWeapon {
         if (this.canInteract){
             toAdd = new OnGroundMeleeWeapon(player.pos, player.currentWeapon);
             player.currentWeapon = this.meleeWeapon;
-            player.currentWeapon.regen();
             this.toDelete=true;
         }
     }

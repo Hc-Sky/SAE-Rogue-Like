@@ -35,8 +35,6 @@ public class Chest {
     int interactKeyCode;
     Animation<TextureRegion> interactKeyAnimation;
 
-    float animationStateTime;
-
     static final int FRAME_COLS = 1;
     static final int FRAME_ROWS = 3;
 
@@ -79,7 +77,7 @@ public class Chest {
             rarityMeleeWeapon = MeleeWeapon.possibleMeleeWeapon.get(rarity);
         }
 
-        return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1));
+        return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1)).getNew();
     }
 
     public void dropLoot(){
