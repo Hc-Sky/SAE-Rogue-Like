@@ -2,7 +2,6 @@ package fr.studiokakou.kakouquest.weapon;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import fr.studiokakou.kakouquest.entity.Monster;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -54,8 +53,7 @@ public class MeleeWeapon {
 	public void regen(){
 		this.resistance = maxResistance;
 	}
-
-	public static void createPossibleMeleeWeapons(int currentLevel){
+	public static void createPossibleMeleeWeapons(){
 		possibleMeleeWeapon = new Hashtable<>();
 		possibleMeleeWeapon.put(1, new ArrayList<>());
 		possibleMeleeWeapon.put(2, new ArrayList<>());
