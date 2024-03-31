@@ -381,31 +381,6 @@ public class Map {
         return true;
     }
 
-    public boolean arePointsOnBrigde(Point[] points){
-        boolean[] areIn = new boolean[points.length];
-        Arrays.fill(areIn, false);
-
-        for (int i = 0; i < points.length; i++) {
-            Point point = points[i];
-            for (Bridge bridge : this.bridges) {
-                for (Point bp : bridge.points) {
-                    Point p1 = bp.mult(Floor.TEXTURE_WIDTH);
-                    Point p2 = bp.mult(Floor.TEXTURE_WIDTH).add(Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
-                    if (point.isPointIn(p1, p2)) {
-                        areIn[i]=true;
-                    }
-                }
-            }
-        }
-
-        for (boolean isIn : areIn){
-            if (!isIn){
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void dispose(){
         for (Floor f : this.floors){
             f.texture.dispose();

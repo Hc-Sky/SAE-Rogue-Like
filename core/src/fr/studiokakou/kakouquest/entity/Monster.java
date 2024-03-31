@@ -246,8 +246,8 @@ public class Monster {
             bloodStateTime+= Gdx.graphics.getDeltaTime();
             TextureRegion currentBloodFrame = this.bloodEffect.getKeyFrame(bloodStateTime, false);
             batch.draw(currentBloodFrame,
-                this.center().x - (float) currentBloodFrame.getRegionWidth() /2 + (float) this.width/2,
-                this.center().y - (float) currentBloodFrame.getRegionHeight() /2 + (float) this.height/2,
+                this.center().x - (float) currentBloodFrame.getRegionWidth() /2 + this.width/2,
+                this.center().y - (float) currentBloodFrame.getRegionHeight() /2 + this.height/2,
                 (float) currentBloodFrame.getRegionWidth(),
                 (float) currentBloodFrame.getRegionHeight()
             );
