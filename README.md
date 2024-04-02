@@ -1,12 +1,27 @@
-# KAKOU QUEST
-Projet BUT ALT Informatique du second semestre
+# Configuration de lancement
 
-Vous trouverez dans la branche main la dernière version sortie du jeu
-Vous trouverez dans la branche up-to-date-game-files la dernière version du jeu en développement
+## Sur IntellIj
+Ouvrir le projet puis cliquer en haut à droite sur la flèche pour ajouter une configuration
 
-# À PROPOS DU JEU
 
-Kakou Quest est un jeu roguelike en multijoueur dans lequel il vous faut descendre le plus profond possible dans un donjon tout en s'améliorant au fur et à mesure jusqu'à ce que vous mourriez et recommenciez au niveau 1. 
-Vos stats et niveau étant sauvegardés après la mort, le jeu devient de moins en moins difficile sur la longueur.
+![img.png](img.png)
 
-L'objectif est d'atteindre un dernier niveau pour combattre le BOSS final !
+Puis cliquez sur Edit configuration
+
+![img_1.png](img_1.png)
+
+Puis cliquez sur Application
+
+Renommez le Desktop
+
+Ajoutez les configurations suivantes
+![img_4.png](img_4.png)
+
+Sur Mac uniquement /!\ : Cliquez sur Modify options et Add VM Options et ajoutez cette option 
+`-XstartOnFirstThread`
+
+![img_2.png](img_2.png)
+
+Config finale :
+
+![img_3.png](img_3.png)
