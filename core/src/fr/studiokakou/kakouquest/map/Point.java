@@ -1,27 +1,23 @@
 package fr.studiokakou.kakouquest.map;
 
 /**
- * le type Point.
- * Cette classe est utilisée pour créer un objet Point.
- *
- * @version 1.0
+ * Represents a point in a two-dimensional space.
  */
 public class Point {
     /**
-     * le point x.
+     * The x-coordinate of the point.
      */
     public float x;
     /**
-     * le point y.
+     * The y-coordinate of the point.
      */
     public float y;
 
     /**
-     * Constructeur de Point.
-     * Sert à créer un objet Point.
+     * Constructs a new Point with the given coordinates.
      *
-     * @param x the x
-     * @param y the y
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
      */
     public Point(float x, float y){
         this.x=x;
@@ -29,30 +25,30 @@ public class Point {
     }
 
     /**
-     * AJoute un point à un autre.
+     * Adds the given x and y values to the current point coordinates.
      *
-     * @param x the x
-     * @param y the y
-     * @return the point
+     * @param x The x value to add.
+     * @param y The y value to add.
+     * @return The resulting Point.
      */
     public Point add(float x, float y){
         return new Point(this.x+x, this.y+y);
     }
 
     /**
-     * Ajoute un point à un autre point en p
+     * Adds another Point to the current point.
      *
-     * @param p the p
-     * @return the point
+     * @param p The Point to add.
+     * @return The resulting Point.
      */
     public Point add(Point p){
         return new Point(this.x+p.x, this.y+p.y);
     }
 
     /**
-     * Soustrait un point à un autre.
+     * Returns a new Point with reversed coordinates (negative of current coordinates).
      *
-     * @return the point
+     * @return The resulting Point.
      */
     public Point reverse(){
         return new Point(-this.x, -this.y);
@@ -63,14 +59,13 @@ public class Point {
     }
 
     /**
-     * Permet de savoir l'orientation entre deux points (start et end)
+     * Calculates the orientation between two points (start and end).
      *
-     * @param start the start
-     * @param end   the end
-     * @return the point
+     * @param start The starting point.
+     * @param end   The ending point.
+     * @return The orientation as a Point.
      */
     public static Point getOrientation(Point start, Point end){
-        //retourne un Point dont les valeurs de x et y ne peuvent etre que -1, 0 ou 1
         float x = end.x - start.x;
         float y = end.y - start.y;
         float totalDistance = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
@@ -97,12 +92,12 @@ public class Point {
     }
 
     /**
-     * Permet de savoir si un point est égal à un autre. Pour savoir si un point est dépassé
+     * Checks if a point exceeds another point based on orientation.
      *
-     * @param start       the start
-     * @param end         the end
-     * @param orientation the orientation
-     * @return the boolean
+     * @param start       The starting point.
+     * @param end         The ending point.
+     * @param orientation The orientation.
+     * @return True if the point exceeds, otherwise false.
      */
     public static boolean isPointExceeded(Point start, Point end, Point orientation){
         if (orientation.x > 0){
@@ -125,34 +120,46 @@ public class Point {
     }
 
     /**
-     * Permet de connaître la postion d'un point avec un angle et une distance
+     * Calculates the position of a point with given angle and distance from another point.
      *
-     * @param pos           the pos
-     * @param distance      the distance
-     * @param angleInDegree the angle in degree
-     * @return the point
+     * @param pos           The starting point.
+     * @param distance      The distance from the starting point.
+     * @param angleInDegree The angle in degrees.
+     * @return The resulting Point.
      */
     public static Point getPosWithAngle(Point pos, float distance, float angleInDegree){
-        //fonction qui retourne un Point qui est a distance de pos avec un angle de angleInDegree de l'axe des abscisses dans le sens des aiguilles d'une montre
         float x = (float) (pos.x + distance * Math.cos(Math.toRadians(angleInDegree)));
         float y = (float) (pos.y + distance * Math.sin(Math.toRadians(angleInDegree)));
         return new Point(x, y);
     }
 
     /**
-     * Multiplie un point par un nombre
+     * Multiplies the current point coordinates by a scalar value.
      *
-     * @param n the n
-     * @return the point
+     * @param n The scalar value.
+     * @return The resulting Point.
      */
     public Point mult(float n){
         return new Point(this.x*n, this.y*n);
     }
 
+    /**
+     * Checks if the current point is equal to another point.
+     *
+     * @param p The other Point to compare.
+     * @return True if the points are equal, otherwise false.
+     */
     public boolean equals(Point p){
         return (this.x==p.x && this.y==p.y);
     }
 
+    /**
+     * Checks if the current point lies within the rectangle defined by two other points.
+     *
+     * @param p1 The first corner of the rectangle.
+     * @param p2 The second corner of the rectangle.
+     * @return True if the point lies within the rectangle, otherwise false.
+     */
     public boolean isPointIn(Point p1, Point p2){
         if (this.x>=p1.x && this.x<=p2.x){
             if (this.y>=p1.y && this.y<=p2.y){

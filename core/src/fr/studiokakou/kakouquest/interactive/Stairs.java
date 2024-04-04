@@ -1,7 +1,5 @@
 package fr.studiokakou.kakouquest.interactive;
 
-//en t'aider de la classe Chest créer un class Stairs Lorsque l’on interagit avec, elle augmente le currentLevel de InGameScreen et appel la fonction nextLevel de InGameScreen qui s’occupe de générer une nouvelle map et de faire respawn le player au bon endroit
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,25 +13,36 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
-// La position des stairs doit etre au centre de la dernière room dans la liste des rooms de map. sa Texture est l’échelle qui rentre dans le sol (assets/map/floor_ladder.png).
-
+/**
+ * Represents a set of stairs that the player can interact with to move to the next level.
+ */
 public class Stairs {
+    /** The position of the stairs. */
     public Point pos;
 
+    /** Indicates if the stairs can be interacted with. */
     boolean canInteract = false;
 
+    /** Texture for the stairs. */
     Texture texture;
 
+    /** Reference to the in-game screen. */
     InGameScreen gameScreen;
 
-    //interact var
+    /** Key for interacting with the stairs. */
     String interactKey;
+    /** Key code for interacting with the stairs. */
     int interactKeyCode;
+    /** Animation for the interact key. */
     Animation<TextureRegion> interactKeyAnimation;
 
+    /**
+     * Constructs a set of stairs at the specified position.
+     * @param pos The position of the stairs.
+     * @param gameScreen The in-game screen object.
+     */
     public Stairs(Point pos, InGameScreen gameScreen){
         this.pos = pos;
-
         this.gameScreen = gameScreen;
 
         this.texture = new Texture("assets/map/floor_ladder.png");
@@ -44,6 +53,11 @@ public class Stairs {
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
     }
 
+    /**
+     * Refreshes the interaction state of the stairs.
+     * @param player The player object.
+     * @param isClosest Indicates if the stairs are the closest to the player.
+     */
     public void refreshInteract(Player player, boolean isClosest){
 
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
@@ -57,12 +71,19 @@ public class Stairs {
         }
     }
 
+    /**
+     * Handles the interaction with the stairs, advancing to the next level.
+     */
     public void interact(){
         if (this.canInteract){
             this.gameScreen.nextLevel();
         }
     }
 
+    /**
+     * Draws the stairs.
+     * @param batch The sprite batch to draw with.
+     */
     public void draw(SpriteBatch batch){
         if (canInteract){
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
@@ -72,5 +93,3 @@ public class Stairs {
         batch.draw(this.texture, this.pos.x, this.pos.y);
     }
 }
-
-

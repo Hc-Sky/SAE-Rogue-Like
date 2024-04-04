@@ -18,224 +18,127 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import java.time.LocalDateTime;
 
 /**
- * le type Player.
- * Cette classe est utilisée pour créer un objet Player.
- *
- * @version 1.0
+ * Represents the player entity.
  */
 public class Player {
 
-    /**
-     * la position du joueur.
-     */
-//player pos
+    /** The position of the player. */
     public Point pos;
-    /**
-     * la dernière position du joueur.
-     */
+    /** The last position of the player. */
     Point lastPos;
 
-    /**
-     * le nom du joueur.
-     */
-//player stats
+    /** The name of the player. */
     public String name;
-    /**
-     * les points de vie.
-     */
+    /** The hit points of the player. */
     public int hp;
+    /** The maximum hit points of the player. */
     public int max_hp;
-    /**
-     * la force.
-     */
+    /** The strength of the player. */
     public int strength;
-    /**
-     * la vitesse.
-     */
+    /** The speed of the player. */
     public float speed;
-    /**
-     * la stamina.
-     */
+    /** The stamina of the player. */
     public float stamina;
+    /** The maximum stamina of the player. */
     public int max_stamina;
 
-    /**
-     * l'arme actuelle.
-     */
-//weapon
+    /** The current weapon equipped by the player. */
     public MeleeWeapon currentWeapon;
 
-    /**
-     * si le joueur est en train de dash.
-     */
-//dash infos
+    /** Indicates if the player is dashing. */
     boolean isDashing = false;
-    /**
-     * si le joueur peut dash.
-     */
+    /** Indicates if the player can dash. */
     boolean canDash = true;
-    /**
-     * le point final du dash.
-     */
+    /** The final point of the dash. */
     Point dashFinalPoint;
-    /**
-     * le point de départ du dash.
-     */
+    /** The start point of the dash. */
     Point dashStartPoint;
-    /**
-     * l'orientation du dash.
-     */
+    /** The orientation of the dash. */
     Point dashOrientation;
-    /**
-     * le timer du dash.
-     */
+    /** The timer of the dash. */
     LocalDateTime dashTimer;
-    /**
-     * le temps du dash.
-     */
+    /** The state time of the dash animation. */
     float dashStateTime;
 
-    /**
-     * la distance de l'arme de mêlée du joueur.
-     */
-//attack var
+    /** The distance of the player's melee weapon. */
     public static float PLAYER_MELEE_WEAPON_DISTANCE=10f;
-    /**
-     * la pause entre les attaques.
-     */
-    public static float ATTACK_PAUSE = 200f; //en millisecondes
-    /**
-     * la stamina utilisée pour attaquer.
-     */
+    /** The pause between attacks. */
+    public static float ATTACK_PAUSE = 200f;
+    /** The stamina usage for attacking. */
     static int ATTACK_STAMINA_USAGE = 2;
 
+    /** The timer for stamina regeneration. */
     LocalDateTime staminaTimer;
-    /**
-     * le timer de l'attaque.
-     */
+    /** The timer for the attack. */
     LocalDateTime attackTimer;
-    /**
-     * si le joueur est en train d'attaquer.
-     */
+    /** Indicates if the player is attacking. */
     public boolean isAttacking=false;
-    /**
-     * si le joueur peut attaquer.
-     */
+    /** Indicates if the player can attack. */
     public boolean canAttack = true;
-    /**
-     * la direction de l'attaque.
-     */
+    /** The direction of the attack. */
     Point attackDirection;
-    /**
-     * la position de l'attaque.
-     */
+    /** The position of the attack. */
     Point attackPos;
-    /**
-     * la rotation de l'attaque.
-     */
+    /** The end rotation of the attack. */
     float attackEndRotation;
-    /**
-     * la rotation de l'attaque.
-     */
+    /** The rotation of the attack. */
     float attackRotation;
 
-    /**
-     * la distance du dash.
-     */
-//dash stats
+    /** The distance of the dash. */
     static float DASH_DISTANCE = 50f;
-    /**
-     * la vitesse du dash.
-     */
+    /** The speed of the dash. */
     static float DASH_SPEED = 500f;
-    /**
-     * la pause entre les dashs.
-     */
-    static long DASH_PAUSE = 3;   //en secondes
-    /**
-     * la stamina utilisée pour dash.
-     */
+    /** The pause between dashes. */
+    static long DASH_PAUSE = 3;
+    /** The stamina usage for dashing. */
     static int DASH_STAMINA_USAGE = 10;
 
-    /**
-     * la taille de la texture du joueur.
-     */
-//player texture size
+    /** The height of the player's texture. */
     public int texture_height;
-    /**
-     * la largeur de la texture du joueur.
-     */
+    /** The width of the player's texture. */
     public int texture_width;
 
-    /**
-     *
-     */
-    boolean flip=false;       //false = regard à droite
-    /**
-     * si le joueur est en train de courir.
-     */
+    /** Indicates if the player is flipped. */
+    boolean flip=false;
+    /** Indicates if the player is running. */
     boolean isRunning=false;
-    /**
-     * si le joueur est en train de spawn.
-     */
+    /** Indicates if the player is spawning. */
     public boolean isPlayerSpawning=false;
-    /**
-     * si le joueur a spawn.
-     */
+    /** Indicates if the player has spawned. */
     public boolean hasPlayerSpawn=false;
 
-    /**
-     * la texture de l'animation de spawn.
-     */
-//animations
+    /** The idle animation of the player. */
     Animation<TextureRegion> idleAnimation;
-    /**
-     * l'animation de course.
-     */
+    /** The running animation of the player. */
     Animation<TextureRegion> runAnimation;
-    /**
-     * l'animation de course.
-     */
+    /** The reversed running animation of the player. */
     Animation<TextureRegion> runAnimationRevert;
-    /**
-     * l'animation de dash.
-     */
+    /** The dash animation of the player. */
     Animation<TextureRegion> dashAnimation;
-    /**
-     * l'animation de spawn.
-     */
+    /** The spawn animation of the player. */
     Animation<TextureRegion> spawnAnimation;
-
-
+    /** The blood effect animation. */
     Animation<TextureRegion> bloodEffect;
-    /**
-     * The Blood state time.
-     */
+
+    /** The state time of the blood effect animation. */
     float bloodStateTime=0f;
 
-    /**
-     * le nombre de colonne de l'animation.
-     */
-    static final int FRAME_COLS = 1,
+    /** The number of columns in the animation. */
+    static final int FRAME_COLS = 1;
+    /** The number of rows in the animation. */
+    static final int FRAME_ROWS = 4;
 
     /**
-     * le nombre de lignes de l'animation.
-     */
-    FRAME_ROWS = 4;
-
-    /**
-     * Constructeur de Player.
-     * Sert à créer un objet Player.
+     * Constructs a new Player object.
      *
-     * @param spawn the spawn
-     * @param name  the name
+     * @param spawn The spawn point of the player.
+     * @param name The name of the player.
      */
-
     public Player(Point spawn,String name){
 
         this.name = name;
 
-        //player animations
+        // Load player animations
         this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
         this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
@@ -243,16 +146,15 @@ public class Player {
         this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
 
-        //get player texture height and width
+        // Get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
         this.texture_height = Utils.getAnimationHeight(this.idleAnimation);
 
-
-        //spawn player pos
+        // Set player spawn position
         this.pos = new Point(spawn.x-((float) this.texture_width /2), spawn.y);
         this.lastPos = this.pos;
 
-        //default values
+        // Set default values
         this.max_hp=100;
         this.hp=100;
         this.strength=10;
@@ -260,29 +162,29 @@ public class Player {
         this.max_stamina=100;
         this.stamina = 100;
 
-        //default weapon
+        // Set default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
     }
 
     /**
-     * Permet de faire spawn le joueur.
+     * Spawns the player, playing the spawn animation.
      */
-    public void spawnPlayer(){   //used to play the spawning animation
+    public void spawnPlayer(){
         InGameScreen.stateTime=0f;
         this.isPlayerSpawning=true;
     }
 
+    /**
+     * Handles player death.
+     */
     public void playerDeath(){
-
-        //default values
+        // Reset player stats and weapon on death
         this.max_hp=100;
         this.hp=100;
         this.strength=10;
         this.speed=40f;
         this.max_stamina=100;
         this.stamina = 100;
-
-        //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
     }
 
@@ -291,18 +193,18 @@ public class Player {
     }
 
     /**
-     * Center point.
+     * Retrieves the center point of the player.
      *
-     * @return the point
+     * @return The center point.
      */
     public Point center(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /4));
     }
 
     /**
-     * Texture center point.
+     * Retrieves the center point of the player's texture.
      *
-     * @return the point
+     * @return The texture center point.
      */
     public Point textureCenter(){
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
@@ -320,10 +222,11 @@ public class Player {
     }
 
     /**
+     * Moves the player.
      *
-     *
-     * @param x the x
-     * @param y the y
+     * @param x The movement along the x-axis.
+     * @param y The movement along the y-axis.
+     * @param map The game map.
      */
     public void move(float x, float y, Map map){
         if (canMove(this.pos.add(x*Gdx.graphics.getDeltaTime()*this.speed, y*Gdx.graphics.getDeltaTime()*this.speed), map)){
@@ -333,19 +236,21 @@ public class Player {
     }
 
     /**
-     * Can action with stamina boolean.
+     * Checks if the player has enough stamina to perform an action.
      *
-     * @param amount the amount
-     * @return the boolean
+     * @param amount The amount of stamina needed.
+     * @return True if the player has enough stamina, false otherwise.
      */
     public boolean canActionWithStamina(int amount){
         return this.stamina-amount >=0;
     }
 
     /**
-     * Dash.
+     * Performs a dash action.
+     *
+     * @param map The game map.
      */
-    public void dash(Map map){    //used for the dash animation
+    public void dash(Map map){
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
                 Point mousePos = Utils.mousePosUnproject(Camera.camera);
@@ -387,11 +292,10 @@ public class Player {
             this.stamina-=Player.DASH_STAMINA_USAGE;
             this.staminaTimer = LocalDateTime.now();
         }
-
     }
 
     /**
-     * Permet de faire attaquer le joueur.
+     * Initiates an attack action.
      */
     public void attack() {
         if (canAttack && !this.isAttacking && this.canActionWithStamina(Player.ATTACK_STAMINA_USAGE)){
@@ -419,8 +323,7 @@ public class Player {
     }
 
     /**
-     * Permet de vérifier si le joueur a touché un monstre.
-     *
+     * Checks if the player has hit a monster.
      */
     public void checkHit(){
         Rectangle meleeWeaponRectangle = this.currentWeapon.sprite.getBoundingRectangle();
@@ -440,9 +343,9 @@ public class Player {
     }
 
     /**
-     * Permet d'afficher l'attaque du joueur.
+     * Displays the player's attack animation.
      *
-     * @param batch the batch
+     * @param batch The sprite batch to draw the animation.
      */
     public void showAttack(SpriteBatch batch){
         if (this.attackRotation <= this.attackEndRotation){
@@ -467,8 +370,7 @@ public class Player {
     }
 
     /**
-     *
-     * Permet de récupérer l'orientation du joueur.
+     * Retrieves the player's orientation.
      */
     public void getOrientation(){
         Point mousePos = Utils.mousePosUnproject(Camera.camera);
@@ -476,8 +378,9 @@ public class Player {
     }
 
     /**
-     * Permet de récupérer les mouvements du clavier.
+     * Retrieves keyboard input for player movement.
      *
+     * @param map The game map.
      */
     public void getKeyboardMove(Map map){
         if (!this.isDashing){
@@ -502,9 +405,9 @@ public class Player {
     }
 
     /**
-     * Dessine le joueur.
+     * Draws the player.
      *
-     * @param batch the batch
+     * @param batch The sprite batch to draw the player.
      */
     public void draw(SpriteBatch batch){
 
@@ -522,7 +425,7 @@ public class Player {
                 currentFrame = this.idleAnimation.getKeyFrame(InGameScreen.stateTime, true);
             }
 
-            //dash animation
+            // Dash animation
             if (!this.canDash && this.dashOrientation!=null && !this.dashAnimation.isAnimationFinished(this.dashStateTime)){
                 this.dashStateTime += Gdx.graphics.getDeltaTime();
                 TextureRegion currentDashFrame = this.dashAnimation.getKeyFrame(this.dashStateTime, false);
@@ -530,7 +433,7 @@ public class Player {
             }
             batch.draw(currentFrame, flip ? this.pos.x+this.texture_width : this.pos.x, this.pos.y, this.flip ? -this.texture_width : this.texture_width, this.texture_height);
 
-            //blood animation
+            // Blood animation
             if (bloodStateTime>=0){
                 bloodStateTime+= Gdx.graphics.getDeltaTime();
                 TextureRegion currentBloodFrame = this.bloodEffect.getKeyFrame(bloodStateTime, false);
@@ -553,19 +456,8 @@ public class Player {
             batch.draw(currentSpawnFrame, this.center().x- (float) currentSpawnFrame.getRegionWidth() /2, this.pos.y);
             if (this.spawnAnimation.getKeyFrameIndex(InGameScreen.stateTime) == 3){
                 this.hasPlayerSpawn=true;
-            }
-            if (this.spawnAnimation.isAnimationFinished(InGameScreen.stateTime)){
-                this.isPlayerSpawning = false;
+                this.isPlayerSpawning=false;
             }
         }
-
-        if (!this.canAttack) {
-            this.showAttack(batch);
-        }
-    }
-
-    public void takeDamage(int damage){
-        this.hp -= damage;
-        this.bloodStateTime=0f;
     }
 }

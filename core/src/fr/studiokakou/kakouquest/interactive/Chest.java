@@ -16,27 +16,47 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.util.ArrayList;
 
+/**
+ * Class representing a chest in the game world.
+ */
 public class Chest {
+    /** Position of the chest. */
     public Point pos;
+    /** Melee weapon inside the chest. */
     MeleeWeapon meleeWeaponLoot;
 
+    /** Indicates if the chest is opened. */
     boolean isOpened=false;
+    /** Indicates if the chest is being opened. */
     boolean isOpenning = false;
+    /** Indicates if the chest can be interacted with. */
     public boolean canInteract = false;
 
+    /** Texture region for the closed chest. */
     TextureRegion closed;
+    /** Texture region for the opened chest. */
     TextureRegion opened;
 
+    /** Animation for the opening of the chest. */
     Animation<TextureRegion> openningAnimation;
 
-    //interact var
+    /** Key for interacting with the chest. */
     String interactKey;
+    /** Key code for interacting with the chest. */
     int interactKeyCode;
+    /** Animation for the interact key. */
     Animation<TextureRegion> interactKeyAnimation;
 
+    /** Number of columns in the texture region for animation. */
     static final int FRAME_COLS = 1;
+    /** Number of rows in the texture region for animation. */
     static final int FRAME_ROWS = 3;
 
+    /**
+     * Constructs a chest object with the given position and current level.
+     * @param pos The position of the chest.
+     * @param currentLevel The current level of the game.
+     */
     public Chest(Point pos, int currentLevel){
         this.pos = pos;
 
@@ -52,6 +72,11 @@ public class Chest {
         this.meleeWeaponLoot = getRandomMeleeWeapon(currentLevel);
     }
 
+    /**
+     * Retrieves a random melee weapon based on the current level.
+     * @param currentLevel The current level of the game.
+     * @return A random melee weapon.
+     */
     public MeleeWeapon getRandomMeleeWeapon(int currentLevel){
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
@@ -79,10 +104,18 @@ public class Chest {
         return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1)).getNew();
     }
 
+    /**
+     * Drops the loot from the chest onto the ground.
+     */
     public void dropLoot(){
         Map.onGroundMeleeWeapons.add(new OnGroundMeleeWeapon(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.meleeWeaponLoot));
     }
 
+    /**
+     * Refreshes the interaction state of the chest.
+     * @param player The player object.
+     * @param isClosest Indicates if the chest is the closest to the player.
+     */
     public void refreshInteract(Player player, boolean isClosest){
 
         if (this.isOpened || this.isOpenning || !isClosest){
@@ -102,6 +135,10 @@ public class Chest {
         }
     }
 
+    /**
+     * Draws the chest onto the screen.
+     * @param batch The sprite batch to draw with.
+     */
     public void draw(SpriteBatch batch){
         if (canInteract && !this.isOpened && !this.isOpenning){
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);

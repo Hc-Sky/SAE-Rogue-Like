@@ -24,7 +24,7 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 public class InGameScreen implements Screen {
 
 	/**
-	 * le temps entre chaque frame.
+	 * le temps entre chaque frame pour les animations.
 	 */
 //defaults
     public static float FRAME_DURATION=0.17f;
@@ -43,6 +43,9 @@ public class InGameScreen implements Screen {
 	 */
 	SpriteBatch hudBatch;
 
+	/**
+	 * variable stateTime utilisée pour gérer les animations en fonctions des images par secondes du joueur pour éviter d'avoir un changement de vitesse d'animation
+	 */
 	public static float stateTime=0f;
 
 	/**
@@ -64,7 +67,6 @@ public class InGameScreen implements Screen {
 	/**
 	 * le niveau actuel.
 	 */
-//map info
 	int currentLevel;
 	/**
 	 * la map.
@@ -95,9 +97,9 @@ public class InGameScreen implements Screen {
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
 
-
 		this.currentLevel = 1;
 
+		//utilisé pour gérer la rareté des armes et des monstres car ils sont dans des dictionnaires qu'il faut initialiser
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
 
@@ -127,55 +129,71 @@ public class InGameScreen implements Screen {
 	}
 
 	/**
-	 * Affiche l'écran de jeu.
+	 * Créé l'écran du jeu
 	 */
 	@Override
 	public void show() {
 
+		//on initialise le stateTime à 0 a la création du InGameScreen
 		InGameScreen.stateTime=0f;
 
-		//set cursor
+		//On définie l'image du curseur
 		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
 		pm.dispose();
 
+		//On créer le HUD
 		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
 
+		//On récupère le temps actuel à la création pour gérer l'animation d'apparition du joueur
 		startTime = TimeUtils.millis();
 
+		//On fait apparaître les monstres et les objets interractifs sur la map
 		this.map.spawnMonsters(currentLevel);
 		this.map.genInteractive(currentLevel, this);
 	}
 
+	/**
+	 * Function called on each new frame
+	 * @param delta The time in seconds since the last render.
+	 */
     @Override
     public void render(float delta) {
+		//on augmente le stateTime courant
         InGameScreen.stateTime += delta;
 
+		//uniquement au developpement : permet de quitter le jeu avec la touche échap
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			Gdx.app.exit();
 		}
 
+		//on efface tout ce qu'il y a sur l'écran en choisissant la couleur de fond
 		Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		//si ça fait une seconde que la partie est lancée : on lance l'animation d'apparition du joueur
 		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.spawnPlayer();
 		}
 
+		//si le joueur est apparue : on actualise les touches du clavier et ses mouvements
 		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.getKeyboardMove(this.map);
 			player.getOrientation();
 			player.dash(this.map);
 		}
 
+		//on actualise la position de la caméra
 		cam.update();
 
 		//update monsters pos
 		this.map.moveMonsters(this.player);
 		this.map.updateInteractive(this.player);
 
+		//on choisit la vue de la caméra pour afficher l'écran
 		batch.setProjectionMatrix(Camera.camera.combined);
 
+		//on commence à "dessiner"
 		batch.begin();
 
 		//map draw
@@ -184,24 +202,30 @@ public class InGameScreen implements Screen {
 		this.map.drawMonsters(batch);
 		this.map.updateHitsAnimation(this.batch);
 
+		//on appel la fonction qui permet au joueur de regagner son énergie si besoin
 		player.regainStamina();
+
+		//on affiche le player
 		player.draw(this.batch);
 
 		batch.end();
 
+		//on vérifie si des monstres sont morts
 		this.map.checkDeadMonster();
 
-
+		//on dessine le HUD
 		hudBatch.begin();
 		this.hud.draw(hudBatch);
 		hudBatch.end();
 
+		//si le joueur est mort : on recommence à 0
 		if (player.hp<=0){
 			this.currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();
 		}
 
+		//on actualise les objets avec lesquels le joueur a intérragie
 		this.map.updateRemoveInteractive();
 	}
 

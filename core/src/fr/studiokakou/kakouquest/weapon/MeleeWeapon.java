@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-
+/**
+ * This class represents a melee weapon in the game.
+ * Each weapon has a name, texture, damage, resistance, attack range, attack speed, and size.
+ * The class also maintains a dictionary of possible melee weapons that can be created.
+ */
 public class MeleeWeapon {
 
 	public String name;
@@ -31,6 +35,17 @@ public class MeleeWeapon {
 
 	public static Dictionary<Integer, ArrayList<MeleeWeapon>> possibleMeleeWeapon = new Hashtable<>();
 
+	/**
+	 * Constructs a new MeleeWeapon with the given parameters.
+	 *
+	 * @param name The name of the weapon.
+	 * @param texturePath The path to the texture of the weapon.
+	 * @param damage The damage the weapon can inflict.
+	 * @param resistance The resistance of the weapon.
+	 * @param attackRange The range of the weapon's attack.
+	 * @param attackSpeed The speed of the weapon's attack.
+	 * @param size The size of the weapon.
+	 */
 	public MeleeWeapon(String name, String texturePath, int damage, int resistance, float attackRange, float attackSpeed, float size) {
 		//weapon stats
 		this.name = name;
@@ -52,9 +67,21 @@ public class MeleeWeapon {
 		this.sprite.flip(true, false);
 	}
 
+	/**
+	 * Returns a new MeleeWeapon with the same properties as this one.
+	 *
+	 * @return A new MeleeWeapon with the same properties as this one.
+	 */
 	public MeleeWeapon getNew(){
 		return new MeleeWeapon(this.name, this.texturePath, damage, maxResistance, attackRange, attackSpeed, size);
 	}
+
+	/**
+	 * Creates a dictionary of possible melee weapons that can be created.
+	 * The dictionary is initialized with 10 keys, each representing a level from 1 to 10.
+	 * Each key is associated with an ArrayList of MeleeWeapon objects.
+	 * Depending on the current level, different types of weapons are added to the corresponding ArrayList.
+	 */
 	public static void createPossibleMeleeWeapons(){
 		possibleMeleeWeapon = new Hashtable<>();
 		possibleMeleeWeapon.put(1, new ArrayList<>());
@@ -67,7 +94,6 @@ public class MeleeWeapon {
 		possibleMeleeWeapon.put(8, new ArrayList<>());
 		possibleMeleeWeapon.put(9, new ArrayList<>());
 		possibleMeleeWeapon.put(10, new ArrayList<>());
-
 
 		possibleMeleeWeapon.get(8).add(ANIME_SWORD());
 		possibleMeleeWeapon.get(6).add(BATON_WITH_SPIKES());
@@ -90,6 +116,8 @@ public class MeleeWeapon {
 		possibleMeleeWeapon.get(4).add(WARAXE());
 	}
 
+
+	//static weapons for better optimisation
 	public static MeleeWeapon ANIME_SWORD () {return new MeleeWeapon("Anime sword", "assets/weapon/weapon_anime_sword.png", 80, 100, 140, 0.6f, 1);}
 	public static MeleeWeapon BATON_WITH_SPIKES () {return new MeleeWeapon("Baton with spikes", "assets/weapon/weapon_baton_with_spikes.png", 40, 35, 150, 0.2f, 1.2f);}
 	public static MeleeWeapon BIG_HAMMER () {return new MeleeWeapon("Big hammer", "assets/weapon/weapon_big_hammer.png", 70, 55, 160, 0.3f, 1.5f);}

@@ -66,7 +66,7 @@ public class SplashScreen implements Screen {
      */
     @Override
     public void show() {
-        this.icon = new Texture("assets/window/icon.png");
+        this.icon = new Texture("assets/window/icon_with_background.png");
     }
 
     /**

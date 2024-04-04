@@ -3,19 +3,15 @@ package fr.studiokakou.kakouquest.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.util.ArrayList;
 
 /**
- * Le type Hud. Cette classe est utilisée pour créer un objet Hud.
+ * The type Hud. This class is used to create a Hud object.
  *
  * @version 1.0
- *
- *
  */
 public class Hud {
     /**
@@ -47,8 +43,8 @@ public class Hud {
     float hudSize;
 
     /**
-     * Constructeur de l'HUD.
-     * Sert à créer un objet Hud.
+     * Constructor of the HUD.
+     * Used to create a Hud object.
      *
      * @param player       the player
      * @param currentLevel the current level
@@ -60,7 +56,6 @@ public class Hud {
 
         this.hudSize = hudSizeMult;
 
-        //health bar textures
         this.healthBarOutside = new Texture("assets/hud/health/outside.png");
         for (int i = 6; i >= 1; i--) {
             this.healthBar.add(new Texture("assets/hud/health/"+i+".png"));
@@ -72,7 +67,7 @@ public class Hud {
     }
 
     /**
-     * Dessine l'HUD.
+     * Draws the HUD.
      *
      * @param batch the batch
      */

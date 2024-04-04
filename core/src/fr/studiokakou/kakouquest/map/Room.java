@@ -5,34 +5,29 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
 
 /**
- * le type Room.
- * Cette classe est utilisée pour créer un objet Room.
- *
- * @version 1.0
- * @author hugocohen--cofflard
+ * Represents a room in the map.
  */
 public class Room {
 
-    /**
-     * le point de départ.
-     */
-    Point start;
-    /**
-     * le point de fin.
-     */
-    Point end;
+	/**
+	 * The starting point of the room.
+	 */
+	Point start;
+	/**
+	 * The ending point of the room.
+	 */
+	Point end;
 
-    /**
-     * Constructeur de Room.
-	 * Sert à créer un objet Room.
-     *
-     * @param startX    the start x
-     * @param startY    the start y
-     * @param endX      the end x
-     * @param endY      the end y
-     * @param hasStairs the has stairs
-     */
-    public Room(int startX, int startY, int endX, int endY, boolean hasStairs){
+	/**
+	 * Constructs a new Room object.
+	 *
+	 * @param startX    The x-coordinate of the starting point.
+	 * @param startY    The y-coordinate of the starting point.
+	 * @param endX      The x-coordinate of the ending point.
+	 * @param endY      The y-coordinate of the ending point.
+	 * @param hasStairs Indicates whether the room has stairs.
+	 */
+	public Room(int startX, int startY, int endX, int endY, boolean hasStairs){
 		if ((endX-startX)%2 ==0){
 			endX-=1;
 		}
@@ -43,11 +38,12 @@ public class Room {
 		this.end = new Point(endX, endY);
 	}
 
-    /**
-     * colision avec une salle.
-	 * Sert à vérifier si une salle est en collision avec une autre salle.
-     * @return the boolean
-     */
+	/**
+	 * Checks if the room collides with any other room.
+	 *
+	 * @param rooms The list of rooms to check collision with.
+	 * @return True if collision occurs, otherwise false.
+	 */
 	public boolean isColliding(ArrayList<Room> rooms){
 		for (Room r : rooms){
 			if (this.collideRoom(r)){
@@ -131,21 +127,21 @@ public class Room {
 		return false;
 	}
 
-    /**
-     * Permet de connaître le centre d'une salle.
-     *
-     * @return the point
-     */
-    public Point getCenter(){
+	/**
+	 * Returns the center point of the room.
+	 *
+	 * @return The center point.
+	 */
+	public Point getCenter(){
 		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2);
 	}
 
-    /**
-     * Permet de connaître le centre d'une salle hors de la map.
-     *
-     * @return the point
-     */
-    public Point getCenterOutOfMap(){
+	/**
+	 * Returns the center point of the room, adjusted to be out of the map.
+	 *
+	 * @return The center point out of the map.
+	 */
+	public Point getCenterOutOfMap(){
 		return new Point(this.start.x+(this.end.x-this.start.x)/2, this.start.y+(this.end.y-this.start.y)/2).mult(Floor.TEXTURE_WIDTH);
 	}
 

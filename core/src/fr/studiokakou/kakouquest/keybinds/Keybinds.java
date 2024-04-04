@@ -3,33 +3,23 @@ package fr.studiokakou.kakouquest.keybinds;
 import fr.studiokakou.kakouquest.GetProperties;
 
 /**
- * L'attribution des taches Keybinds.
+ * Manages the keybindings for various actions.
  */
 public class Keybinds {
-    /**
-     * La touche du Haut (Z).
-     */
+    /** The key for moving up (Z). */
     public static int UP_KEY;
-    /**
-     * La touche du bas 'S'.
-     */
+    /** The key for moving down (S). */
     public static int DOWN_KEY;
-    /**
-     * La touche de gauche 'Q'.
-     */
+    /** The key for moving left (Q). */
     public static int LEFT_KEY;
-    /**
-     * La touche de droite 'D'.
-     */
+    /** The key for moving right (D). */
     public static int RIGHT_KEY;
-    /**
-     * La touche de dash 'Espace'.
-     */
+    /** The key for dashing (Space). */
     public static int DASH_KEY;
 
     /**
-     * Met à jour les touches.
-     * Permet de mettre à jour les touches en fonction du fichier de configuration.
+     * Updates the keybindings.
+     * This method updates the keybindings based on the configuration file.
      */
     public static void updateKeys(){
         Keybinds.UP_KEY = GetProperties.getIntProperty("KEY_UP");

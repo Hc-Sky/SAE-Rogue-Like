@@ -13,14 +13,14 @@ import fr.studiokakou.kakouquest.screens.InGameScreen;
 import java.util.Random;
 
 /**
- * le type Utils.
- * Cette classe est utilisée pour créer un objet Utils.
+ * The Utils class.
+ * Used to store every utility static functions that does not link to a specific class
  * @version 1.0
  */
 public class Utils {
+
     /**
-     * Recupere l'animmaton d'un sprite sheet. La fonction découpe le sprite sheet en plusieurs frames.
-     *
+     * Retrieves the animation from a sprite sheet. The function cuts the sprite sheet into multiple frames.
      *
      * @param textureName the texture name
      * @param FRAME_COLS  the frame cols
@@ -29,25 +29,21 @@ public class Utils {
      */
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS){
         Texture texture = new Texture(textureName);
-
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
                 texture.getHeight() / FRAME_ROWS);
-
         TextureRegion[] textureRegions = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-
         int index = 0;
         for (int i = 0; i < FRAME_ROWS; i++) {
             for (int j = 0; j < FRAME_COLS; j++) {
                 textureRegions[index++] = tmp[i][j];
             }
         }
-
         return new Animation<TextureRegion>(InGameScreen.FRAME_DURATION, textureRegions);
     }
 
     /**
-     *Permet de récupérer une animation avec un nom de texture, un nombre de colonnes, un nombre de lignes et une durée de frame.
+     * Retrieves an animation with a texture name, number of columns, number of rows, and frame duration.
      *
      * @param textureName    the texture name
      * @param FRAME_COLS     the frame cols
@@ -57,25 +53,21 @@ public class Utils {
      */
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
         Texture texture = new Texture(textureName);
-
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
                 texture.getHeight() / FRAME_ROWS);
-
         TextureRegion[] textureRegions = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-
         int index = 0;
         for (int i = 0; i < FRAME_ROWS; i++) {
             for (int j = 0; j < FRAME_COLS; j++) {
                 textureRegions[index++] = tmp[i][j];
             }
         }
-
         return new Animation<TextureRegion>(frame_duration, textureRegions);
     }
 
     /**
-     * Permet de récupérer l'horizontale d'une animation.
+     * Retrieves the horizontal of an animation.
      *
      * @param textureName    the texture name
      * @param FRAME_COLS     the frame cols
@@ -85,25 +77,21 @@ public class Utils {
      */
     public static Animation<TextureRegion> getAnimationHorizontal(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
         Texture texture = new Texture(textureName);
-
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
                 texture.getHeight() / FRAME_ROWS);
-
         TextureRegion[] textureRegions = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-
         int index = 0;
         for (int i = 0; i < FRAME_COLS; i++) {
             for (int j = 0; j < FRAME_ROWS; j++) {
                 textureRegions[index++] = tmp[j][i];
             }
         }
-
         return new Animation<TextureRegion>(frame_duration, textureRegions);
     }
 
     /**
-     * Permet de récupérer une animation dans l'ordre inverse.
+     * Retrieves an animation in reverse order.
      *
      * @param textureName the texture name
      * @param FRAME_COLS  the frame cols
@@ -112,25 +100,21 @@ public class Utils {
      */
     public static Animation<TextureRegion> getAnimationRevert(String textureName, int FRAME_COLS, int FRAME_ROWS){
         Texture texture = new Texture(textureName);
-
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
                 texture.getHeight() / FRAME_ROWS);
-
         TextureRegion[] textureRegions = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-
         int index = 0;
         for (int i = FRAME_ROWS-1; i >= 0; i--) {
             for (int j = 0; j < FRAME_COLS; j++) {
                 textureRegions[index++] = tmp[i][j];
             }
         }
-
         return new Animation<TextureRegion>(InGameScreen.FRAME_DURATION, textureRegions);
     }
 
     /**
-     * Permet de récupérer la largeur d'une animation.
+     * Retrieves the width of an animation.
      *
      * @param animation the animation
      * @return the int
@@ -141,7 +125,7 @@ public class Utils {
     }
 
     /**
-     * Permet de récupérer la hauteur d'une animation.
+     * Retrieves the height of an animation.
      *
      * @param animation the animation
      * @return the int
@@ -181,7 +165,7 @@ public class Utils {
     }
 
     /**
-     * La position de la souris.
+     * The mouse position.
      *
      * @param camera the camera
      * @return the point
@@ -192,7 +176,7 @@ public class Utils {
     }
 
     /**
-     * La direction entre deux points.
+     * The direction between two points.
      *
      * @param p1    the p 1
      * @param p2    the p 2
@@ -208,7 +192,7 @@ public class Utils {
     }
 
     /**
-     * la distance entre deux points.
+     * The distance between two points.
      *
      * @param p1 the p 1
      * @param p2 the p 2
@@ -219,7 +203,7 @@ public class Utils {
     }
 
     /**
-     * random int.
+     * Random int.
      *
      * @param min the min
      * @param max the max
@@ -230,19 +214,18 @@ public class Utils {
     }
 
     /**
-     * Permet de récupérer un angle en degrée entre deux points.
+     * Retrieves the angle in degrees between two points.
      *
      * @param p1 the p 1
      * @param p2 the p 2
      * @return the float
      */
     public static float getAngleWithPoint(Point p1, Point p2){
-        //retourne un angle en degree (float) qu'il y a du point p1 au point p2 par l'axe des abscisses dans le sens des aiguilles d'une montre
         return (float) Math.toDegrees(Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /**
-     * Permet de récupérer la distance entre une postion et le joueur.
+     * Retrieves the distance between a position and the player.
      *
      * @param pos       the pos
      * @param playerPos the player pos

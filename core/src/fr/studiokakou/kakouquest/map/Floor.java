@@ -6,40 +6,26 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import java.util.ArrayList;
 
 /**
- * The type Floor.
+ * Represents a floor tile.
  */
 public class Floor {
-    /**
-     * la position.
-     */
+    /** The position. */
     Point pos;
 
-    /**
-     * la largeur de la texture.
-     */
-//texture defaults
+    /** The width of the texture. */
     public static float TEXTURE_WIDTH = 16;
-    /**
-     * la hauteur de la texture.
-     */
+    /** The height of the texture. */
     public static float TEXTURE_HEIGHT = 16;
-    /**
-     * la liste des textures possibles.
-     */
+    /** The possible textures. */
     public static Texture[] POSSIBLE_TEXTURE = {new Texture("assets/map/floor_1.png"), new Texture("assets/map/floor_2.png"), new Texture("assets/map/floor_3.png"), new Texture("assets/map/floor_4.png"), new Texture("assets/map/floor_5.png"), new Texture("assets/map/floor_6.png"), new Texture("assets/map/floor_7.png"), new Texture("assets/map/floor_8.png"), };
 
-    /**
-     * La texture.
-     */
-//texture info
+    /** The texture. */
     public Texture texture;
 
     /**
-     * Constructeur de Floor.
-     * Sert à créer un objet Floor.
-     *
-     * @param x the x
-     * @param y the y
+     * Constructs a new floor tile.
+     * @param x The x coordinate.
+     * @param y The y coordinate.
      */
     public Floor(float x, float y){
         this.pos = new Point(x, y);
@@ -52,6 +38,11 @@ public class Floor {
 
     }
 
+    /**
+     * Gets the surrounding walls of the floor.
+     * @param floors The list of floor tiles.
+     * @return The list of surrounding walls.
+     */
     public ArrayList<Wall> getSurrounding(ArrayList<Floor> floors){
 
         ArrayList<Point> result = new ArrayList<>();
@@ -77,41 +68,41 @@ public class Floor {
 
         ArrayList<Wall> walls = new ArrayList<>();
 
-        Point orientaion = new Point(0, 0);
+        Point orientation = new Point(0, 0);
         if (result.get(0)!=null){
-            orientaion = orientaion.add(1, 0);
+            orientation = orientation.add(1, 0);
         }
         if (result.get(1)!=null){
-            orientaion = orientaion.add(-1, 0);
+            orientation = orientation.add(-1, 0);
         }
         if (result.get(2)!=null){
-            orientaion = orientaion.add(0, 1);
+            orientation = orientation.add(0, 1);
         }
         if (result.get(3)!=null){
-            orientaion = orientaion.add(0, -1);
+            orientation = orientation.add(0, -1);
         }
 
-        if (orientaion.equals(new Point(-1, -1))){
+        if (orientation.equals(new Point(-1, -1))){
             walls.add(new Wall(this.pos.add(-1, -1), "assets/map/wall_outer_front_left.png"));
             walls.add(new Wall(this.pos.add(0, -1), "assets/map/wall_mid.png"));
             walls.add(new Wall(this.pos, "assets/map/wall_top_mid.png"));
             walls.add(new Wall(this.pos.add(-1, 0), "assets/map/wall_edge_mid_right.png"));
         }
-        if (orientaion.equals(new Point(1, -1))) {
+        if (orientation.equals(new Point(1, -1))) {
             walls.add(new Wall(this.pos.add(1, -1), "assets/map/wall_outer_front_right.png"));
             walls.add(new Wall(this.pos.add(0, -1), "assets/map/wall_mid.png"));
             walls.add(new Wall(this.pos, "assets/map/wall_top_mid.png"));
             walls.add(new Wall(this.pos.add(1, 0), "assets/map/wall_edge_mid_left.png"));
         }
 
-        if (orientaion.equals(new Point(-1, 1))) {
+        if (orientation.equals(new Point(-1, 1))) {
             walls.add(new Wall(this.pos.add(-1, 2), "assets/map/wall_outer_top_left.png"));
             walls.add(new Wall(this.pos.add(0, 1), "assets/map/wall_mid.png"));
             walls.add(new Wall(this.pos.add(-1, 1), "assets/map/wall_edge_mid_right.png"));
             walls.add(new Wall(this.pos.add(-1, 0), "assets/map/wall_edge_mid_right.png"));
             walls.add(new Wall(this.pos.add(0, 2), "assets/map/wall_top_mid.png"));
         }
-        if (orientaion.equals(new Point(1, 1))) {
+        if (orientation.equals(new Point(1, 1))) {
             walls.add(new Wall(this.pos.add(1, 2), "assets/map/wall_outer_top_right.png"));
             walls.add(new Wall(this.pos.add(0, 1), "assets/map/wall_mid.png"));
             walls.add(new Wall(this.pos.add(1, 1), "assets/map/wall_edge_mid_left.png"));
@@ -119,15 +110,15 @@ public class Floor {
             walls.add(new Wall(this.pos.add(0, 2), "assets/map/wall_top_mid.png"));
         }
 
-        if (orientaion.equals(new Point(-1, 0))) {
+        if (orientation.equals(new Point(-1, 0))) {
             walls.add(new Wall(this.pos.add(-1, 0), "assets/map/wall_edge_mid_right.png"));
-        } if (orientaion.equals(new Point(1, 0))) {
+        } if (orientation.equals(new Point(1, 0))) {
             walls.add(new Wall(this.pos.add(1, 0), "assets/map/wall_edge_mid_left.png"));
         }
-        if (orientaion.equals(new Point(0, -1))) {
+        if (orientation.equals(new Point(0, -1))) {
             walls.add(new Wall(this.pos.add(0, -1), "assets/map/wall_mid.png"));
             walls.add(new Wall(this.pos, "assets/map/wall_top_mid.png"));
-        } if (orientaion.equals(new Point(0, 1))) {
+        } if (orientation.equals(new Point(0, 1))) {
             walls.add(new Wall(this.pos.add(0, 1), "assets/map/wall_mid.png"));
             walls.add(new Wall(this.pos.add(0, 2), "assets/map/wall_top_mid.png"));
         }
