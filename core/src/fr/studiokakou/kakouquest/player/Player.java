@@ -367,6 +367,10 @@ public class Player {
                 this.dashTimer = LocalDateTime.now();
                 this.dashStateTime = 0f;
             }else {
+                if (this.dashTimer.plusSeconds(1).isBefore(LocalDateTime.now())) {
+                    this.isDashing=false;
+                }
+
                 if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     assert this.dashFinalPoint != null;
                     Point nextPos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
@@ -382,11 +386,12 @@ public class Player {
                         this.pos = new Point(nextPos.x, this.pos.y);
                     } else if (!canMove1) {
                         this.isDashing=false;
-                        this.dashFinalPoint=null;
                     }
                 } else {
                     this.isDashing=false;
                     this.dashFinalPoint=null;
+                    this.dashStartPoint=null;
+                    this.dashOrientation=null;
                 }
             }
         } else if (!this.canDash && this.dashTimer.plusSeconds(Player.DASH_PAUSE).isBefore(LocalDateTime.now())) {
