@@ -18,53 +18,36 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 /**
- * The type Monster.
- * This class is used to create a monster object.
+ * Represents a Monster in the game.
+ * Each monster has its name, position, speed, damage, etc.
  *
  * @version 1.0
  * @author hugocohen--cofflard
- *
  */
 public class Monster {
+    /** The name of the monster. */
     public String name;
-    /**
-     * The Pos.
-     */
+    /** The position of the monster. */
     public Point pos;
-    /**
-     * The Speed.
-     */
+    /** The speed of the monster. */
     public float speed;
-    /**
-     * The Damage.
-     */
+    /** The damage inflicted by the monster. */
     public int damage;
+    /** The time pause between attacks. */
     public float attackPause;
 
     LocalDateTime currentAttackTime;
-    /**
-     * The Hp.
-     */
+    /** The hit points of the monster. */
     public int hp;
-    /**
-     * The Detect range.
-     */
+    /** The range in which the monster can detect the player. */
     public int detectRange;
-    /**
-     * La hauteur.
-     */
+    /** The height of the monster. */
     float height;
-    /**
-     * La largeur.
-     */
+    /** The width of the monster. */
     float width;
-    /**
-     * The Idle animation.
-     */
+    /** The animation for idle state. */
     Animation<TextureRegion> idleAnimation;
-    /**
-     * The Run animation.
-     */
+    /** The animation for running state. */
     Animation<TextureRegion> runAnimation;
     boolean isRunning=false;
     boolean isFlip=Utils.randint(0, 1)==0;
@@ -73,38 +56,34 @@ public class Monster {
     public boolean isDying=false;
     public boolean isDead = false;
 
-    /**
-     * The Frame cols.
-     */
-    public static int FRAME_COLS = 1; /**
-     * The Frame rows.
-     */
+    /** Number of columns in the animation sprite sheet. */
+    public static int FRAME_COLS = 1;
+    /** Number of rows in the animation sprite sheet. */
     public static int FRAME_ROWS = 4;
-
 
     //hit vars
     public ArrayList<String> player_hitted = new ArrayList<>();
-    /**
-     * Boolean si c'est rouge.
-     */
     boolean isRed;
-    /**
-     * Le lancement du temps.
-     */
     LocalDateTime hitStart=null;
-    /**
-     * Les effets de sang.
-     */
     Animation<TextureRegion> bloodEffect;
-    /**
-     * The Blood state time.
-     */
     float bloodStateTime=0f;
 
     public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
 
 
-
+    /**
+     * Constructs a new Monster with specified parameters.
+     *
+     * @param name The name of the monster.
+     * @param idleAnimationPath The path to the sprite sheet for idle animation.
+     * @param runAnimationPath The path to the sprite sheet for run animation.
+     * @param hp The hit points of the monster.
+     * @param damage The damage inflicted by the monster.
+     * @param attackPause The time pause between attacks.
+     * @param speed The speed of the monster.
+     * @param detectRange The range in which the monster can detect the player.
+     * @param currentLevel The current level of the monster.
+     */
     public Monster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel){
         this.name=name;
         this.speed = speed;
@@ -124,19 +103,41 @@ public class Monster {
         this.upgradeStats(currentLevel);
     }
 
+    /**
+     * Sets the position of the monster.
+     *
+     * @param pos The position to set.
+     */
     public void place(Point pos){
         this.pos = pos;
     }
 
+    /**
+     * Upgrades the stats of the monster based on the current level.
+     *
+     * @param currentLevel The current level of the monster.
+     */
     public void upgradeStats(int currentLevel){
         this.hp = this.hp +(this.hp * currentLevel/4);
         this.damage = this.damage + (this.damage * currentLevel /4);
     }
 
+    /**
+     * Calculates the center point of the monster.
+     *
+     * @return The center point.
+     */
     public Point center(){
         return new Point(this.pos.x+ this.width /2,this.pos.y+ this.height /4);
     }
 
+    /**
+     * Checks if the monster can move to the specified orientation on the map.
+     *
+     * @param orientation The direction to move.
+     * @param map The map.
+     * @return True if the monster can move, false otherwise.
+     */
     public boolean canMove(Point orientation, Map map){
         Point newPos = this.pos.add(orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
         Point hitboxTopLeft = newPos.add(3, this.height - Floor.TEXTURE_HEIGHT);
@@ -147,12 +148,13 @@ public class Monster {
         Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
 
         return map.arePointsOnFloor(points);
-
     }
 
     /**
-     * Move.
+     * Moves the monster towards the player if in detection range.
      *
+     * @param player The player.
+     * @param map The map.
      */
     public void move(Player player, Map map){
         if (isDying || isRed || !player.hasPlayerSpawn){
@@ -177,6 +179,11 @@ public class Monster {
         }
     }
 
+    /**
+     * Determines the orientation of the monster towards the player.
+     *
+     * @param player The player.
+     */
     public void getOrientation(Player player){
         if (player.center().x-1<this.center().x){
             this.isFlip = true;
@@ -186,10 +193,10 @@ public class Monster {
     }
 
     /**
-     * Detect player boolean.
+     * Detects if the player is within detection range.
      *
-     * @param playerPos the player pos
-     * @return the boolean
+     * @param playerPos The position of the player.
+     * @return True if the player is detected, false otherwise.
      */
     public boolean detectPlayer(Point playerPos){
         return Utils.distance(this.pos, playerPos) <= this.detectRange;
@@ -207,8 +214,9 @@ public class Monster {
     }
 
     /**
-     * Take damage.
+     * Inflicts damage to the monster.
      *
+     * @param player The player attacking the monster.
      */
     public void takeDamage(Player player){
         this.hp -= player.currentWeapon.damage*(player.strength/10);
@@ -217,6 +225,11 @@ public class Monster {
         }
     }
 
+    /**
+     * Draws the monster on the screen.
+     *
+     * @param batch The SpriteBatch used for drawing.
+     */
     public void draw(SpriteBatch batch){
         TextureRegion currentFrame;
         if(isRunning){
@@ -241,15 +254,20 @@ public class Monster {
 
     }
 
+    /**
+     * Updates hit animation and handles monster death animation.
+     *
+     * @param batch The SpriteBatch used for drawing.
+     */
     public void updateHitAnimation(SpriteBatch batch){
         if (bloodStateTime>=0){
             bloodStateTime+= Gdx.graphics.getDeltaTime();
             TextureRegion currentBloodFrame = this.bloodEffect.getKeyFrame(bloodStateTime, false);
             batch.draw(currentBloodFrame,
-                this.center().x - (float) currentBloodFrame.getRegionWidth() /2 + this.width/2,
-                this.center().y - (float) currentBloodFrame.getRegionHeight() /2 + this.height/2,
-                (float) currentBloodFrame.getRegionWidth(),
-                (float) currentBloodFrame.getRegionHeight()
+                    this.center().x - (float) currentBloodFrame.getRegionWidth() /2 + this.width/2,
+                    this.center().y - (float) currentBloodFrame.getRegionHeight() /2 + this.height/2,
+                    (float) currentBloodFrame.getRegionWidth(),
+                    (float) currentBloodFrame.getRegionHeight()
             );
         }
 
@@ -267,6 +285,12 @@ public class Monster {
         }
     }
 
+    /**
+     * Handles monster getting hit by the player.
+     *
+     * @param player The player hitting the monster.
+     * @return True if the monster was successfully hit, false otherwise.
+     */
     public boolean hit(Player player){
         if (!this.player_hitted.contains(player.name)){
             this.takeDamage(player);
@@ -281,6 +305,11 @@ public class Monster {
 
 
 
+    /**
+     * Creates possible monsters for a given level.
+     *
+     * @param currentLevel The current level.
+     */
     public static void createPossibleMonsters(int currentLevel){
         possibleMonsters = new Hashtable<>();
         possibleMonsters.put(1, new ArrayList<>());
@@ -351,5 +380,4 @@ public class Monster {
     static Monster WOGOL(int currentLevel){
         return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 600, 50f, 150, currentLevel);
     }
-
 }

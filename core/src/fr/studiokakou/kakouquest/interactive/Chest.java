@@ -16,27 +16,72 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.util.ArrayList;
 
+/**
+ * The type Chest.
+ * This class is used to create a chest object.
+ *
+ * @version 1.0
+ */
 public class Chest {
+    /**
+     * The Pos.
+     */
     public Point pos;
-    MeleeWeapon meleeWeaponLoot;
+    /**
+     * The Melee weapon loot.
+     */
+    public MeleeWeapon meleeWeaponLoot;
 
     boolean isOpened=false;
     boolean isOpenning = false;
+    /**
+     * The Can interact.
+     */
     public boolean canInteract = false;
 
-    TextureRegion closed;
-    TextureRegion opened;
+    /**
+     * The Closed.
+     */
+    public TextureRegion closed;
+    /**
+     * The Opened.
+     */
+    public TextureRegion opened;
 
-    Animation<TextureRegion> openningAnimation;
+    /**
+     * The Openning animation.
+     */
+    public Animation<TextureRegion> openningAnimation;
 
     //interact var
-    String interactKey;
-    int interactKeyCode;
-    Animation<TextureRegion> interactKeyAnimation;
+    /**
+     * The Interact key.
+     */
+    public String interactKey;
+    /**
+     * The Interact key code.
+     */
+    public int interactKeyCode;
+    /**
+     * The Interact key animation.
+     */
+    public Animation<TextureRegion> interactKeyAnimation;
 
-    static final int FRAME_COLS = 1;
-    static final int FRAME_ROWS = 3;
+    /**
+     * The Frame cols.
+     */
+    public static final int FRAME_COLS = 1;
+    /**
+     * The Frame rows.
+     */
+    public static final int FRAME_ROWS = 3;
 
+    /**
+     * Instantiates a new Chest.
+     *
+     * @param pos          the pos
+     * @param currentLevel the current level
+     */
     public Chest(Point pos, int currentLevel){
         this.pos = pos;
 
@@ -52,6 +97,12 @@ public class Chest {
         this.meleeWeaponLoot = getRandomMeleeWeapon(currentLevel);
     }
 
+    /**
+     * Gets random melee weapon.
+     *
+     * @param currentLevel the current level
+     * @return the random melee weapon
+     */
     public MeleeWeapon getRandomMeleeWeapon(int currentLevel){
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
@@ -79,10 +130,19 @@ public class Chest {
         return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1)).getNew();
     }
 
+    /**
+     * Drop loot.
+     */
     public void dropLoot(){
         Map.onGroundMeleeWeapons.add(new OnGroundMeleeWeapon(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.meleeWeaponLoot));
     }
 
+    /**
+     * Refresh interact.
+     *
+     * @param player     the player
+     * @param isClosest  the is closest
+     */
     public void refreshInteract(Player player, boolean isClosest){
 
         if (this.isOpened || this.isOpenning || !isClosest){
@@ -102,6 +162,11 @@ public class Chest {
         }
     }
 
+    /**
+     * Draw.
+     *
+     * @param batch the batch
+     */
     public void draw(SpriteBatch batch){
         if (canInteract && !this.isOpened && !this.isOpenning){
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);

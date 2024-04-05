@@ -7,78 +7,66 @@ import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
 
-import java.sql.Time;
-
 /**
- * Le type GameSpace.
- * Cette classe est utilisée pour créer un objet GameSpace.
- *
- * @version 1.0
+ * La classe GameSpace représente l'application principale du jeu.
  */
 public class GameSpace extends Game {
 	/**
-	 * le batch = une collection de sprites.
+	 * Le SpriteBatch principal pour dessiner les éléments du jeu.
 	 */
 	public SpriteBatch batch;
 	/**
-	 * le batch de l'HUD : une collection de sprites pour l'HUD.
+	 * Le SpriteBatch pour dessiner les éléments de l'HUD (interface utilisateur).
 	 */
 	public SpriteBatch hudBatch;
 	/**
-	 * Le temps de démarrage.
+	 * Le temps de démarrage de l'application.
 	 */
 	public long startTime;
 
 	/**
-	 * L'écran de démarrage.
+	 * L'écran de démarrage du jeu.
 	 */
 	public SplashScreen splashScreen;
 
 	/**
-	 * Constructeur de GameSpace.
-	 * Sert à créer un objet GameSpace.
-	 *
+	 * Méthode appelée lors de la création de l'application.
 	 */
 	@Override
-	public void create () {
-		//update key binds
+	public void create() {
+		// Mise à jour des raccourcis clavier
 		Keybinds.updateKeys();
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
 		startTime = TimeUtils.millis();
 
-		//this.setScreen(new SplashScreen(this));
+		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage)
 		this.setScreen(new InGameScreen(this));
-
 	}
 
 	/**
-	 * Render.
-	 * Sert à afficher l'écran.
-	 *
+	 * Méthode appelée à chaque frame pour afficher le jeu.
 	 */
 	@Override
-	public void render () {
+	public void render() {
 		super.render();
 	}
 
 	/**
-	 * Dispose.
-	 * Sert à supprimer l'écran.
+	 * Méthode appelée lors de la fermeture de l'application pour libérer les ressources.
 	 */
 	@Override
-	public void dispose () {
+	public void dispose() {
 		batch.dispose();
 		hudBatch.dispose();
 	}
 
 	/**
-	 * Resize.
-	 * Sert à redimensionner l'écran.
+	 * Méthode appelée lors du redimensionnement de la fenêtre de l'application.
 	 *
-	 * @param width
-	 * @param height
+	 * @param width  Nouvelle largeur de la fenêtre
+	 * @param height Nouvelle hauteur de la fenêtre
 	 */
 	@Override
 	public void resize(int width, int height) {

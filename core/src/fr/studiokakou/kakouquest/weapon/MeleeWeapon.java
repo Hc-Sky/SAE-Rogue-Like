@@ -8,6 +8,10 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 
+/**
+ * This class represents a MeleeWeapon in the game.
+ * A MeleeWeapon has a name, texture, stats, dimensions, and a list of possible MeleeWeapons.
+ */
 public class MeleeWeapon {
 
 	public String name;
@@ -31,6 +35,16 @@ public class MeleeWeapon {
 
 	public static Dictionary<Integer, ArrayList<MeleeWeapon>> possibleMeleeWeapon = new Hashtable<>();
 
+	/**
+	 * Constructs a MeleeWeapon with the given parameters.
+	 * @param name The name of the weapon.
+	 * @param texturePath The path to the texture of the weapon.
+	 * @param damage The damage of the weapon.
+	 * @param resistance The resistance of the weapon.
+	 * @param attackRange The attack range of the weapon.
+	 * @param attackSpeed The attack speed of the weapon.
+	 * @param size The size of the weapon.
+	 */
 	public MeleeWeapon(String name, String texturePath, int damage, int resistance, float attackRange, float attackSpeed, float size) {
 		//weapon stats
 		this.name = name;
@@ -52,9 +66,17 @@ public class MeleeWeapon {
 		this.sprite.flip(true, false);
 	}
 
+	/**
+	 * Returns a new MeleeWeapon with the same parameters as this MeleeWeapon.
+	 * @return A new MeleeWeapon.
+	 */
 	public MeleeWeapon getNew(){
 		return new MeleeWeapon(this.name, this.texturePath, damage, maxResistance, attackRange, attackSpeed, size);
 	}
+
+	/**
+	 * Creates the possible MeleeWeapons and adds them to the possibleMeleeWeapon dictionary.
+	 */
 	public static void createPossibleMeleeWeapons(){
 		possibleMeleeWeapon = new Hashtable<>();
 		possibleMeleeWeapon.put(1, new ArrayList<>());
