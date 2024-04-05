@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
@@ -28,6 +29,10 @@ public class GameSpace extends Game {
 	 * L'écran de démarrage du jeu.
 	 */
 	public SplashScreen splashScreen;
+
+
+	public BitmapFont font;
+
 
 	/**
 	 * Méthode appelée lors de la création de l'application.
