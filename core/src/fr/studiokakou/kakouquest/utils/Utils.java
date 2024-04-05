@@ -13,19 +13,19 @@ import fr.studiokakou.kakouquest.screens.InGameScreen;
 import java.util.Random;
 
 /**
- * le type Utils.
- * Cette classe est utilisée pour créer un objet Utils.
+ * Classe utilitaire.
+ * Cette classe contient des méthodes utilitaires pour diverses tâches.
+ *
  * @version 1.0
  */
 public class Utils {
     /**
-     * Recupere l'animmaton d'un sprite sheet. La fonction découpe le sprite sheet en plusieurs frames.
+     * Récupère une animation à partir d'une sprite sheet.
      *
-     *
-     * @param textureName the texture name
-     * @param FRAME_COLS  the frame cols
-     * @param FRAME_ROWS  the frame rows
-     * @return the animation
+     * @param textureName Le nom de la texture
+     * @param FRAME_COLS  Le nombre de colonnes de la sprite sheet
+     * @param FRAME_ROWS  Le nombre de lignes de la sprite sheet
+     * @return L'animation générée
      */
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS){
         Texture texture = new Texture(textureName);
@@ -47,13 +47,13 @@ public class Utils {
     }
 
     /**
-     *Permet de récupérer une animation avec un nom de texture, un nombre de colonnes, un nombre de lignes et une durée de frame.
+     * Récupère une animation à partir d'une sprite sheet avec une durée de frame personnalisée.
      *
-     * @param textureName    the texture name
-     * @param FRAME_COLS     the frame cols
-     * @param FRAME_ROWS     the frame rows
-     * @param frame_duration the frame duration
-     * @return the animation
+     * @param textureName    Le nom de la texture
+     * @param FRAME_COLS     Le nombre de colonnes de la sprite sheet
+     * @param FRAME_ROWS     Le nombre de lignes de la sprite sheet
+     * @param frame_duration La durée de chaque frame
+     * @return L'animation générée
      */
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
         Texture texture = new Texture(textureName);
@@ -75,13 +75,13 @@ public class Utils {
     }
 
     /**
-     * Permet de récupérer l'horizontale d'une animation.
+     * Récupère une animation horizontale à partir d'une sprite sheet.
      *
-     * @param textureName    the texture name
-     * @param FRAME_COLS     the frame cols
-     * @param FRAME_ROWS     the frame rows
-     * @param frame_duration the frame duration
-     * @return the animation
+     * @param textureName    Le nom de la texture
+     * @param FRAME_COLS     Le nombre de colonnes de la sprite sheet
+     * @param FRAME_ROWS     Le nombre de lignes de la sprite sheet
+     * @param frame_duration La durée de chaque frame
+     * @return L'animation générée
      */
     public static Animation<TextureRegion> getAnimationHorizontal(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
         Texture texture = new Texture(textureName);
@@ -103,12 +103,12 @@ public class Utils {
     }
 
     /**
-     * Permet de récupérer une animation dans l'ordre inverse.
+     * Récupère une animation inversée à partir d'une sprite sheet.
      *
-     * @param textureName the texture name
-     * @param FRAME_COLS  the frame cols
-     * @param FRAME_ROWS  the frame rows
-     * @return the animation
+     * @param textureName Le nom de la texture
+     * @param FRAME_COLS  Le nombre de colonnes de la sprite sheet
+     * @param FRAME_ROWS  Le nombre de lignes de la sprite sheet
+     * @return L'animation inversée générée
      */
     public static Animation<TextureRegion> getAnimationRevert(String textureName, int FRAME_COLS, int FRAME_ROWS){
         Texture texture = new Texture(textureName);
@@ -130,10 +130,10 @@ public class Utils {
     }
 
     /**
-     * Permet de récupérer la largeur d'une animation.
+     * Récupère la largeur d'une animation.
      *
-     * @param animation the animation
-     * @return the int
+     * @param animation L'animation
+     * @return La largeur de l'animation
      */
     public static int getAnimationWidth(Animation<TextureRegion> animation){
         TextureRegion currentFrame = animation.getKeyFrame(0f, true);
@@ -141,10 +141,10 @@ public class Utils {
     }
 
     /**
-     * Permet de récupérer la hauteur d'une animation.
+     * Récupère la hauteur d'une animation.
      *
-     * @param animation the animation
-     * @return the int
+     * @param animation L'animation
+     * @return La hauteur de l'animation
      */
     public static int getAnimationHeight(Animation<TextureRegion> animation){
         TextureRegion currentFrame = animation.getKeyFrame(0f, true);
@@ -152,11 +152,11 @@ public class Utils {
     }
 
     /**
-     * Get unproject pos point.
+     * Transforme les coordonnées d'un point en coordonnées non projetées.
      *
-     * @param p      the p
-     * @param camera the camera
-     * @return the point
+     * @param p      Le point à transformer
+     * @param camera La caméra utilisée
+     * @return Le point non projeté
      */
     public static Point getUnprojectPos(Point p, OrthographicCamera camera){
         Vector3 camPosVect = camera.unproject(new Vector3(p.x, p.y, 0));
@@ -164,15 +164,21 @@ public class Utils {
     }
 
     /**
-     * Mark point.
+     * Marque un point sur l'écran.
      *
-     * @param position the position
-     * @param batch    the batch
+     * @param position La position du point à marquer
+     * @param batch    Le SpriteBatch utilisé pour le rendu
      */
     public static void markPoint(Point position, SpriteBatch batch){
         batch.draw(new Texture("assets/mark.png"), position.x, position.y);
     }
 
+    /**
+     * Marque un point sur l'écran de manière plus large.
+     *
+     * @param position La position du point à marquer
+     * @param batch    Le SpriteBatch utilisé pour le rendu
+     */
     public static void bigMarkPoint(Point position, SpriteBatch batch){
         batch.draw(new Texture("assets/mark.png"), position.x, position.y);
         batch.draw(new Texture("assets/mark.png"), position.x+1, position.y);
@@ -181,10 +187,10 @@ public class Utils {
     }
 
     /**
-     * La position de la souris.
+     * Récupère la position de la souris non projetée.
      *
-     * @param camera the camera
-     * @return the point
+     * @param camera La caméra utilisée
+     * @return La position de la souris non projetée
      */
     public static Point mousePosUnproject(OrthographicCamera camera){
         Vector3 camPosVect = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -192,12 +198,12 @@ public class Utils {
     }
 
     /**
-     * La direction entre deux points.
+     * Récupère la direction entre deux points.
      *
-     * @param p1    the p 1
-     * @param p2    the p 2
-     * @param speed the speed
-     * @return the point
+     * @param p1    Le premier point
+     * @param p2    Le deuxième point
+     * @param speed La vitesse
+     * @return La direction entre les deux points
      */
     public static Point getPointDirection(Point p1, Point p2, float speed){
         float totalDistance = (float) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
@@ -208,45 +214,44 @@ public class Utils {
     }
 
     /**
-     * la distance entre deux points.
+     * Calcule la distance entre deux points.
      *
-     * @param p1 the p 1
-     * @param p2 the p 2
-     * @return the float
+     * @param p1 Le premier point
+     * @param p2 Le deuxième point
+     * @return La distance entre les deux points
      */
     public static float getDistance(Point p1, Point p2){
         return (float) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
     }
 
     /**
-     * random int.
+     * Génère un nombre aléatoire dans un intervalle donné.
      *
-     * @param min the min
-     * @param max the max
-     * @return the int
+     * @param min La borne inférieure de l'intervalle
+     * @param max La borne supérieure de l'intervalle
+     * @return Le nombre aléatoire généré
      */
     public static int randint(int min, int max){
         return min+(int)(Math.random() * ((max - min) + 1));
     }
 
     /**
-     * Permet de récupérer un angle en degrée entre deux points.
+     * Calcule l'angle entre deux points en degrés.
      *
-     * @param p1 the p 1
-     * @param p2 the p 2
-     * @return the float
+     * @param p1 Le premier point
+     * @param p2 Le deuxième point
+     * @return L'angle entre les deux points en degrés
      */
     public static float getAngleWithPoint(Point p1, Point p2){
-        //retourne un angle en degree (float) qu'il y a du point p1 au point p2 par l'axe des abscisses dans le sens des aiguilles d'une montre
         return (float) Math.toDegrees(Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /**
-     * Permet de récupérer la distance entre une postion et le joueur.
+     * Calcule la distance entre une position et la position du joueur.
      *
-     * @param pos       the pos
-     * @param playerPos the player pos
-     * @return the int
+     * @param pos       La position
+     * @param playerPos La position du joueur
+     * @return La distance entre la position et la position du joueur
      */
     public static int distance(Point pos, Point playerPos) {
         return (int) Math.sqrt(Math.pow(playerPos.x - pos.x, 2) + Math.pow(playerPos.y - pos.y, 2));

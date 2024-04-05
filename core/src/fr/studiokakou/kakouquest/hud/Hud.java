@@ -3,7 +3,6 @@ package fr.studiokakou.kakouquest.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
  * Le type Hud. Cette classe est utilisée pour créer un objet Hud.
  *
  * @version 1.0
- *
  *
  */
 public class Hud {

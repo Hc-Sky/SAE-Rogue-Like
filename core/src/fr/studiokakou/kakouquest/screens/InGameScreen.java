@@ -16,79 +16,76 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 /**
- * le type InGameScreen.
- * Cette classe est utilisée pour créer un objet InGameScreen.
+ * Écran de jeu principal.
+ * Cette classe gère l'écran de jeu principal.
  *
  * @version 1.0
  */
 public class InGameScreen implements Screen {
 
 	/**
-	 * le temps entre chaque frame.
+	 * Durée entre chaque frame.
 	 */
-//defaults
-    public static float FRAME_DURATION=0.17f;
+	public static float FRAME_DURATION=0.17f;
 
 	/**
-	 * le jeu.
+	 * Espace de jeu.
 	 */
-//screen info
 	GameSpace game;
 	/**
-	 * le batch.
+	 * Batch pour le rendu.
 	 */
 	SpriteBatch batch;
 	/**
-	 * le batch de l'HUD.
+	 * Batch pour l'HUD.
 	 */
 	SpriteBatch hudBatch;
 
+	/**
+	 * Temps écoulé depuis le début du jeu.
+	 */
 	public static float stateTime=0f;
 
 	/**
-	 * le joueur.
+	 * Joueur.
 	 */
-//player
 	Player player;
 	/**
-	 * la caméra.
+	 * Caméra.
 	 */
 	Camera cam;
 
 	/**
-	 * l'HUD.
+	 * HUD du jeu.
 	 */
-//hud
 	Hud hud;
 
 	/**
-	 * le niveau actuel.
+	 * Niveau actuel.
 	 */
-//map info
 	int currentLevel;
 	/**
-	 * la map.
+	 * Carte du jeu.
 	 */
 	Map map;
 	/**
-	 * la hauteur de la map.
+	 * Hauteur de la carte.
 	 */
 	public int map_height;
 	/**
-	 * la largeur de la map.
+	 * Largeur de la carte.
 	 */
 	public int map_width;
 
 	/**
-	 * le temps de départ.
+	 * Temps de départ du jeu.
 	 */
 	long startTime;
 
-
 	/**
-	 * Constructeur de InGameScreen.
+	 * Constructeur de l'écran de jeu.
 	 *
-	 * @param game the game
+	 * @param game Le jeu
 	 */
 	public InGameScreen(GameSpace game){
 		this.game=game;
@@ -101,16 +98,19 @@ public class InGameScreen implements Screen {
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
 
-		//map init
+		// Initialisation de la carte
 		this.map_height = 150;
 		this.map_width = 150;
 		this.map = new Map(this.map_width, this.map_height);
 
-		//player init
+		// Initialisation du joueur
 		this.player = new Player(map.getPlayerSpawn(),"player");
 		this.cam = new Camera(this.player);
 	}
 
+	/**
+	 * Passe au niveau suivant.
+	 */
 	public void nextLevel(){
 		InGameScreen.stateTime=0f;
 		System.out.println("next level");
@@ -134,7 +134,7 @@ public class InGameScreen implements Screen {
 
 		InGameScreen.stateTime=0f;
 
-		//set cursor
+		// Définit le curseur
 		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
 		pm.dispose();
@@ -147,9 +147,9 @@ public class InGameScreen implements Screen {
 		this.map.genInteractive(currentLevel, this);
 	}
 
-    @Override
-    public void render(float delta) {
-        InGameScreen.stateTime += delta;
+	@Override
+	public void render(float delta) {
+		InGameScreen.stateTime += delta;
 
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			Gdx.app.exit();
@@ -170,7 +170,7 @@ public class InGameScreen implements Screen {
 
 		cam.update();
 
-		//update monsters pos
+		// Met à jour la position des monstres
 		this.map.moveMonsters(this.player);
 		this.map.updateInteractive(this.player);
 
@@ -178,7 +178,7 @@ public class InGameScreen implements Screen {
 
 		batch.begin();
 
-		//map draw
+		// Dessine la carte
 		this.map.drawMap(this.batch);
 		this.map.drawInteractive(this.batch);
 		this.map.drawMonsters(batch);
@@ -206,9 +206,10 @@ public class InGameScreen implements Screen {
 	}
 
 	/**
-	 * Resize l'écran de jeu.
-	 * Permet de redimensionner l'écran de jeu.
+	 * Redimensionne l'écran de jeu.
 	 *
+	 * @param width Largeur
+	 * @param height Hauteur
 	 */
 	@Override
 	public void resize(int width, int height) {
@@ -230,6 +231,9 @@ public class InGameScreen implements Screen {
 		// TODO
 	}
 
+	/**
+	 * Libère les ressources utilisées par l'écran de jeu.
+	 */
 	@Override
 	public void dispose() {
 		this.game.dispose();
