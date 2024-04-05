@@ -14,37 +14,41 @@ import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 /**
- * Represents a set of stairs that the player can interact with to move to the next level.
+ * La classe Stairs représente un objet qui permet de changer de niveau dans le jeu.
+ * Lorsque le joueur interagit avec les escaliers, le niveau actuel est augmenté et une nouvelle carte est générée,
+ * tout en restaurant le joueur à l'endroit approprié.
  */
 public class Stairs {
-    /** The position of the stairs. */
+    /** Position des escaliers sur la carte. */
     public Point pos;
 
-    /** Indicates if the stairs can be interacted with. */
+    /** Indique si le joueur peut interagir avec les escaliers. */
     boolean canInteract = false;
 
-    /** Texture for the stairs. */
+    /** Texture représentant les escaliers. */
     Texture texture;
 
-    /** Reference to the in-game screen. */
+    /** Référence à l'écran de jeu dans lequel les escaliers sont utilisés. */
     InGameScreen gameScreen;
 
-    /** Key for interacting with the stairs. */
+    //interact var
+    /** Touche pour interagir avec les escaliers. */
     String interactKey;
-    /** Key code for interacting with the stairs. */
+
+    /** Code de la touche pour interagir avec les escaliers. */
     int interactKeyCode;
-    /** Animation for the interact key. */
+
+    /** Animation de la touche pour interagir avec les escaliers. */
     Animation<TextureRegion> interactKeyAnimation;
 
     /**
-     * Constructs a set of stairs at the specified position.
-     * @param pos The position of the stairs.
-     * @param gameScreen The in-game screen object.
+     * Constructeur de la classe Stairs.
+     * @param pos Position des escaliers sur la carte.
+     * @param gameScreen Référence à l'écran de jeu dans lequel les escaliers sont utilisés.
      */
     public Stairs(Point pos, InGameScreen gameScreen){
         this.pos = pos;
         this.gameScreen = gameScreen;
-
         this.texture = new Texture("assets/map/floor_ladder.png");
 
         this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
@@ -54,9 +58,9 @@ public class Stairs {
     }
 
     /**
-     * Refreshes the interaction state of the stairs.
-     * @param player The player object.
-     * @param isClosest Indicates if the stairs are the closest to the player.
+     * Met à jour la possibilité d'interaction avec les escaliers en fonction de la position du joueur.
+     * @param player Joueur actuel.
+     * @param isClosest Indique si le joueur est le plus proche des escaliers.
      */
     public void refreshInteract(Player player, boolean isClosest){
 
@@ -71,9 +75,7 @@ public class Stairs {
         }
     }
 
-    /**
-     * Handles the interaction with the stairs, advancing to the next level.
-     */
+    /** Effectue l'interaction avec les escaliers, déclenchant le passage au niveau suivant. */
     public void interact(){
         if (this.canInteract){
             this.gameScreen.nextLevel();
@@ -81,8 +83,8 @@ public class Stairs {
     }
 
     /**
-     * Draws the stairs.
-     * @param batch The sprite batch to draw with.
+     * Dessine les escaliers sur l'écran de jeu.
+     * @param batch Batch pour dessiner les textures.
      */
     public void draw(SpriteBatch batch){
         if (canInteract){

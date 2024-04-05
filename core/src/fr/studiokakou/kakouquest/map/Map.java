@@ -9,53 +9,85 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.TreeMap;
 
 /**
- * le type Map.
- * Cette classe est utilisée pour créer un objet Map.
+ * The Map class represents a game map.
+ * This class is used to create a Map object.
  *
  * @version 1.0
  */
 public class Map {
-    /** The list of floor tiles. */
+    /**
+     * The floors of the map. It is a list of floors.
+     */
     public ArrayList<Floor> floors = new ArrayList<>();
-    /** The list of monsters. */
+    /**
+     * The list of monsters.
+     */
     public static ArrayList<Monster> monsters = new ArrayList<>();
-    /** The list of chests. */
+    /**
+     * The list of chests.
+     */
     ArrayList<Chest> chests = new ArrayList<>();
-    /** The list of melee weapons on the ground. */
+    /**
+     * The list of melee weapons on the ground.
+     */
     public static ArrayList<OnGroundMeleeWeapon> onGroundMeleeWeapons = new ArrayList<>();
-    /** The stairs. */
+    /**
+     * The stairs of the map.
+     */
     public Stairs stairs;
-    /** The height of the map. */
+    /**
+     * The height of the map.
+     */
     public int map_height;
-    /** The width of the map. */
+    /**
+     * The width of the map.
+     */
     public int map_width;
-
-    /** The list of rooms. */
-    ArrayList<Room> rooms = new ArrayList<>();
-    /** The list of bridges. */
+    /**
+     * The list of rooms.
+     */
+    ArrayList<Room> rooms =  new ArrayList<>();
+    /**
+     * The list of bridges.
+     */
     ArrayList<Bridge> bridges = new ArrayList<>();
-    /** The list of walls. */
+    /**
+     * The list of walls.
+     */
     ArrayList<Wall> walls = new ArrayList<>();
-
-    /** The minimum height of a room. */
+    /**
+     * The minimum height of a room.
+     */
     public static int ROOM_MIN_HEIGHT=7;
-    /** The minimum width of a room. */
+    /**
+     * The minimum width of a room.
+     */
     public static int ROOM_MIN_WIDTH=7;
-    /** The maximum height of a room. */
+    /**
+     * The maximum height of a room.
+     */
     public static int ROOM_MAX_HEIGHT=21;
-    /** The maximum width of a room. */
+    /**
+     * The maximum width of a room.
+     */
     public static int ROOM_MAX_WIDTH=21;
-
-    /** The distances between points and objects. */
+    /**
+     * A hash table storing distances.
+     */
     public Hashtable<Float, Object> distances = new Hashtable<>();
 
     /**
-     * Constructs a new map.
-     * @param width The width of the map.
-     * @param height The height of the map.
+     * Constructs a Map object.
+     * This constructor is used to create a Map object.
+     *
+     * @param width  the width of the map
+     * @param height the height of the map
      */
     public Map(int width, int height){
         this.map_height = height;
@@ -66,6 +98,11 @@ public class Map {
 
     /**
      * Initializes the map.
+     * This method is used to initialize the map.
+     * It generates rooms and floors.
+     *
+     * @see Map#generateRooms()
+     * @see Map#genFloors()
      */
     public void initMap(){
         Map.onGroundMeleeWeapons.clear();
@@ -85,7 +122,8 @@ public class Map {
 
     /**
      * Updates hit animations.
-     * @param batch The sprite batch.
+     *
+     * @param batch the sprite batch
      */
     public void updateHitsAnimation(SpriteBatch batch){
         for (Monster m : Map.monsters){
@@ -94,7 +132,7 @@ public class Map {
     }
 
     /**
-     * Retrieves the real size of the map.
+     * Adjusts the position of floors.
      */
     public void getRealSize(){
         for (Floor f : this.floors){
@@ -103,7 +141,7 @@ public class Map {
     }
 
     /**
-     * Generates walls for the map.
+     * Generates walls.
      */
     public void genWalls(){
         for (Floor f : this.floors){
@@ -119,7 +157,8 @@ public class Map {
 
     /**
      * Draws the map.
-     * @param batch The sprite batch.
+     *
+     * @param batch the sprite batch
      */
     public void drawMap(SpriteBatch batch){
         for (Floor f : this.floors){
@@ -132,8 +171,9 @@ public class Map {
     }
 
     /**
-     * Draws monsters on the map.
-     * @param batch The sprite batch.
+     * Draws monsters.
+     *
+     * @param batch the sprite batch
      */
     public void drawMonsters(SpriteBatch batch){
         for (Monster m : Map.monsters){
@@ -142,8 +182,9 @@ public class Map {
     }
 
     /**
-     * Draws interactive objects on the map.
-     * @param batch The sprite batch.
+     * Draws interactive objects.
+     *
+     * @param batch the sprite batch
      */
     public void drawInteractive(SpriteBatch batch){
         for (Chest chest : this.chests){
@@ -158,7 +199,7 @@ public class Map {
     }
 
     /**
-     * Checks if any monster is dead and removes it from the list.
+     * Checks for dead monsters and removes them.
      */
     public void checkDeadMonster(){
         ArrayList<Monster> tmp = new ArrayList<>();
@@ -173,7 +214,7 @@ public class Map {
     }
 
     /**
-     * Generates rooms for the map.
+     * Generates rooms.
      */
     public void generateRooms(){
         for (int i = 0; i < 50; i++) {
@@ -201,7 +242,7 @@ public class Map {
     }
 
     /**
-     * Generates floor tiles for the map.
+     * Generates floors.
      */
     public void genFloors(){
         for (Room r : this.rooms){
@@ -219,16 +260,18 @@ public class Map {
     }
 
     /**
-     * Retrieves the spawn point for the player.
-     * @return The spawn point.
+     * Returns the player spawn point.
+     *
+     * @return the spawn point
      */
     public Point getPlayerSpawn(){
         return this.rooms.get(0).getCenterOutOfMap();
     }
 
     /**
-     * Spawns monsters on the map based on the current level.
-     * @param currentLevel The current level.
+     * Spawns monsters.
+     *
+     * @param currentLevel the current level
      */
     public void spawnMonsters(int currentLevel){
         Map.monsters.clear();
@@ -266,8 +309,9 @@ public class Map {
     }
 
     /**
-     * Moves monsters on the map towards the player.
-     * @param player The player.
+     * Moves monsters towards the player.
+     *
+     * @param player the player
      */
     public void moveMonsters(Player player){
         for (Monster m : Map.monsters){
@@ -276,7 +320,7 @@ public class Map {
     }
 
     /**
-     * Sorts rooms based on their proximity.
+     * Sorts rooms by distance.
      */
     public void sortRooms(){
         ArrayList<Room> sortedRooms = new ArrayList<>();
@@ -296,16 +340,17 @@ public class Map {
     }
 
     /**
-     * Generates interactive objects such as chests and stairs.
-     * @param currentLevel The current level.
-     * @param gameScreen The game screen.
+     * Generates interactive objects like chests and stairs.
+     *
+     * @param currentLevel the current level
+     * @param gameScreen   the game screen
      */
     public void genInteractive(int currentLevel, InGameScreen gameScreen){
         this.stairs = new Stairs(this.rooms.get(this.rooms.size()-1).getCenterOutOfMapPos(), gameScreen);
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(0, 4) == 0){
+            if (Utils.randint(1, 5) == 1){
                 if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
                     this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
                 }
@@ -315,8 +360,9 @@ public class Map {
     }
 
     /**
-     * Updates the state of interactive objects based on player's position.
-     * @param player The player.
+     * Updates interactive objects.
+     *
+     * @param player the player
      */
     public void updateInteractive(Player player){
         this.distances.clear();
@@ -336,9 +382,10 @@ public class Map {
     }
 
     /**
-     * Retrieves distances between points and objects.
-     * @param player The player.
-     * @return A tree map of distances.
+     * Calculates distances from player to interactive objects.
+     *
+     * @param player the player
+     * @return a sorted map of distances
      */
     public TreeMap<Float, Object> getDistances(Player player){
         for (Chest chest : this.chests){
@@ -376,9 +423,10 @@ public class Map {
     }
 
     /**
-     * Checks if all points are on floor tiles.
-     * @param points The points to check.
-     * @return True if all points are on floor tiles, false otherwise.
+     * Checks if points are on floor.
+     *
+     * @param points the points to check
+     * @return true if all points are on floor, false otherwise
      */
     public boolean arePointsOnFloor(Point[] points){
         boolean[] areIn = new boolean[points.length];
@@ -405,7 +453,7 @@ public class Map {
     }
 
     /**
-     * Disposes of resources.
+     * Disposes resources.
      */
     public void dispose(){
         for (Floor f : this.floors){

@@ -175,10 +175,10 @@ public class Player {
     }
 
     /**
-     * Handles player death.
+     * gère la mort du player
      */
     public void playerDeath(){
-        // Reset player stats and weapon on death
+        //default values
         this.max_hp=100;
         this.hp=100;
         this.strength=10;
@@ -188,6 +188,10 @@ public class Player {
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
     }
 
+    /**
+     * sert a déplacer le joueur à un poit précis
+     * @param pos
+     */
     public void setPos(Point pos){
         this.pos = pos;
     }
@@ -210,6 +214,12 @@ public class Player {
         return new Point(this.pos.x+((float) this.texture_width /2), this.pos.y+((float) this.texture_height /2));
     }
 
+    /**
+     * Vérifie si le player peut aller à sa prochaine position avec les collisions
+     * @param newPos
+     * @param map
+     * @return
+     */
     public boolean canMove(Point newPos, Map map){
         Point hitboxTopLeft = newPos.add(3, this.texture_height-5 - Floor.TEXTURE_HEIGHT);
         Point hitboxBottomLeft = newPos.add(3, 0);
@@ -311,6 +321,9 @@ public class Player {
         }
     }
 
+    /**
+     * redonne de l'énergie au joueur au bout d'un certain temps
+     */
     public void regainStamina(){
         if (this.staminaTimer==null || this.staminaTimer.plusSeconds(5).isBefore(LocalDateTime.now())){
             if (this.stamina < this.max_stamina){
@@ -459,5 +472,14 @@ public class Player {
                 this.isPlayerSpawning=false;
             }
         }
+    }
+
+    /**
+     * gère les dégàts fais au joueur
+     * @param damage
+     */
+    public void takeDamage(int damage){
+        this.hp -= damage;
+        this.bloodStateTime=0f;
     }
 }

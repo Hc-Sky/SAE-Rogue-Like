@@ -4,20 +4,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
- * Represents a wall in the map.
+ * Represents a wall object in the game map.
  */
 public class Wall {
-    /** The position of the wall. */
+    /** The position of the wall on the map. */
     Point pos;
 
-    /** The texture of the wall. */
+    /** The texture used to render the wall. */
     Texture texture;
 
     /**
-     * Constructs a new Wall object.
+     * Constructs a new wall object.
      *
-     * @param pos        The position of the wall.
-     * @param assetPath  The path to the texture asset.
+     * @param pos         The position of the wall on the map.
+     * @param assetPath   The file path to the texture asset used for rendering the wall.
      */
     public Wall(Point pos, String assetPath){
         this.pos = pos;
@@ -27,7 +27,7 @@ public class Wall {
     /**
      * Draws the wall on the screen.
      *
-     * @param batch The sprite batch to draw the wall.
+     * @param batch   The sprite batch used for rendering.
      */
     public void draw(SpriteBatch batch){
         batch.draw(this.texture, this.pos.x*Floor.TEXTURE_WIDTH, this.pos.y*Floor.TEXTURE_HEIGHT);

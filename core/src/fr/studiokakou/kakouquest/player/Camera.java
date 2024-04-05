@@ -4,23 +4,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 /**
- * Represents a camera used to follow the player.
+ * Represents a camera object used for rendering the game view.
  */
 public class Camera {
-    /** The camera instance. */
+    /** The orthographic camera instance. */
     public static OrthographicCamera camera;
 
-    /** The player being followed by the camera. */
+    /** The player object associated with the camera. */
     Player player;
 
-    /** Default camera zoom. */
-    public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) /720;
-    //public static float DEFAULT_ZOOM = 0.8f;
+    /** Default zoom value for the camera. */
+    public static float DEFAULT_ZOOM = (float) (Gdx.graphics.getHeight() * 2.5) / 720;
 
-    /** The distance in y-axis of the camera from the player. */
+    /** Distance in y-axis between the camera and the player. */
     public static float CAM_Y_DISTANCE = 53;
 
-    /** The distance in x-axis of the camera from the player. */
+    /** Distance in x-axis between the camera and the player. */
     public static float CAM_X_DISTANCE = 95;
 
     /** The zoom level of the camera. */
@@ -29,10 +28,12 @@ public class Camera {
     /**
      * Constructs a new Camera object.
      *
-     * @param player The player to follow.
+     * @param player The player object to associate with the camera.
      */
     public Camera(Player player){
         this.player = player;
+
+        // Always maintain the same zoom regardless of screen size
         this.zoom = Camera.DEFAULT_ZOOM;
 
         // Initialize camera
@@ -50,7 +51,7 @@ public class Camera {
     }
 
     /**
-     * Updates the camera position.
+     * Updates the camera position based on the player's movement.
      */
     public void update(){
         if (Camera.camera.position.x + Camera.CAM_X_DISTANCE < this.player.center().x){

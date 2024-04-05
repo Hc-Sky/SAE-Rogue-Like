@@ -17,45 +17,72 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import java.util.ArrayList;
 
 /**
- * Class representing a chest in the game world.
+ * The type Chest.
+ * This class is used to create a chest object.
+ *
+ * @version 1.0
  */
 public class Chest {
-    /** Position of the chest. */
+    /**
+     * The Pos.
+     */
     public Point pos;
-    /** Melee weapon inside the chest. */
-    MeleeWeapon meleeWeaponLoot;
+    /**
+     * The Melee weapon loot.
+     */
+    public MeleeWeapon meleeWeaponLoot;
 
     /** Indicates if the chest is opened. */
     boolean isOpened=false;
     /** Indicates if the chest is being opened. */
     boolean isOpenning = false;
-    /** Indicates if the chest can be interacted with. */
+    /**
+     * The Can interact.
+     */
     public boolean canInteract = false;
 
-    /** Texture region for the closed chest. */
-    TextureRegion closed;
-    /** Texture region for the opened chest. */
-    TextureRegion opened;
-
-    /** Animation for the opening of the chest. */
-    Animation<TextureRegion> openningAnimation;
-
-    /** Key for interacting with the chest. */
-    String interactKey;
-    /** Key code for interacting with the chest. */
-    int interactKeyCode;
-    /** Animation for the interact key. */
-    Animation<TextureRegion> interactKeyAnimation;
-
-    /** Number of columns in the texture region for animation. */
-    static final int FRAME_COLS = 1;
-    /** Number of rows in the texture region for animation. */
-    static final int FRAME_ROWS = 3;
+    /**
+     * The Closed.
+     */
+    public TextureRegion closed;
+    /**
+     * The Opened.
+     */
+    public TextureRegion opened;
 
     /**
-     * Constructs a chest object with the given position and current level.
-     * @param pos The position of the chest.
-     * @param currentLevel The current level of the game.
+     * The Openning animation.
+     */
+    public Animation<TextureRegion> openningAnimation;
+
+    //interact var
+    /**
+     * The Interact key.
+     */
+    public String interactKey;
+    /**
+     * The Interact key code.
+     */
+    public int interactKeyCode;
+    /**
+     * The Interact key animation.
+     */
+    public Animation<TextureRegion> interactKeyAnimation;
+
+    /**
+     * The Frame cols.
+     */
+    public static final int FRAME_COLS = 1;
+    /**
+     * The Frame rows.
+     */
+    public static final int FRAME_ROWS = 3;
+
+    /**
+     * Instantiates a new Chest.
+     *
+     * @param pos          the pos
+     * @param currentLevel the current level
      */
     public Chest(Point pos, int currentLevel){
         this.pos = pos;
@@ -73,9 +100,10 @@ public class Chest {
     }
 
     /**
-     * Retrieves a random melee weapon based on the current level.
-     * @param currentLevel The current level of the game.
-     * @return A random melee weapon.
+     * Gets random melee weapon.
+     *
+     * @param currentLevel the current level
+     * @return the random melee weapon
      */
     public MeleeWeapon getRandomMeleeWeapon(int currentLevel){
         ArrayList<Integer> randomRarity = new ArrayList<>();
@@ -105,16 +133,17 @@ public class Chest {
     }
 
     /**
-     * Drops the loot from the chest onto the ground.
+     * Drop loot.
      */
     public void dropLoot(){
         Map.onGroundMeleeWeapons.add(new OnGroundMeleeWeapon(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.meleeWeaponLoot));
     }
 
     /**
-     * Refreshes the interaction state of the chest.
-     * @param player The player object.
-     * @param isClosest Indicates if the chest is the closest to the player.
+     * Refresh interact.
+     *
+     * @param player     the player
+     * @param isClosest  the is closest
      */
     public void refreshInteract(Player player, boolean isClosest){
 
@@ -136,8 +165,9 @@ public class Chest {
     }
 
     /**
-     * Draws the chest onto the screen.
-     * @param batch The sprite batch to draw with.
+     * Draw.
+     *
+     * @param batch the batch
      */
     public void draw(SpriteBatch batch){
         if (canInteract && !this.isOpened && !this.isOpenning){

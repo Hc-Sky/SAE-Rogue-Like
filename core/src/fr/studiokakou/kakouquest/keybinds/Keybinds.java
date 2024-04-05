@@ -3,23 +3,24 @@ package fr.studiokakou.kakouquest.keybinds;
 import fr.studiokakou.kakouquest.GetProperties;
 
 /**
- * Manages the keybindings for various actions.
+ * Classe pour gérer les touches attribuées.
+ * Cette classe permet de récupérer les touches attribuées à différentes actions dans le jeu.
  */
 public class Keybinds {
-    /** The key for moving up (Z). */
+    /** Touche pour se déplacer vers le haut (Z). */
     public static int UP_KEY;
-    /** The key for moving down (S). */
+    /** Touche pour se déplacer vers le bas ('S'). */
     public static int DOWN_KEY;
-    /** The key for moving left (Q). */
+    /** Touche pour se déplacer vers la gauche ('Q'). */
     public static int LEFT_KEY;
-    /** The key for moving right (D). */
+    /** Touche pour se déplacer vers la droite ('D'). */
     public static int RIGHT_KEY;
-    /** The key for dashing (Space). */
+    /** Touche pour effectuer un dash ('Espace'). */
     public static int DASH_KEY;
 
     /**
-     * Updates the keybindings.
-     * This method updates the keybindings based on the configuration file.
+     * Met à jour les touches attribuées.
+     * Cette méthode met à jour les touches en fonction du fichier de configuration.
      */
     public static void updateKeys(){
         Keybinds.UP_KEY = GetProperties.getIntProperty("KEY_UP");

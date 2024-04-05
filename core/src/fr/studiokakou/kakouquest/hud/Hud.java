@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * The type Hud. This class is used to create a Hud object.
  *
  * @version 1.0
+ *
  */
 public class Hud {
     /**

@@ -14,33 +14,55 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 /**
- * Represents a melee weapon on the ground that can be picked up by the player.
+ * The type On ground melee weapon.
+ * This class is used to create an on-ground melee weapon object.
+ *
+ * @version 1.0
  */
 public class OnGroundMeleeWeapon {
-    /** The melee weapon object. */
+    /**
+     * The Melee weapon.
+     */
     public MeleeWeapon meleeWeapon;
 
-    /** The position of the melee weapon on the ground. */
+    /**
+     * The Pos.
+     */
     public Point pos;
 
-    /** Indicates if the melee weapon can be interacted with. */
-    boolean canInteract = false;
-    /** Indicates if the melee weapon should be deleted. */
+    /**
+     * The Can interact.
+     */
+    public boolean canInteract = false;
+    /**
+     * The To delete.
+     */
     public boolean toDelete = false;
-    /** The melee weapon to be added to the player's inventory. */
+    /**
+     * The To add.
+     */
     public OnGroundMeleeWeapon toAdd;
 
-    /** Key for interacting with the melee weapon. */
-    String interactKey;
-    /** Key code for interacting with the melee weapon. */
-    int interactKeyCode;
-    /** Animation for the interact key. */
-    Animation<TextureRegion> interactKeyAnimation;
+
+    //interact var
+    /**
+     * The Interact key.
+     */
+    public String interactKey;
+    /**
+     * The Interact key code.
+     */
+    public int interactKeyCode;
+    /**
+     * The Interact key animation.
+     */
+    public Animation<TextureRegion> interactKeyAnimation;
 
     /**
-     * Constructs a melee weapon on the ground at the given position.
-     * @param pos The position of the melee weapon.
-     * @param meleeWeapon The melee weapon object.
+     * Instantiates a new On ground melee weapon.
+     *
+     * @param pos          the pos
+     * @param meleeWeapon  the melee weapon
      */
     public OnGroundMeleeWeapon(Point pos, MeleeWeapon meleeWeapon){
         this.pos = pos;
@@ -53,9 +75,10 @@ public class OnGroundMeleeWeapon {
     }
 
     /**
-     * Refreshes the interaction state of the melee weapon.
-     * @param player The player object.
-     * @param isClosest Indicates if the melee weapon is the closest to the player.
+     * Refresh interact.
+     *
+     * @param player     the player
+     * @param isClosest  the is closest
      */
     public void refreshInteract(Player player, boolean isClosest){
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
@@ -70,8 +93,9 @@ public class OnGroundMeleeWeapon {
     }
 
     /**
-     * Handles the interaction of the melee weapon with the player.
-     * @param player The player object.
+     * Interact.
+     *
+     * @param player  the player
      */
     public void interact(Player player){
         if (this.canInteract){
@@ -82,8 +106,9 @@ public class OnGroundMeleeWeapon {
     }
 
     /**
-     * Draws the melee weapon on the ground.
-     * @param batch The sprite batch to draw with.
+     * Draw.
+     *
+     * @param batch  the batch
      */
     public void draw(SpriteBatch batch){
 
