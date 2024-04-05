@@ -375,9 +375,6 @@ public class Player {
                     assert this.dashFinalPoint != null;
                     Point nextPos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
 
-                    boolean canMoveY = canMove(new Point(this.pos.x, nextPos.y), map);
-                    boolean canMoveX = canMove(new Point(nextPos.x, this.pos.y), map);
-
                     boolean canMove1 = true;
 
                     if (canMove(new Point(this.pos.x, nextPos.y), map)){
