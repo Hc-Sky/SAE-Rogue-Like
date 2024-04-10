@@ -99,8 +99,8 @@ public class InGameScreen implements Screen {
 		MeleeWeapon.createPossibleMeleeWeapons();
 
 		// Initialisation de la carte
-		this.map_height = 150;
-		this.map_width = 150;
+		this.map_height = 80;
+		this.map_width = 80;
 		this.map = new Map(this.map_width, this.map_height);
 
 		// Initialisation du joueur

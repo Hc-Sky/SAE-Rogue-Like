@@ -106,7 +106,7 @@ public class Chest {
     public MeleeWeapon getRandomMeleeWeapon(int currentLevel){
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        float tmp_current_level = (float) currentLevel/3;
+        float tmp_current_level = (float) currentLevel;
         if (tmp_current_level<1){
             tmp_current_level=1;
         }
