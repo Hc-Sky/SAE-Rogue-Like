@@ -122,7 +122,7 @@ public class MeleeWeapon {
 	public static MeleeWeapon HAMMER () {return new MeleeWeapon("Hammer", "assets/weapon/weapon_hammer.png", 40, 40, 90, 0.5f, 1);}
 	public static MeleeWeapon KATANA () {return new MeleeWeapon("Katana", "assets/weapon/weapon_katana.png", 50, 100, 130, 0.7f, 1);}
 	public static MeleeWeapon KNIFE () {return new MeleeWeapon("Knife", "assets/weapon/weapon_knife.png", 12, 40, 90, 0.7f, 1);}
-	public static MeleeWeapon KNIGHT_SWORD () {return new MeleeWeapon("Knight sword", "assets/weapon/weapon_knight_sword.png", 35, 80, 110, 0.5f, 1);}
+	public static MeleeWeapon KNIGHT_SWORD () {return new MeleeWeapon("Knight sword", "assets/weapon/weapon_knight_sword.png", 35, 80, 110, 0.7f, 1);}
 	public static MeleeWeapon LAVISH_SWORD () {return new MeleeWeapon("Lavish sword", "assets/weapon/weapon_lavish_sword.png", 90, 120, 120, 0.8f, 1);}
 	public static MeleeWeapon MACE () {return new MeleeWeapon("Mace", "assets/weapon/weapon_mace.png", 60, 30, 180, 0.3f, 1);}
 	public static MeleeWeapon MACHETE () {return new MeleeWeapon("Machete", "assets/weapon/weapon_machete.png", 20, 40, 90, 0.5f, 1);}
@@ -130,7 +130,7 @@ public class MeleeWeapon {
 	public static MeleeWeapon REGULAR_SWORD () {return new MeleeWeapon("Regular sword", "assets/weapon/weapon_regular_sword.png", 25, 70, 110, 0.5f, 1);}
 	public static MeleeWeapon RUSTY_SWORD () {return new MeleeWeapon("Rusty sword", "assets/weapon/weapon_rusty_sword.png", 10, -1000, 90, 0.5f, 1);}
 	public static MeleeWeapon SAW_SWORD () {return new MeleeWeapon("Saw sword", "assets/weapon/weapon_saw_sword.png", 65, 80, 120, 0.5f, 1);}
-	public static MeleeWeapon THROWING_AXE () {return new MeleeWeapon("Throwing axe", "assets/weapon/weapon_throwing_axe.png", 15, 40, 90, 0.7f, 1);}
+	public static MeleeWeapon THROWING_AXE () {return new MeleeWeapon("Throwing axe", "assets/weapon/weapon_throwing_axe.png", 15, 50, 90, 0.7f, 1);}
 	public static MeleeWeapon WARAXE () {return new MeleeWeapon("Waraxe", "assets/weapon/weapon_waraxe.png", 45, 60, 120, 0.4f, 1.3f);}
 
 	//dev weapon

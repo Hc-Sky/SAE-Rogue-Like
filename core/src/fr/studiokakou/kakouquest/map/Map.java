@@ -219,7 +219,7 @@ public class Map {
      * Generates rooms.
      */
     public void generateRooms(){
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 30; i++) {
             int startX = Utils.randint(0, this.map_width-Map.ROOM_MAX_WIDTH);
             int startY = Utils.randint(0, this.map_height-Map.ROOM_MAX_HEIGHT);
             int endX = startX+Utils.randint(Map.ROOM_MIN_WIDTH,Map.ROOM_MAX_WIDTH);

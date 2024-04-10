@@ -371,7 +371,11 @@ public class Player {
                     this.isDashing=false;
                 }
 
-                if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
+                if (this.dashOrientation==null){
+                    this.isDashing = false;
+                    this.dashFinalPoint=null;
+                    this.dashStartPoint=null;
+                } else if (!Point.isPointExceeded(this.pos, this.dashFinalPoint, this.dashOrientation)){
                     assert this.dashFinalPoint != null;
                     Point nextPos = Utils.getPointDirection(this.pos, this.dashFinalPoint, Player.DASH_SPEED*Gdx.graphics.getDeltaTime());
 
