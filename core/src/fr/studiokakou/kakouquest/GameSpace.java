@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
+import fr.studiokakou.kakouquest.screens.MenuScreen;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
 
 /**
@@ -46,8 +47,8 @@ public class GameSpace extends Game {
 		hudBatch = new SpriteBatch();
 		startTime = TimeUtils.millis();
 
-		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage)
-		this.setScreen(new InGameScreen(this));
+		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
+		this.setScreen(new MenuScreen(this));
 	}
 
 	/**
