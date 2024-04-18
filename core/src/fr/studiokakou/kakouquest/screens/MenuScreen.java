@@ -25,12 +25,12 @@ public class MenuScreen implements Screen {
      * The width/height ratio must be 3:1 for the text buttons
      * and 1:1 for the icon buttons
      */
-    private static final int PLAY_BUTTON_HEIGHT = 200;
+    private static final int PLAY_BUTTON_HEIGHT = 300;
     private static final int PLAY_BUTTON_WIDTH = 600;
-    private static final int EXIT_BUTTON_HEIGHT = 70;
+    private static final int EXIT_BUTTON_HEIGHT = 100;
     private static final int EXIT_BUTTON_WIDTH = 210;
-    private static final int SETTINGS_BUTTON_HEIGHT = 120;
-    private static final int SETTINGS_BUTTON_WIDTH = 360;
+    private static final int SETTINGS_BUTTON_HEIGHT = 125;
+    private static final int SETTINGS_BUTTON_WIDTH = 400;
     private static final int HELP_BUTTON_HEIGHT = 120;
     private static final int HELP_BUTTON_WIDTH = 120;
     /**
@@ -85,7 +85,7 @@ public class MenuScreen implements Screen {
          */
         int yposPlay = Gdx.graphics.getHeight()/2;
         int yposExit = Gdx.graphics.getHeight()/8 - EXIT_BUTTON_HEIGHT/2;
-        int yposSettings = Gdx.graphics.getHeight()/2 - SETTINGS_BUTTON_HEIGHT -30;
+        int yposSettings = Gdx.graphics.getHeight()/2 - SETTINGS_BUTTON_HEIGHT -50;
         int yposHelp = Gdx.graphics.getHeight() - HELP_BUTTON_HEIGHT - 30;
         /*
           Bouton Play
@@ -97,7 +97,7 @@ public class MenuScreen implements Screen {
                 Gdx.graphics.getHeight() - Gdx.input.getY() > yposPlay) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
-                game.setScreen(new InGameScreen(game));
+                game.setScreen(new GameModeChoice(game));
             }
         }
         /*

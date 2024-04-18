@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,17 +20,17 @@ public class HelpScreen implements Screen {
     GameSpace game;
     private final SpriteBatch batch;
     private final BitmapFont font;
-    public Animation<TextureRegion> interactKeyAnimation;
+    Texture backButton;
 
     public HelpScreen(GameSpace game){
         this.game = game;
         batch = new SpriteBatch();
         font = game.font;
-        this.interactKeyAnimation = getAnimationHorizontal("assets/keys/animated/ARROWLEFT.png", 2, 1, 1f);
         // Taille du texte
         font.getData().setScale(1.5f);
         // Couleur du texte
         font.setColor(Color.WHITE);
+        backButton = new Texture("assets/buttons/back_button.png");
     }
 
     @Override
@@ -79,9 +80,8 @@ public class HelpScreen implements Screen {
                 "peut trouver des potions dans des coffres qu'il peut utiliser pour toutes sortes de choses comme r\u00E9g\u00E9n\u00E9rer sa vie ou son \u00E9nergie.\n\n\n" +
                 "Appuyez sur Echap pour revenir au menu principal...", xposText, yposText);
 
-        TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
-        game.batch.draw(currentKeyFrame, 620, 50, 70, 70);
-        if (Gdx.input.getX() < 620 + 70 &&
+        game.batch.draw(backButton, 620, 50, 230, 70);
+        if (Gdx.input.getX() < 620 + 230 &&
                 Gdx.input.getX() > 620 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 50 + 70 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > 50) {

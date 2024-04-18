@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
-import fr.studiokakou.kakouquest.screens.HelpScreen;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.screens.MenuScreen;
-import fr.studiokakou.kakouquest.screens.SplashScreen;
+import fr.studiokakou.kakouquest.screens.*;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -50,7 +47,7 @@ public class GameSpace extends Game {
 		//Le initialize sert juste pour le HelpScreen pour les fonts
 		initialize();
 		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
-		this.setScreen(new HelpScreen(this));
+		this.setScreen(new SplashScreen(this));
 	}
 
 	/**
