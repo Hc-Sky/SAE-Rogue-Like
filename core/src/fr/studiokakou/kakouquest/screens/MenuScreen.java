@@ -22,8 +22,7 @@ import static com.badlogic.gdx.Gdx.input;
 public class MenuScreen implements Screen {
     /**
      * Constants for the buttons
-     * The width/height ratio must be 3:1 for the text buttons
-     * and 1:1 for the icon buttons
+     * The width/height ratio has to be arbitrary
      */
     private static final int PLAY_BUTTON_HEIGHT = 300;
     private static final int PLAY_BUTTON_WIDTH = 600;

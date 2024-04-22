@@ -1,0 +1,50 @@
+
+# Principe du jeu
+
+Le but du jeu Kakou Quest est, à la manière d’un Roguelike, de s’améliorer en tant
+que joueur en combattant des monstres. Il faut descendre d’étages en étages et aller le
+plus bas possible tout en améliorant son joueur et son équipement et combattant des
+monstres et des boss. 
+
+Le jeu utilise un système de mort permanente qui fait recommencer au premier niveau le
+joueur à chaque fois qu’il meurt et lui fait perdre son équipement mais lui laisse
+tout de même ses améliorations de statistiques faites durant la partie. Ceci permettra
+au joueur de s’améliorer à chaque mort et lui permettra aussi d’avancer de plus en plus loin
+dans un jeu qui se veut difficile.
+
+À chaque fois que le joueur tues un monstre ou passe un étage, il récupère des points
+d’expérience qui lui permettent de passer des niveau et donc d’améliorer une statistique
+au choix parmi sa vie, sa force, sa vitesse et son énergie.
+
+Les combats de boss, quant à eux, permettent au joueurs de gagner beaucoup plus de
+points d’expérience et d’équipement rare que le reste des coffres et des monstres mais
+seront bien plus dur a terminer.
+
+
+
+# Déroulement d’une partie
+
+Après avoir choisit, à l’aide du menu principal, de commencer une nouvelle partie en
+solo ou de rejoindre une partie multijoueur, le ou les joueurs commencent au premier
+étage (qui est l’étage le plus haut) avec uniquement l’arme de départ qui est la moins
+forte (Rusty Sword) et avec uniquement les stats de base.
+
+Ils apparaissent donc dans la première salle de la map générée aléatoirement et doivent
+la parcourir afin de trouver l’échelle pour atteindre le prochain étage. 
+
+Au cours de leur trajet, les joueurs devront donc tuer des monstres et peuvent trouver
+des coffres contenant des armes plus puissantes que celle de départ mais qui ne
+possèdent pas une résistance illimitée.
+
+Le joueur possède aussi un arc qu’il peut utiliser pour attaquer des monstres de loin
+mais ses flèches ne sont pas illimitées non plus. Il peut cependant
+en trouver dans des coffres ou en acheter à des marchands.
+
+De plus, le joueur possède aussi des sorts qu’il peut utiliser pour effectuer
+différentes actions.
+
+Enfin, le joueur peut trouver des potions dans des coffres qu’il peut utiliser pour
+toutes sortes de choses comme régénérer sa vie ou son énergie.
+
+
+Appuyez sur Echap pour revenir au menu...
