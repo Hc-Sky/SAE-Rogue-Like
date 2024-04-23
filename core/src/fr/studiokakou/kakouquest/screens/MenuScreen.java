@@ -115,6 +115,15 @@ public class MenuScreen implements Screen {
           Bouton Settings
          */
         game.batch.draw(settingsButton, xposSettings, yposSettings, SETTINGS_BUTTON_WIDTH, SETTINGS_BUTTON_HEIGHT);
+        if (Gdx.input.getX() < xposSettings + SETTINGS_BUTTON_WIDTH &&
+                Gdx.input.getX() > xposSettings &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposSettings + SETTINGS_BUTTON_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposSettings) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new SettingsScreen(game));
+            }
+        }
         /*
           Bouton Help (Règles du jeu)
          */
