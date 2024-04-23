@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.OnGroundMeleeWeapon;
+import fr.studiokakou.kakouquest.interactive.OnGroundPotion;
 import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
@@ -37,6 +38,10 @@ public class Map {
      * The list of melee weapons on the ground.
      */
     public static ArrayList<OnGroundMeleeWeapon> onGroundMeleeWeapons = new ArrayList<>();
+    /**
+     * The list of potion on the ground.
+     */
+    public static ArrayList<OnGroundPotion> OnGroundPotions = new ArrayList<>();
     /**
      * The stairs of the map.
      */

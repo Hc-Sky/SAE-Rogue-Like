@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.item.Potion;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
@@ -16,6 +17,7 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * le type Player.
@@ -65,6 +67,11 @@ public class Player {
 //weapon
     public MeleeWeapon currentWeapon;
 
+    /**
+     * les potions actuelles
+     */
+//potion
+    public ArrayList<Potion> currentPotions;
     /**
      * si le joueur est en train de dash.
      */
@@ -262,6 +269,9 @@ public class Player {
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+
+        //default potion
+        this.currentPotions = null;
     }
 
     /**

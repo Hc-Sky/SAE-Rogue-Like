@@ -13,8 +13,10 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+import fr.studiokakou.kakouquest.item.Potion;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * The type Chest.
@@ -31,6 +33,10 @@ public class Chest {
      * The Melee weapon loot.
      */
     public MeleeWeapon meleeWeaponLoot;
+    /**
+     * The Potion loot.
+     */
+    public Potion potion;
 
     boolean isOpened=false;
     boolean isOpenning = false;
@@ -95,6 +101,7 @@ public class Chest {
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
 
         this.meleeWeaponLoot = getRandomMeleeWeapon(currentLevel);
+        this.potion = generateRandomPotion(currentLevel);
     }
 
     /**
@@ -128,6 +135,33 @@ public class Chest {
         }
 
         return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1)).getNew();
+    }
+
+    /**
+     * Generates a random potion based on the current level.
+     *
+     * @param currentLevel the current level
+     * @return the generated potion
+     */
+    public Potion generateRandomPotion(int currentLevel) {
+        if (shouldSpawnPotion(currentLevel)) {
+            return Potion.generateRandomPotion();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Determines if a potion should spawn based on the current level.
+     *
+     * @param currentLevel the current level
+     * @return true if a potion should spawn, false otherwise
+     */
+    private boolean shouldSpawnPotion(int currentLevel) {
+        Random random = new Random();
+        int threshold = 50 + currentLevel * 10;
+
+        return random.nextInt(100) < threshold;
     }
 
     /**
