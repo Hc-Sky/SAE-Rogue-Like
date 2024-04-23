@@ -12,6 +12,8 @@ public class HelpScreen implements Screen {
      * Constantes de position pour le png des règles du jeu
      */
     private static final int TEXT_HEIGHT = Gdx.graphics.getHeight() - 60;
+    private static final int TEXT_WIDTH = Gdx.graphics.getWidth() - 60;
+
     /**
      * Espace de jeu.
      */
@@ -55,11 +57,11 @@ public class HelpScreen implements Screen {
         game.batch.begin();
 
         // Texte des règles du jeu
-        game.batch.draw(text, 30, 30, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.batch.draw(text, 30, 40, TEXT_WIDTH, TEXT_HEIGHT);
 
 
         //Bouton Back
-        game.batch.draw(backButton, 620, 15, 230, 70);
+        game.batch.draw(backButton, 620, 25, 230, 70);
         if (Gdx.input.getX() < 620 + 230 &&
                 Gdx.input.getX() > 620 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 15 + 70 &&
