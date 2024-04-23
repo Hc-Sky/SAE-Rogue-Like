@@ -39,6 +39,12 @@ public class Hud {
      * The Current level.
      */
     int currentLevel;
+
+    /**
+     * Texture de l'arme.
+     */
+    Texture weaponIcon;
+
     /**
      * The Hud size.
      */
@@ -79,6 +85,8 @@ public class Hud {
 
         Point healthBarPos = new Point(100, Gdx.graphics.getHeight()-100);
         Point staminaBarPos = new Point(78, Gdx.graphics.getHeight()-120);
+        Point weaponIconPos = new Point(Gdx.graphics.getWidth() - 80, 50);
+
 
         if (healthAmount>=0){
             batch.draw(this.healthBar.get(healthAmount), healthBarPos.x, healthBarPos.y, this.healthBar.get(0).getWidth()*this.hudSize, this.healthBar.get(0).getHeight()*this.hudSize);
@@ -86,6 +94,9 @@ public class Hud {
         batch.draw(this.healthBarOutside, healthBarPos.x, healthBarPos.y, this.healthBarOutside.getWidth()*this.hudSize, this.healthBarOutside.getHeight()*this.hudSize);
 
         batch.draw(this.staminaBar.get(getStaminaAmount()), staminaBarPos.x, staminaBarPos.y, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
+
+        Texture weaponIcon = this.player.currentWeapon.texture;
+        batch.draw(weaponIcon, weaponIconPos.x, weaponIconPos.y, weaponIcon.getWidth() * hudSize * 0.6f, weaponIcon.getHeight() * hudSize * 0.6f);
     }
 
     private int getStaminaAmount() {
