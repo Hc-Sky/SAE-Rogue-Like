@@ -6,7 +6,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.GetProperties;
@@ -15,10 +17,25 @@ import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 import static com.badlogic.gdx.Gdx.input;
 
 public class SettingsScreen implements Screen{
+    //interact var
+    /**
+     * The Interact key.
+     */
+    public String interactKey;
+    /**
+     * The Interact key code.
+     */
+    public int interactKeyCode;
+    /**
+     * The Interact key animation.
+     */
+    public Animation<TextureRegion> interactKeyAnimation;
+
     /**
      * Constants for the text textures
      */
@@ -28,7 +45,7 @@ public class SettingsScreen implements Screen{
      * Coords for the text textures
      */
     int ecart = 50;
-    int xposText = Gdx.graphics.getWidth()/4 * 1;
+    int xposText = ((Gdx.graphics.getWidth() / 4) * 1) - 180;
     int yposUp = Gdx.graphics.getHeight() - 150;
     int yposDown = yposUp- TEXT_HEIGHT - ecart;
     int yposLeft = yposDown - TEXT_HEIGHT - ecart;
@@ -45,10 +62,26 @@ public class SettingsScreen implements Screen{
     Texture interactText;
     Texture dashText;
     Texture inventoryText;
+    Texture upKey;
+    Texture downKey;
+    Texture leftKey;
+    Texture rightKey;
+    Texture interactionKey;
+    Texture dashKey;
+    Texture inventoryKey;
+
+
+
     Texture backButton;
 
     public SettingsScreen(GameSpace game){
         this.game = game;
+
+        this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
+        this.interactKey = Input.Keys.toString(this.interactKeyCode);
+        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
+
+
         upText = new Texture("assets/window/up_text.png");
         downText = new Texture("assets/window/down_text.png");
         leftText = new Texture("assets/window/left_text.png");
@@ -56,6 +89,11 @@ public class SettingsScreen implements Screen{
         interactText = new Texture("assets/window/interact_text.png");
         dashText = new Texture("assets/window/dash_text.png");
         inventoryText = new Texture("assets/window/inventory_text.png");
+
+        interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
+        interactKey = Input.Keys.toString(this.interactKeyCode);
+        interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
+
         backButton = new Texture("assets/buttons/back_button.png");
 
 
@@ -99,6 +137,7 @@ public class SettingsScreen implements Screen{
         game.batch.draw(interactText, xposText, yposInteract, TEXT_WIDTH, TEXT_HEIGHT);
         game.batch.draw(dashText, xposText, yposDash, TEXT_WIDTH, TEXT_HEIGHT);
         game.batch.draw(inventoryText, xposText, yposInventory, TEXT_WIDTH, TEXT_HEIGHT);
+        TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
 
 
         game.batch.end();

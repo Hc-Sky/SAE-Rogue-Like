@@ -17,6 +17,11 @@ public class Keybinds {
     public static int RIGHT_KEY;
     /** Touche pour effectuer un dash ('Espace'). */
     public static int DASH_KEY;
+    /** Touche pour interagir ('E'). */
+    public static int INTERRACT_KEY;
+    /** Touche pour ouvrir l'inventaire ('Tab'). */
+    public static int INVENTORY_KEY;
+
 
     /**
      * Met à jour les touches attribuées.
@@ -28,5 +33,7 @@ public class Keybinds {
         Keybinds.LEFT_KEY = GetProperties.getIntProperty("KEY_LEFT");
         Keybinds.RIGHT_KEY = GetProperties.getIntProperty("KEY_RIGHT");
         Keybinds.DASH_KEY = GetProperties.getIntProperty("KEY_DASH");
+        Keybinds.INTERRACT_KEY = GetProperties.getIntProperty(("KEY_INTERRACT"));
+        Keybinds.INVENTORY_KEY = GetProperties.getIntProperty(("KEY_INVENTORY"));
     }
 }
