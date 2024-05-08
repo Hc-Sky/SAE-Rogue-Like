@@ -88,10 +88,9 @@ public class InGameScreen implements Screen {
 	 * @param game Le jeu
 	 */
 	public InGameScreen(GameSpace game){
-		this.game=game;
+		this.game = game;
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
-
 
 		this.currentLevel = 1;
 
@@ -114,7 +113,7 @@ public class InGameScreen implements Screen {
 	public void nextLevel(){
 		InGameScreen.stateTime=0f;
 		System.out.println("next level");
-		this.currentLevel+=1;
+		this.currentLevel += 1;
 
 		this.map = new Map(this.map_width, this.map_height);
 		this.player.hasPlayerSpawn=false;
@@ -164,6 +163,7 @@ public class InGameScreen implements Screen {
 
 		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.getKeyboardMove(this.map);
+			player.getKeyboardWeapon();
 			player.getOrientation();
 			player.dash(this.map);
 		}

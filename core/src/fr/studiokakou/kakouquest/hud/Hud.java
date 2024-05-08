@@ -5,7 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.utils.Utils;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Pixmap;
+
 
 import java.util.ArrayList;
 
@@ -41,14 +44,14 @@ public class Hud {
     int currentLevel;
 
     /**
-     * Texture de l'arme.
-     */
-    Texture weaponIcon;
-
-    /**
      * The Hud size.
      */
     float hudSize;
+
+    /**
+     * The SnapeRenderer
+     */
+    private ShapeRenderer shapeRenderer;
 
     /**
      * Constructeur de l'HUD.
@@ -62,6 +65,7 @@ public class Hud {
         this.player = player;
         this.currentLevel = currentLevel;
 
+        shapeRenderer = new ShapeRenderer();
         this.hudSize = hudSizeMult;
 
         //health bar textures
@@ -85,7 +89,10 @@ public class Hud {
 
         Point healthBarPos = new Point(100, Gdx.graphics.getHeight()-100);
         Point staminaBarPos = new Point(78, Gdx.graphics.getHeight()-120);
-        Point weaponIconPos = new Point(Gdx.graphics.getWidth() - 80, 50);
+        Point defaultWeaponIconPos = new Point(Gdx.graphics.getWidth() - 110, 50);
+        Point weaponIcon1Pos = new Point(Gdx.graphics.getWidth() - 110, 180);
+        Point weaponIcon2Pos = new Point(Gdx.graphics.getWidth() - 110, 310);
+        Point weaponIcon3Pos = new Point(Gdx.graphics.getWidth() - 110, 440);
 
 
         if (healthAmount>=0){
@@ -95,8 +102,53 @@ public class Hud {
 
         batch.draw(this.staminaBar.get(getStaminaAmount()), staminaBarPos.x, staminaBarPos.y, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
 
-        Texture weaponIcon = this.player.currentWeapon.texture;
-        batch.draw(weaponIcon, weaponIconPos.x, weaponIconPos.y, weaponIcon.getWidth() * hudSize * 0.6f, weaponIcon.getHeight() * hudSize * 0.6f);
+        Texture square = drawSquare(Color.WHITE);
+        batch.draw(square, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
+        batch.draw(square, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
+        batch.draw(square, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
+
+        Texture defaultWeaponIcon = this.player.defaultWeapon.texture;
+        batch.draw(defaultWeaponIcon, defaultWeaponIconPos.x, defaultWeaponIconPos.y, defaultWeaponIcon.getWidth() * hudSize * 1f, defaultWeaponIcon.getHeight() * hudSize * 1f);
+        if (this.player.weapons.size() > 0) {
+            if (this.player.indexWeapon == 0) {
+                Texture redSquare = drawSquare(Color.RED);
+                batch.draw(redSquare, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
+            }
+            Texture weaponIcon1 = this.player.weapons.get(0).texture;
+            batch.draw(weaponIcon1, weaponIcon1Pos.x, weaponIcon1Pos.y, weaponIcon1.getWidth() * hudSize * 1f, weaponIcon1.getHeight() * hudSize * 1f);
+        }
+        if (this.player.weapons.size() > 1) {
+            if (this.player.indexWeapon == 1) {
+                Texture redSquare = drawSquare(Color.RED);
+                batch.draw(redSquare, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
+            }
+            Texture weaponIcon2 = this.player.weapons.get(1).texture;
+            batch.draw(weaponIcon2, weaponIcon2Pos.x, weaponIcon2Pos.y, weaponIcon2.getWidth() * hudSize * 1f, weaponIcon2.getHeight() * hudSize * 1f);
+        }
+        if (this.player.weapons.size() > 2) {
+            if (this.player.indexWeapon == 2) {
+                Texture redSquare = drawSquare(Color.RED);
+                batch.draw(redSquare, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
+            }
+            Texture weaponIcon3 = this.player.weapons.get(2).texture;
+            batch.draw(weaponIcon3, weaponIcon3Pos.x, weaponIcon3Pos.y, weaponIcon3.getWidth() * hudSize * 1f, weaponIcon3.getHeight() * hudSize * 1f);
+        }
+    }
+
+    private Texture drawSquare(Color color) {
+        Pixmap pixmap = new Pixmap(150, 150, Pixmap.Format.RGBA8888);
+
+        pixmap.setColor(color);
+        pixmap.drawRectangle(0, 0, 100, 100);
+
+        pixmap.setColor(new Color(1, 1, 1, 0.5f));
+        pixmap.fillRectangle(1, 1, 98, 98);
+
+        Texture texture = new Texture(pixmap);
+
+        pixmap.dispose();
+
+        return texture;
     }
 
     private int getStaminaAmount() {
