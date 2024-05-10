@@ -24,19 +24,6 @@ import static com.badlogic.gdx.Gdx.input;
 public class SettingsScreen implements Screen{
     //interact var
     /**
-     * The Interact key.
-     */
-    public String interactKey;
-    /**
-     * The Interact key code.
-     */
-    public int interactKeyCode;
-    /**
-     * The Interact key animation.
-     */
-    public Animation<TextureRegion> interactKeyAnimation;
-
-    /**
      * Constants for the text textures
      */
     private final static int TEXT_WIDTH = Gdx.graphics.getWidth()/4;
@@ -45,7 +32,7 @@ public class SettingsScreen implements Screen{
      * Coords for the text textures
      */
     int ecart = 50;
-    int xposText = ((Gdx.graphics.getWidth() / 4) * 1) - 180;
+    int xposText = ((Gdx.graphics.getWidth() / 4)) - 180;
     int yposUp = Gdx.graphics.getHeight() - 150;
     int yposDown = yposUp- TEXT_HEIGHT - ecart;
     int yposLeft = yposDown - TEXT_HEIGHT - ecart;
@@ -62,6 +49,7 @@ public class SettingsScreen implements Screen{
     Texture interactText;
     Texture dashText;
     Texture inventoryText;
+
     Texture upKey;
     Texture downKey;
     Texture leftKey;
@@ -70,17 +58,19 @@ public class SettingsScreen implements Screen{
     Texture dashKey;
     Texture inventoryKey;
 
+    private TextureRegion leftRegionUpKey;
+    private TextureRegion leftRegionDownKey;
+    private TextureRegion leftRegionLeftKey;
+    private TextureRegion leftRegionRightKey;
+    private TextureRegion leftRegionInteractionKey;
+    private TextureRegion leftRegionDashKey;
+    private TextureRegion leftRegionInventoryKey;
 
 
     Texture backButton;
 
     public SettingsScreen(GameSpace game){
         this.game = game;
-
-        this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
-        this.interactKey = Input.Keys.toString(this.interactKeyCode);
-        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
-
 
         upText = new Texture("assets/window/up_text.png");
         downText = new Texture("assets/window/down_text.png");
@@ -90,9 +80,22 @@ public class SettingsScreen implements Screen{
         dashText = new Texture("assets/window/dash_text.png");
         inventoryText = new Texture("assets/window/inventory_text.png");
 
-        interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
-        interactKey = Input.Keys.toString(this.interactKeyCode);
-        interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
+        upKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_UP"))+".png");
+        downKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_DOWN"))+".png");
+        leftKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_LEFT"))+".png");
+        rightKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_RIGHT"))+".png");
+        interactionKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_INTERRACT"))+".png");
+        dashKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_DASH"))+".png");
+        inventoryKey = new Texture("assets/keys/animated/"+ Input.Keys.toString(GetProperties.getIntProperty("KEY_INVENTORY"))+".png");
+
+        leftRegionUpKey = new TextureRegion(upKey, 0, 0, upKey.getWidth() / 2, upKey.getHeight());
+        leftRegionDownKey = new TextureRegion(downKey, 0, 0, downKey.getWidth() / 2, downKey.getHeight());
+        leftRegionLeftKey = new TextureRegion(leftKey, 0, 0, leftKey.getWidth() / 2, leftKey.getHeight());
+        leftRegionRightKey = new TextureRegion(rightKey, 0, 0, rightKey.getWidth() / 2, rightKey.getHeight());
+        leftRegionInteractionKey = new TextureRegion(interactionKey, 0, 0, interactionKey.getWidth() / 2, interactionKey.getHeight());
+        leftRegionDashKey = new TextureRegion(dashKey, 0, 0, dashKey.getWidth() / 2, dashKey.getHeight());
+        leftRegionInventoryKey = new TextureRegion(inventoryKey, 0, 0, inventoryKey.getWidth() / 2, inventoryKey.getHeight());
+
 
         backButton = new Texture("assets/buttons/back_button.png");
 
@@ -137,7 +140,77 @@ public class SettingsScreen implements Screen{
         game.batch.draw(interactText, xposText, yposInteract, TEXT_WIDTH, TEXT_HEIGHT);
         game.batch.draw(dashText, xposText, yposDash, TEXT_WIDTH, TEXT_HEIGHT);
         game.batch.draw(inventoryText, xposText, yposInventory, TEXT_WIDTH, TEXT_HEIGHT);
-        TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
+
+        game.batch.draw(leftRegionUpKey, xposText + 1000, yposUp, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposUp + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposUp) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        game.batch.draw(leftRegionDownKey, xposText + 1000, yposDown, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposDown + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposDown) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        game.batch.draw(leftRegionLeftKey, xposText + 1000, yposLeft, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposLeft + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposLeft) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        game.batch.draw(leftRegionRightKey, xposText + 1000, yposRight, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposRight + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposRight) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        game.batch.draw(leftRegionInteractionKey, xposText + 1000, yposInteract, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposInteract + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposInteract) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        game.batch.draw(leftRegionDashKey, xposText + 1000, yposDash, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposDash + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposDash) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        game.batch.draw(leftRegionInventoryKey, xposText + 1000, yposInventory, TEXT_HEIGHT, TEXT_HEIGHT);
+        if (Gdx.input.getX() < xposText+1000 + TEXT_HEIGHT &&
+                Gdx.input.getX() > xposText+1000 &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() < yposInventory + TEXT_HEIGHT &&
+                Gdx.graphics.getHeight() - Gdx.input.getY() > yposInventory) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game));
+            }
+        }
 
 
         game.batch.end();
