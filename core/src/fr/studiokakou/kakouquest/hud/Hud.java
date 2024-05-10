@@ -2,15 +2,18 @@ package fr.studiokakou.kakouquest.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.item.Potion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Pixmap;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Le type Hud. Cette classe est utilisée pour créer un objet Hud.
@@ -47,6 +50,8 @@ public class Hud {
      * The Hud size.
      */
     float hudSize;
+
+    BitmapFont font;
 
     /**
      * The SnapeRenderer
@@ -132,6 +137,55 @@ public class Hud {
             }
             Texture weaponIcon3 = this.player.weapons.get(2).texture;
             batch.draw(weaponIcon3, weaponIcon3Pos.x, weaponIcon3Pos.y, weaponIcon3.getWidth() * hudSize * 1f, weaponIcon3.getHeight() * hudSize * 1f);
+        }
+
+        // Parcours de la HashMap de potions
+        for (HashMap.Entry<Potion.PotionType, Integer> entry : this.player.potions.entrySet()) {
+            Potion.PotionType potionType = entry.getKey();
+            int potionCount = entry.getValue();
+
+            // Dessiner l'icône de la potion en fonction du type
+            Texture potionTexture = getTextureForPotion(potionType);
+            Point potionIconPos = getPointForPotion(potionType);
+
+            batch.draw(potionTexture, potionIconPos.x, potionIconPos.y, potionTexture.getWidth() * hudSize, potionTexture.getHeight() * hudSize);
+
+            String potionCountText = "x" + potionCount;
+            font.draw(batch, potionCountText, potionIconPos.x + 35, potionIconPos.y + 15);
+        }
+    }
+
+    public void setFont(BitmapFont font) {
+        this.font = font;
+    }
+
+    private Texture getTextureForPotion(Potion.PotionType potionType) {
+        switch (potionType) {
+            case HEALTH:
+                return new Texture("assets/items/flask_big_red.png");
+            case STAMINA:
+                return new Texture("assets/items/flask_big_yellow.png");
+            case STRENGTH:
+                return new Texture("assets/items/flask_big_blue.png");
+            case SPEED:
+                return new Texture("assets/items/flask_big_green.png");
+            default:
+                return null;
+        }
+    }
+
+    private Point getPointForPotion(Potion.PotionType potionType) {
+        switch (potionType) {
+            case HEALTH:
+                return new Point (Gdx.graphics.getWidth() - 150, 600);
+            case STAMINA:
+                return new Point (Gdx.graphics.getWidth() - 95, 600);
+            case STRENGTH:
+                return new Point (Gdx.graphics.getWidth() - 150, 540);
+            case SPEED:
+                return new Point (Gdx.graphics.getWidth() - 95, 540);
+            default:
+                return null;
         }
     }
 

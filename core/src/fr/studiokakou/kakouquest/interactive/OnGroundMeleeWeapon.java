@@ -102,10 +102,11 @@ public class OnGroundMeleeWeapon {
             if (player.weapons.size() > 2) {
                 if (player.indexWeapon != -1) {
                     player.weapons.set(player.indexWeapon, this.meleeWeapon);
+                    toAdd = new OnGroundMeleeWeapon(player.pos, player.currentWeapon);
                 }
             } else {
-                toAdd = new OnGroundMeleeWeapon(player.pos, player.currentWeapon);
                 player.weapons.add(this.meleeWeapon);
+                player.indexWeapon = player.weapons.size() - 1;
             }
             this.toDelete = true;
         }

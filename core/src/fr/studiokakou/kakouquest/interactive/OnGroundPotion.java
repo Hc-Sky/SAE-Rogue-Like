@@ -46,13 +46,17 @@ public class OnGroundPotion {
         }
     }
 
-    public void interact(Player player){
-        if (this.canInteract){
-            player.potions.put(this.potion.getType(), this.potion.getAmount());
-//            System.out.println(player.potions);
+    public void interact(Player player) {
+        if (this.canInteract) {
+            Potion.PotionType potionType = this.potion.getType();
+            int currentAmount = player.potions.getOrDefault(potionType, 0);
+            int newAmount = currentAmount + this.potion.getAmount();
+            player.potions.put(potionType, newAmount);
+            System.out.println(player.potions);
             this.toDelete = true;
         }
     }
+
 
     public void draw(SpriteBatch batch){
         if (canInteract){

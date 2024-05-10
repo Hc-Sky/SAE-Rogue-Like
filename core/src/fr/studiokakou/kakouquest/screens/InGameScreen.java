@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
@@ -59,6 +60,7 @@ public class InGameScreen implements Screen {
 	 * HUD du jeu.
 	 */
 	Hud hud;
+	BitmapFont font;
 
 	/**
 	 * Niveau actuel.
@@ -139,6 +141,8 @@ public class InGameScreen implements Screen {
 		pm.dispose();
 
 		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
+		font = new BitmapFont();
+		hud.setFont(font);
 
 		startTime = TimeUtils.millis();
 

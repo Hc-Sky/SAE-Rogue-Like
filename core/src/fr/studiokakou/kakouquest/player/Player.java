@@ -297,6 +297,7 @@ public class Player {
         this.speed=40f;
         this.max_stamina=100;
         this.stamina = 100;
+        this.indexWeapon = -1;
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
