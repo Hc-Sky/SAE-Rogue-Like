@@ -12,7 +12,6 @@ public class Potion {
 
     public String texturePath;
     public Texture texture;
-    public Sprite sprite;
 
     private String name;
     private PotionType type;

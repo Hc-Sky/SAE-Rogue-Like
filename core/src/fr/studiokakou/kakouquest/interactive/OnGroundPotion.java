@@ -48,8 +48,8 @@ public class OnGroundPotion {
 
     public void interact(Player player){
         if (this.canInteract){
-//            toAdd = new OnGroundPotion(player.pos);
-            player.currentPotions.add(this.potion);
+            player.potions.put(this.potion.getType(), this.potion.getAmount());
+//            System.out.println(player.potions);
             this.toDelete = true;
         }
     }
@@ -57,7 +57,7 @@ public class OnGroundPotion {
     public void draw(SpriteBatch batch){
         if (canInteract){
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
-            batch.draw(currentKeyFrame, this.pos.x - ((float) this.potion.sprite.getWidth() /2), this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
+            batch.draw(currentKeyFrame, this.pos.x - ((float) this.potion.texture.getWidth() /2), this.pos.y + 20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
         }
 
         batch.draw(this.potion.texture, this.pos.x, this.pos.y);

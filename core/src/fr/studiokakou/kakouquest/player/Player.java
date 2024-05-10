@@ -17,7 +17,7 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * le type Player.
@@ -71,7 +71,7 @@ public class Player {
      * les potions actuelles
      */
 //potion
-    public ArrayList<Potion> currentPotions;
+    public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
     /**
      * si le joueur est en train de dash.
      */
@@ -269,9 +269,8 @@ public class Player {
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
-
         //default potion
-        this.currentPotions = null;
+        this.potions = new HashMap<>();
     }
 
     /**
@@ -296,6 +295,8 @@ public class Player {
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        //default potion
+        this.potions.clear();
     }
 
     /**

@@ -41,7 +41,7 @@ public class Map {
     /**
      * The list of potion on the ground.
      */
-    public static ArrayList<OnGroundPotion> OnGroundPotions = new ArrayList<>();
+    public static ArrayList<OnGroundPotion> onGroundPotions = new ArrayList<>();
     /**
      * The stairs of the map.
      */
@@ -202,6 +202,11 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             weapon.draw(batch);
         }
+
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            potion.draw(batch);
+        }
+
     }
 
     /**
@@ -358,7 +363,8 @@ public class Map {
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(1, 5) == 1){
+//            if (Utils.randint(1, 5) == 1){
+              if (true) {
                 if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
                     this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
                 }
@@ -387,6 +393,9 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             weapon.refreshInteract(player, weapon == closestObject);
         }
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            potion.refreshInteract(player, potion == closestObject);
+        }
     }
 
     /**
@@ -403,6 +412,9 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             this.distances.put(Utils.getDistance(weapon.pos, player.pos), weapon);
         }
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            this.distances.put(Utils.getDistance(potion.pos, player.pos), potion);
+        }
 
         return new TreeMap<>(this.distances);
     }
@@ -411,23 +423,34 @@ public class Map {
      * Updates the removal of interactive objects.
      */
     public void updateRemoveInteractive(){
-        ArrayList<OnGroundMeleeWeapon> toRemove = new ArrayList<>();
-        ArrayList<OnGroundMeleeWeapon> toAdd = new ArrayList<>();
+        ArrayList<OnGroundMeleeWeapon> meleeWeaponsToRemove = new ArrayList<>();
+        ArrayList<OnGroundMeleeWeapon> meleeWeaponsToAdd = new ArrayList<>();
+        ArrayList<OnGroundPotion> potionsToRemove = new ArrayList<>();
+        ArrayList<OnGroundPotion> potionsToAdd = new ArrayList<>();
 
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             if (weapon.toDelete){
-                toRemove.add(weapon);
+                meleeWeaponsToRemove.add(weapon);
             }
-            if (weapon.toAdd!=null){
-                toAdd.add(weapon.toAdd);
+            if (weapon.toAdd != null){
+                meleeWeaponsToAdd.add(weapon.toAdd);
             }
         }
 
-        Map.onGroundMeleeWeapons.addAll(toAdd);
-
-        for (OnGroundMeleeWeapon weapon : toRemove){
-            Map.onGroundMeleeWeapons.remove(weapon);
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            if (potion.toDelete){
+                potionsToRemove.add(potion);
+            }
+            if (potion.toAdd != null){
+                potionsToAdd.add(potion.toAdd);
+            }
         }
+
+        Map.onGroundMeleeWeapons.addAll(meleeWeaponsToAdd);
+        Map.onGroundPotions.addAll(potionsToAdd);
+
+        Map.onGroundMeleeWeapons.removeAll(meleeWeaponsToRemove);
+        Map.onGroundPotions.removeAll(potionsToRemove);
     }
 
     /**

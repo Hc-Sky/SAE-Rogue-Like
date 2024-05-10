@@ -172,6 +172,16 @@ public class Chest {
     }
 
     /**
+     * Drop an item on the ground.
+     */
+    public void dropItem(){
+        Map.onGroundPotions.add(new OnGroundPotion(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.potion));
+    }
+
+
+
+
+    /**
      * Refresh interact.
      *
      * @param player     the player
@@ -187,7 +197,11 @@ public class Chest {
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.isOpened = true;
             this.dropLoot();
+            if (this.potion != null) {
+                this.dropItem();
+            }
         }
+
 
         if (Utils.getDistance(this.pos, player.pos) <= 40){
             this.canInteract = true;
