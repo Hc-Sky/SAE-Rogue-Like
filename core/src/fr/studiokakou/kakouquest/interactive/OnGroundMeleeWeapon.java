@@ -43,7 +43,6 @@ public class OnGroundMeleeWeapon {
      */
     public OnGroundMeleeWeapon toAdd;
 
-
     //interact var
     /**
      * The Interact key.
@@ -72,7 +71,6 @@ public class OnGroundMeleeWeapon {
         this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
-
     }
 
     /**
@@ -100,9 +98,16 @@ public class OnGroundMeleeWeapon {
      */
     public void interact(Player player){
         if (this.canInteract){
-            toAdd = new OnGroundMeleeWeapon(player.pos, player.currentWeapon);
             player.currentWeapon = this.meleeWeapon;
-            this.toDelete=true;
+            if (player.weapons.size() > 2) {
+                if (player.indexWeapon != -1) {
+                    player.weapons.set(player.indexWeapon, this.meleeWeapon);
+                }
+            } else {
+                toAdd = new OnGroundMeleeWeapon(player.pos, player.currentWeapon);
+                player.weapons.add(this.meleeWeapon);
+            }
+            this.toDelete = true;
         }
     }
 

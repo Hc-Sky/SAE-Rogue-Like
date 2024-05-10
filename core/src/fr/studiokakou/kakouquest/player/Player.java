@@ -18,6 +18,7 @@ import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * le type Player.
@@ -66,6 +67,9 @@ public class Player {
      */
 //weapon
     public MeleeWeapon currentWeapon;
+    public MeleeWeapon defaultWeapon;
+    public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
+    public int indexWeapon = -1;
 
     /**
      * les potions actuelles
@@ -268,7 +272,8 @@ public class Player {
         this.stamina = 100;
 
         //default weapon
-        this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.defaultWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.currentWeapon = defaultWeapon;
         //default potion
         this.potions = new HashMap<>();
     }
@@ -295,6 +300,7 @@ public class Player {
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.weapons.clear();
         //default potion
         this.potions.clear();
     }
@@ -423,6 +429,16 @@ public class Player {
     }
 
     /**
+     * Définit l'arme actuelle à l'index spécifié dans la liste currentWeapons.
+     *
+     * @param weapon la nouvelle arme à définir
+     */
+    public void setCurrentWeapon(MeleeWeapon weapon) {
+            currentWeapon = weapon;
+    }
+
+
+    /**
      * Permet de faire attaquer le joueur.
      */
     public void attack() {
@@ -464,9 +480,9 @@ public class Player {
             if (meleeWeaponRectangle.overlaps(mRectangle)){
                 boolean damaged = m.hit(this);
                 if (damaged){
-                    this.currentWeapon.resistance-=1;
+                    this.currentWeapon.resistance -= 1;
                     System.out.println(this.currentWeapon.resistance);
-                    if (currentWeapon.resistance<=0 && currentWeapon.resistance>-100){
+                    if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
                     }
                 }
@@ -532,6 +548,33 @@ public class Player {
                 this.isRunning=false;
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
+            }
+        }
+    }
+
+    /**
+     * Permet de récupérer le choix de l'arme du joueur.
+     *
+     */
+    public void getKeyboardWeapon() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+            System.out.println("J");
+            setCurrentWeapon(defaultWeapon);
+            indexWeapon = -1;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            if (weapons.size() >= 1) {
+                setCurrentWeapon(weapons.get(0));
+                indexWeapon = 0;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            if (weapons.size() >= 2) {
+                setCurrentWeapon(weapons.get(1));
+                indexWeapon = 1;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (weapons.size() >= 3) {
+                setCurrentWeapon(weapons.get(2));
+                indexWeapon = 2;
             }
         }
     }
