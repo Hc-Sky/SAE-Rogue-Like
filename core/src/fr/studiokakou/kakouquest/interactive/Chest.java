@@ -85,8 +85,7 @@ public class Chest {
     /**
      * Instantiates a new Chest.
      *
-     * @param pos          the pos
-     * @param currentLevel the current level
+     * @param pos the pos
      */
     public Chest(Point pos, int currentLevel){
         this.pos = pos;
@@ -101,7 +100,7 @@ public class Chest {
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
 
         this.meleeWeaponLoot = getRandomMeleeWeapon(currentLevel);
-        this.potion = generateRandomPotion(currentLevel);
+        this.potion = generateRandomPotion();
     }
 
     /**
@@ -134,34 +133,20 @@ public class Chest {
             rarityMeleeWeapon = MeleeWeapon.possibleMeleeWeapon.get(rarity);
         }
 
-        return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1)).getNew();
+        return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size() - 1)).getNew();
     }
 
     /**
-     * Generates a random potion based on the current level.
+     * Generates a random potion.
      *
-     * @param currentLevel the current level
      * @return the generated potion
      */
-    public Potion generateRandomPotion(int currentLevel) {
-        if (shouldSpawnPotion(currentLevel)) {
+    public Potion generateRandomPotion() {
+        if (Utils.randint(1, 2) == 1){
             return Potion.generateRandomPotion();
         } else {
             return null;
         }
-    }
-
-    /**
-     * Determines if a potion should spawn based on the current level.
-     *
-     * @param currentLevel the current level
-     * @return true if a potion should spawn, false otherwise
-     */
-    private boolean shouldSpawnPotion(int currentLevel) {
-        Random random = new Random();
-        int threshold = 50 + currentLevel * 10;
-
-        return random.nextInt(100) < threshold;
     }
 
     /**

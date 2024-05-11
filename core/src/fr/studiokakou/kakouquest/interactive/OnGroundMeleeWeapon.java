@@ -98,17 +98,24 @@ public class OnGroundMeleeWeapon {
      */
     public void interact(Player player){
         if (this.canInteract){
+//            System.out.println("Avant : " + player.weapons);
             player.currentWeapon = this.meleeWeapon;
+//            System.out.println("Size : " + player.weapons.size());
             if (player.weapons.size() > 2) {
                 if (player.indexWeapon != -1) {
-                    player.weapons.set(player.indexWeapon, this.meleeWeapon);
                     toAdd = new OnGroundMeleeWeapon(player.pos, player.currentWeapon);
+                    System.out.println(player.weapons);
+                    System.out.println(player.indexWeapon);
+                    player.weapons.set(player.indexWeapon, this.meleeWeapon);
+                    System.out.println(player.weapons);
+                    this.toDelete = true;
                 }
             } else {
                 player.weapons.add(this.meleeWeapon);
                 player.indexWeapon = player.weapons.size() - 1;
+                this.toDelete = true;
             }
-            this.toDelete = true;
+//            System.out.println("Apres : " + player.weapons);
         }
     }
 
