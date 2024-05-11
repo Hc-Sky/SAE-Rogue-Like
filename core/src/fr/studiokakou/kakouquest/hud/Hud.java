@@ -144,14 +144,16 @@ public class Hud {
             Potion.PotionType potionType = entry.getKey();
             int potionCount = entry.getValue();
 
-            // Dessiner l'icône de la potion en fonction du type
-            Texture potionTexture = getTextureForPotion(potionType);
-            Point potionIconPos = getPointForPotion(potionType);
+            if (potionCount > 0) {
+                // Dessiner l'icône de la potion en fonction du type
+                Texture potionTexture = getTextureForPotion(potionType);
+                Point potionIconPos = getPointForPotion(potionType);
 
-            batch.draw(potionTexture, potionIconPos.x, potionIconPos.y, potionTexture.getWidth() * hudSize, potionTexture.getHeight() * hudSize);
+                batch.draw(potionTexture, potionIconPos.x, potionIconPos.y, potionTexture.getWidth() * hudSize, potionTexture.getHeight() * hudSize);
 
-            String potionCountText = "x" + potionCount;
-            font.draw(batch, potionCountText, potionIconPos.x + 35, potionIconPos.y + 15);
+                String potionCountText = "x" + potionCount;
+                font.draw(batch, potionCountText, potionIconPos.x + 35, potionIconPos.y + 15);
+            }
         }
     }
 
