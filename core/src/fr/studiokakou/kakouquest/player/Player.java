@@ -559,7 +559,6 @@ public class Player {
      */
     public void getKeyboardWeapon() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
-            System.out.println("J");
             setCurrentWeapon(defaultWeapon);
             indexWeapon = -1;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
@@ -577,6 +576,73 @@ public class Player {
                 setCurrentWeapon(weapons.get(2));
                 indexWeapon = 2;
             }
+        }
+    }
+
+    /**
+     * Permet de récupérer le choix de l'utilisation des potions.
+     */
+    public void getKeyboardPotion() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            usePotion(Potion.PotionType.HEALTH);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            usePotion(Potion.PotionType.STAMINA);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            usePotion(Potion.PotionType.STRENGTH);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            usePotion(Potion.PotionType.SPEED);
+        }
+    }
+
+    /**
+     * Permet d'utiliser les potions
+     */
+    public void usePotion(Potion.PotionType type) {
+        if (potions.containsKey(type)) {
+            int potionCount = potions.get(type);
+            if (potionCount >= 1) {
+                potions.put(type, potionCount - 1);
+                applyEffect(type);
+            }
+        }
+    }
+
+    /**
+     * Effet de la potion
+     * @param type
+     */
+    private void applyEffect(Potion.PotionType type) {
+        switch (type) {
+            case HEALTH:
+                this.hp = Math.min(this.hp + 50, 100);
+                break;
+            case STAMINA:
+                this.stamina = Math.min(this.stamina + 50, 100);
+                break;
+            case STRENGTH:
+                this.strength *= 2;
+                // Lancer un thread pour annuler l'effet après 30 secondes
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        this.strength /= 2;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
+            case SPEED:
+                this.speed *= 2;
+                // Lancer un thread pour annuler l'effet après 30 secondes
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        this.speed /= 2;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
         }
     }
 

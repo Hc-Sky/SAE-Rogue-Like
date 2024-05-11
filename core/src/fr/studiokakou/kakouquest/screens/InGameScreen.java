@@ -168,6 +168,7 @@ public class InGameScreen implements Screen {
 		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.getKeyboardMove(this.map);
 			player.getKeyboardWeapon();
+			player.getKeyboardPotion();
 			player.getOrientation();
 			player.dash(this.map);
 		}
