@@ -253,12 +253,12 @@ public class Player {
         this.lastPos = this.pos;
 
         //default values
-        this.max_hp=1000000;
-        this.hp=1000000;
-        this.strength=200;
-        this.speed=200f;
-        this.max_stamina=1000000;
-        this.stamina = 1000000;
+        this.max_hp=100;
+        this.hp=100;
+        this.strength=10;
+        this.speed=40f;
+        this.max_stamina=100;
+        this.stamina = 100;
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
