@@ -12,8 +12,8 @@ import fr.studiokakou.kakouquest.GetProperties;
 import static com.badlogic.gdx.Gdx.input;
 
 public class SettingsScreen implements Screen {
-    private final static int TEXT_WIDTH = Gdx.graphics.getWidth() / 4;
-    private final static int TEXT_HEIGHT = TEXT_WIDTH / 6;
+    private final static int TEXT_HEIGHT = Gdx.graphics.getWidth() / 24; // Adjusted height based on overall width
+    private final static int LETTER_WIDTH = Gdx.graphics.getWidth() / 40; // Base width per letter
     int ecart = 50;
     int xposText = ((Gdx.graphics.getWidth() / 4)) - 180;
     int yposUp = Gdx.graphics.getHeight() - 150;
@@ -130,13 +130,22 @@ public class SettingsScreen implements Screen {
     }
 
     private void drawTextAndKeys() {
-        game.batch.draw(upText, xposText, yposUp, TEXT_WIDTH, TEXT_HEIGHT);
-        game.batch.draw(downText, xposText, yposDown, TEXT_WIDTH, TEXT_HEIGHT);
-        game.batch.draw(leftText, xposText, yposLeft, TEXT_WIDTH, TEXT_HEIGHT);
-        game.batch.draw(rightText, xposText, yposRight, TEXT_WIDTH, TEXT_HEIGHT);
-        game.batch.draw(interactText, xposText, yposInteract, TEXT_WIDTH, TEXT_HEIGHT);
-        game.batch.draw(dashText, xposText, yposDash, TEXT_WIDTH, TEXT_HEIGHT);
-        game.batch.draw(inventoryText, xposText, yposInventory, TEXT_WIDTH, TEXT_HEIGHT);
+        // Dynamically calculate text widths
+        int widthUp = "Monter".length() * LETTER_WIDTH;
+        int widthDown = "Descendre".length() * LETTER_WIDTH;
+        int widthLeft = "Gauche".length() * LETTER_WIDTH;
+        int widthRight = "Droite".length() * LETTER_WIDTH;
+        int widthInteract = "Interagir".length() * LETTER_WIDTH;
+        int widthDash = "Dash".length() * LETTER_WIDTH;
+        int widthInventory = "Inventaire".length() * LETTER_WIDTH;
+
+        game.batch.draw(upText, xposText, yposUp, widthUp, TEXT_HEIGHT);
+        game.batch.draw(downText, xposText, yposDown, widthDown, TEXT_HEIGHT);
+        game.batch.draw(leftText, xposText, yposLeft, widthLeft, TEXT_HEIGHT);
+        game.batch.draw(rightText, xposText, yposRight, widthRight, TEXT_HEIGHT);
+        game.batch.draw(interactText, xposText, yposInteract, widthInteract, TEXT_HEIGHT);
+        game.batch.draw(dashText, xposText, yposDash, widthDash, TEXT_HEIGHT);
+        game.batch.draw(inventoryText, xposText, yposInventory, widthInventory, TEXT_HEIGHT);
 
         game.batch.draw(leftRegionUpKey, xposText + 1000, yposUp, TEXT_HEIGHT, TEXT_HEIGHT);
         game.batch.draw(leftRegionDownKey, xposText + 1000, yposDown, TEXT_HEIGHT, TEXT_HEIGHT);
@@ -166,8 +175,7 @@ public class SettingsScreen implements Screen {
     }
 
     private boolean isKeyClicked(int x, int y, int width, int height) {
-        return Gdx.input.getX() < x + width &&
-                Gdx.input.getX() > x &&
+        return Gdx.input.getX() < x + width && Gdx.input.getX() > x &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < y + height &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > y &&
                 Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
@@ -184,23 +192,10 @@ public class SettingsScreen implements Screen {
 
     private void updateKeyBinding(String key, int newKey) {
         GetProperties.setIntProperty(key, newKey);
-        saveProperties();
         reloadKeyTextures();
     }
 
-    private void saveProperties() {
-        // Implement your method to save the properties to the file
-    }
-
     private void reloadKeyTextures() {
-        upKey.dispose();
-        downKey.dispose();
-        leftKey.dispose();
-        rightKey.dispose();
-        interactionKey.dispose();
-        dashKey.dispose();
-        inventoryKey.dispose();
-
         upKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_UP")) + ".png");
         downKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_DOWN")) + ".png");
         leftKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_LEFT")) + ".png");
@@ -209,13 +204,13 @@ public class SettingsScreen implements Screen {
         dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_DASH")) + ".png");
         inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_INVENTORY")) + ".png");
 
-        leftRegionUpKey.setTexture(upKey);
-        leftRegionDownKey.setTexture(downKey);
-        leftRegionLeftKey.setTexture(leftKey);
-        leftRegionRightKey.setTexture(rightKey);
-        leftRegionInteractionKey.setTexture(interactionKey);
-        leftRegionDashKey.setTexture(dashKey);
-        leftRegionInventoryKey.setTexture(inventoryKey);
+        leftRegionUpKey = new TextureRegion(upKey, 0, 0, upKey.getWidth() / 2, upKey.getHeight());
+        leftRegionDownKey = new TextureRegion(downKey, 0, 0, downKey.getWidth() / 2, downKey.getHeight());
+        leftRegionLeftKey = new TextureRegion(leftKey, 0, 0, leftKey.getWidth() / 2, leftKey.getHeight());
+        leftRegionRightKey = new TextureRegion(rightKey, 0, 0, rightKey.getWidth() / 2, rightKey.getHeight());
+        leftRegionInteractionKey = new TextureRegion(interactionKey, 0, 0, interactionKey.getWidth() / 2, interactionKey.getHeight());
+        leftRegionDashKey = new TextureRegion(dashKey, 0, 0, dashKey.getWidth() / 2, dashKey.getHeight());
+        leftRegionInventoryKey = new TextureRegion(inventoryKey, 0, 0, inventoryKey.getWidth() / 2, inventoryKey.getHeight());
     }
 
     @Override
@@ -236,5 +231,20 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void dispose() {
+        upText.dispose();
+        downText.dispose();
+        leftText.dispose();
+        rightText.dispose();
+        interactText.dispose();
+        dashText.dispose();
+        inventoryText.dispose();
+        upKey.dispose();
+        downKey.dispose();
+        leftKey.dispose();
+        rightKey.dispose();
+        interactionKey.dispose();
+        dashKey.dispose();
+        inventoryKey.dispose();
+        backButton.dispose();
     }
 }
