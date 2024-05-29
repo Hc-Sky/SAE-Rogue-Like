@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Objects;
 
 /**
  * Represents a Monster in the game.
@@ -92,7 +93,12 @@ public class Monster {
         this.hp = hp;
         this.detectRange = detectRange;
         this.idleAnimation = Utils.getAnimation(idleAnimationPath, FRAME_COLS, FRAME_ROWS);
-        this.runAnimation = Utils.getAnimation(runAnimationPath, FRAME_COLS, FRAME_ROWS);
+        if (Objects.equals(this.name, "Big Zombie")){
+            this.runAnimation = Utils.getAnimation(runAnimationPath, FRAME_COLS, 5);
+        }
+        else {
+            this.runAnimation = Utils.getAnimation(runAnimationPath, FRAME_COLS, FRAME_ROWS);
+        }
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
 
         this.height = idleAnimation.getKeyFrame(0f).getRegionHeight();

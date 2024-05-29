@@ -9,16 +9,16 @@ import java.io.IOException;
 public class DesktopLauncher {
 	public static void main (String[] arg) throws IOException {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(GetProperties.getIntProperty("FRAME_RATE"));
+		config.setForegroundFPS(GetCoreProperties.getIntProperty("FRAME_RATE"));
 		config.useVsync(true);
 
 		config.setWindowIcon("assets/window/icon.png");
 
-		if (GetProperties.getBoolProperty("FULLSCREEN")){
+		if (GetCoreProperties.getBoolProperty("FULLSCREEN")){
 			config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		}else {
 			config.setResizable(false);
-			config.setWindowedMode(GetProperties.getIntProperty("RES_WIDTH"), GetProperties.getIntProperty("RES_HEIGHT"));
+			config.setWindowedMode(GetCoreProperties.getIntProperty("RES_WIDTH"), GetCoreProperties.getIntProperty("RES_HEIGHT"));
 		}
 
 		config.setTitle("Kakou Quest");

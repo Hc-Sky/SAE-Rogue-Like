@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import fr.studiokakou.kakouquest.GetProperties;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
@@ -89,7 +89,7 @@ public class Chest {
         this.closed = this.openningAnimation.getKeyFrames()[0];
         this.opened = this.openningAnimation.getKeyFrames()[2];
 
-        this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
+        this.interactKeyCode = GetCoreProperties.getIntProperty("KEY_INTERRACT");
         this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
