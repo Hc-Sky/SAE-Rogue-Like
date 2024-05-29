@@ -4,18 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
-import fr.studiokakou.kakouquest.GetProperties;
-import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.hud.Hud;
-import fr.studiokakou.kakouquest.map.Map;
-import fr.studiokakou.kakouquest.player.Camera;
-import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+
 import static com.badlogic.gdx.Gdx.input;
 
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GameSpace;
-import fr.studiokakou.kakouquest.GetProperties;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -66,13 +66,13 @@ public class SettingsScreen implements Screen {
         dashText = new Texture("assets/window/dash_text.png");
         inventoryText = new Texture("assets/window/inventory_text.png");
 
-        upKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_UP")) + ".png");
-        downKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_DOWN")) + ".png");
-        leftKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_LEFT")) + ".png");
-        rightKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_RIGHT")) + ".png");
-        interactionKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_INTERRACT")) + ".png");
-        dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_DASH")) + ".png");
-        inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_INVENTORY")) + ".png");
+        upKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_UP")) + ".png");
+        downKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DOWN")) + ".png");
+        leftKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_LEFT")) + ".png");
+        rightKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_RIGHT")) + ".png");
+        interactionKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INTERRACT")) + ".png");
+        dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DASH")) + ".png");
+        inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INVENTORY")) + ".png");
 
         leftRegionUpKey = new TextureRegion(upKey, 0, 0, upKey.getWidth() / 2, upKey.getHeight());
         leftRegionDownKey = new TextureRegion(downKey, 0, 0, downKey.getWidth() / 2, downKey.getHeight());
@@ -191,18 +191,18 @@ public class SettingsScreen implements Screen {
     }
 
     private void updateKeyBinding(String key, int newKey) {
-        GetProperties.setIntProperty(key, newKey);
+        GetCoreProperties.setIntProperty(key, newKey);
         reloadKeyTextures();
     }
 
     private void reloadKeyTextures() {
-        upKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_UP")) + ".png");
-        downKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_DOWN")) + ".png");
-        leftKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_LEFT")) + ".png");
-        rightKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_RIGHT")) + ".png");
-        interactionKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_INTERRACT")) + ".png");
-        dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_DASH")) + ".png");
-        inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetProperties.getIntProperty("KEY_INVENTORY")) + ".png");
+        upKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_UP")) + ".png");
+        downKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DOWN")) + ".png");
+        leftKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_LEFT")) + ".png");
+        rightKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_RIGHT")) + ".png");
+        interactionKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INTERRACT")) + ".png");
+        dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DASH")) + ".png");
+        inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INVENTORY")) + ".png");
 
         leftRegionUpKey = new TextureRegion(upKey, 0, 0, upKey.getWidth() / 2, upKey.getHeight());
         leftRegionDownKey = new TextureRegion(downKey, 0, 0, downKey.getWidth() / 2, downKey.getHeight());

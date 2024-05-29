@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * La classe GetProperties contient des méthodes pour récupérer les propriétés à partir d'un fichier properties.
  */
-public class GetProperties {
+public class GetCoreProperties {
 
     private static Properties properties = new Properties();
     private static final String PROPERTIES_FILE = "settings.properties";

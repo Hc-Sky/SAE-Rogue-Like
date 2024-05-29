@@ -1,6 +1,6 @@
 package fr.studiokakou.kakouquest.keybinds;
 
-import fr.studiokakou.kakouquest.GetProperties;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 
 /**
  * Classe pour gérer les touches attribuées.
@@ -28,12 +28,12 @@ public class Keybinds {
      * Cette méthode met à jour les touches en fonction du fichier de configuration.
      */
     public static void updateKeys(){
-        Keybinds.UP_KEY = GetProperties.getIntProperty("KEY_UP");
-        Keybinds.DOWN_KEY = GetProperties.getIntProperty("KEY_DOWN");
-        Keybinds.LEFT_KEY = GetProperties.getIntProperty("KEY_LEFT");
-        Keybinds.RIGHT_KEY = GetProperties.getIntProperty("KEY_RIGHT");
-        Keybinds.DASH_KEY = GetProperties.getIntProperty("KEY_DASH");
-        Keybinds.INTERRACT_KEY = GetProperties.getIntProperty(("KEY_INTERRACT"));
-        Keybinds.INVENTORY_KEY = GetProperties.getIntProperty(("KEY_INVENTORY"));
+        Keybinds.UP_KEY = GetCoreProperties.getIntProperty("KEY_UP");
+        Keybinds.DOWN_KEY = GetCoreProperties.getIntProperty("KEY_DOWN");
+        Keybinds.LEFT_KEY = GetCoreProperties.getIntProperty("KEY_LEFT");
+        Keybinds.RIGHT_KEY = GetCoreProperties.getIntProperty("KEY_RIGHT");
+        Keybinds.DASH_KEY = GetCoreProperties.getIntProperty("KEY_DASH");
+        Keybinds.INTERRACT_KEY = GetCoreProperties.getIntProperty(("KEY_INTERRACT"));
+        Keybinds.INVENTORY_KEY = GetCoreProperties.getIntProperty(("KEY_INVENTORY"));
     }
 }
