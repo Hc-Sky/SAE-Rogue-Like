@@ -1,8 +1,6 @@
 package fr.studiokakou.kakouquest;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -11,7 +9,16 @@ import java.util.Properties;
  */
 public class GetProperties {
 
+    private static Properties properties = new Properties();
     private static final String PROPERTIES_FILE = "settings.properties";
+
+    static {
+        try (FileInputStream in = new FileInputStream(PROPERTIES_FILE)) {
+            properties.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Récupère une propriété booléenne à partir du fichier settings.properties.
@@ -55,9 +62,12 @@ public class GetProperties {
      * @param value La nouvelle valeur entière de la propriété
      */
     public static void setIntProperty(String key, int value) {
-        Properties prop = loadPropertiesFile();
-        prop.setProperty(key, String.valueOf(value));
-        savePropertiesFile(prop);
+        properties.setProperty(key, Integer.toString(value));
+        try (FileOutputStream out = new FileOutputStream(PROPERTIES_FILE)) {
+            properties.store(out, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
