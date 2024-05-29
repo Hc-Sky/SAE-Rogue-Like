@@ -360,8 +360,21 @@ public class Player {
     public void dash(Map map){    //used for the dash animation
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
-                Point mousePos = Utils.mousePosUnproject(Camera.camera);
-                this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
+
+                Point direction = new Point(0, 0);
+                if (Gdx.input.isKeyPressed(Keybinds.UP_KEY)){
+                    direction = direction.add(0, 1);
+                } else if (Gdx.input.isKeyPressed(Keybinds.DOWN_KEY)){
+                    direction = direction.add(0, -1);
+                } if (Gdx.input.isKeyPressed(Keybinds.LEFT_KEY)){
+                    direction = direction.add(-1, 0);
+                } else if (Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY)){
+                    direction = direction.add(1, 0);
+                }
+
+                //Point mousePos = Utils.mousePosUnproject(Camera.camera);
+                //this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
+                this.dashFinalPoint = this.pos.add(direction.mult(Player.DASH_DISTANCE));
                 this.dashStartPoint = this.pos;
                 this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
                 this.dashTimer = LocalDateTime.now();
