@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
@@ -32,17 +31,17 @@ public class Boss extends Monster {
                 String hitAnimationPath, String deathAnimationPath, int hp, int damage, float attackPause, float speed,
                 int detectRange, int currentLevel) {
         super(name, idleAnimationPath, runAnimationPath, hp, damage, attackPause, speed, detectRange, currentLevel);
-        this.idleAnimation = Utils.getAnimation(idleAnimationPath, 6, 1);
-        this.runAnimation = Utils.getAnimation(runAnimationPath, 12, 1);
-        this.attackAnimation = Utils.getAnimation(attackAnimationPath, 15, 1);
+        this.idleAnimation = Utils.getAnimation(idleAnimationPath, 1, 6);
+        this.runAnimation = Utils.getAnimation(runAnimationPath, 1, 12);
+        this.attackAnimation = Utils.getAnimation(attackAnimationPath, 1, 15);
 
         // Ajuster la durée de chaque frame pour l'animation hit
         int hitFrameCount = 5;
-        this.hitAnimation = new Animation<>(HIT_ANIMATION_DURATION / hitFrameCount, Utils.getAnimation(hitAnimationPath, hitFrameCount, 1).getKeyFrames());
+        this.hitAnimation = new Animation<>(HIT_ANIMATION_DURATION / hitFrameCount, Utils.getAnimation(hitAnimationPath, 1, hitFrameCount).getKeyFrames());
 
         // Ajuster la durée de chaque frame pour l'animation death
         int deathFrameCount = 22;
-        this.deathAnimation = new Animation<>(DEATH_ANIMATION_DURATION / deathFrameCount, Utils.getAnimation(deathAnimationPath, deathFrameCount, 1).getKeyFrames());
+        this.deathAnimation = new Animation<>(DEATH_ANIMATION_DURATION / deathFrameCount, Utils.getAnimation(deathAnimationPath, 1, deathFrameCount).getKeyFrames());
 
         this.sprite = new Sprite(idleAnimation.getKeyFrame(0)); // Initialiser le sprite avec la première frame de l'animation idle
     }
@@ -53,7 +52,7 @@ public class Boss extends Monster {
             return;
         }
         Point playerPos = player.pos;
-        if (Utils.distance(playerPos, this.pos) <= 20) {
+        if (Utils.distance(playerPos, this.pos) <= 75) {
             this.attack(player);
         }
         if (detectPlayer(playerPos)) {
@@ -74,7 +73,6 @@ public class Boss extends Monster {
         }
     }
 
-
     @Override
     public void draw(SpriteBatch batch) {
         stateTime += Gdx.graphics.getDeltaTime();
@@ -85,6 +83,7 @@ public class Boss extends Monster {
             currentFrame = this.deathAnimation.getKeyFrame(deathStateTime, false);
             if (this.deathAnimation.isAnimationFinished(deathStateTime)) {
                 this.isDead = true;
+                Gdx.app.log("Boss", "Boss is dead");
             }
         } else if (isHit) {
             hitStateTime += Gdx.graphics.getDeltaTime();
@@ -120,7 +119,7 @@ public class Boss extends Monster {
 
     @Override
     public void takeDamage(Player player) {
-        if (Utils.getDistance(player.pos, this.pos) < 80 ){
+        if (Utils.getDistance(player.pos, this.pos) < 80) {
             this.hp -= player.currentWeapon.damage * (player.strength / 10);
             this.isHit = true;
             this.isRed = true; // Activer l'effet rouge
@@ -149,8 +148,6 @@ public class Boss extends Monster {
             this.isFlip = (this.pos.x + 150 < player.pos.x);
         }
     }
-
-
 
     public static Boss createSlimeBoss(int currentLevel) {
         return new Boss("Slime Boss",
