@@ -111,19 +111,39 @@ public class InGameScreen implements Screen {
 	/**
 	 * Passe au niveau suivant.
 	 */
-	public void nextLevel(){
-		InGameScreen.stateTime=0f;
-		System.out.println("next level");
-		this.currentLevel+=1;
+	public void nextLevel() {
+		game.setScreen(new LoadingScreen(game));
 
-		this.map = new Map(this.map_width, this.map_height);
-		this.player.hasPlayerSpawn=false;
-		this.player.setPos(map.getPlayerSpawn());
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(500); // Simulate loading time (optional)
 
-		startTime = TimeUtils.millis();
+					Gdx.app.postRunnable(new Runnable() {
+						@Override
+						public void run() {
+							InGameScreen.stateTime = 0f;
+							System.out.println("next level");
+							currentLevel += 1;
 
-		this.map.spawnMonsters(currentLevel);
-		this.map.genInteractive(currentLevel, this);
+							map = new Map(map_width, map_height);
+							player.hasPlayerSpawn = false;
+							player.setPos(map.getPlayerSpawn());
+
+							startTime = TimeUtils.millis();
+
+							map.spawnMonsters(currentLevel);
+							map.genInteractive(currentLevel, InGameScreen.this);
+
+							game.setScreen(InGameScreen.this);
+						}
+					});
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	/**
