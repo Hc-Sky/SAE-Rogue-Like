@@ -87,7 +87,7 @@ public class MenuScreen implements Screen {
                 Gdx.graphics.getHeight() - Gdx.input.getY() > yposPlay) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
-                game.setScreen(new GameModeChoice(game));
+                game.setScreen(new InGameScreen(game));
             }
         }
         /*
