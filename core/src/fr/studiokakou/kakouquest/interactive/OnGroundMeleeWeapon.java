@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import fr.studiokakou.kakouquest.GetProperties;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
@@ -68,7 +68,7 @@ public class OnGroundMeleeWeapon {
         this.pos = pos;
         this.meleeWeapon = meleeWeapon;
 
-        this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
+        this.interactKeyCode = GetCoreProperties.getIntProperty("KEY_INTERRACT");
         this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);

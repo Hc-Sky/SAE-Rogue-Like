@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.screens.SplashScreen;
+import fr.studiokakou.kakouquest.screens.*;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -45,9 +44,10 @@ public class GameSpace extends Game {
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
 		startTime = TimeUtils.millis();
-
-		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage)
-		this.setScreen(new InGameScreen(this));
+		//Le initialize sert juste pour le HelpScreen pour les fonts
+		initialize();
+		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
+		this.setScreen(new SettingsScreen(this));
 	}
 
 	/**
@@ -77,4 +77,9 @@ public class GameSpace extends Game {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 	}
+
+	public void initialize() {
+		font = new BitmapFont();
+	}
+
 }
