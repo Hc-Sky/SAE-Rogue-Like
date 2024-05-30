@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.GameSpace;
 
+import java.awt.Desktop;
+import java.net.URI;
+
 import static com.badlogic.gdx.Gdx.input;
 
 public class GameModeChoice implements Screen {
@@ -80,8 +83,12 @@ public class GameModeChoice implements Screen {
                 Gdx.graphics.getHeight() - Gdx.input.getY() < yposMulti + MULTI_BUTTON_HEIGHT &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > yposMulti) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                this.dispose();
-                game.setScreen(new InGameScreen(game));
+                try {
+                    Desktop desktop = Desktop.getDesktop();
+                    desktop.browse(new URI("http://www.studio-kakou.fr/"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
