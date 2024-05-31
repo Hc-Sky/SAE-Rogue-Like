@@ -1,6 +1,9 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -32,6 +35,11 @@ public class GameSpace extends Game {
 
 	public BitmapFont font;
 
+	public Screen previousScreen;
+
+	private PauseScreen pauseScreen;
+
+
 
 	/**
 	 * Méthode appelée lors de la création de l'application.
@@ -43,6 +51,7 @@ public class GameSpace extends Game {
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
+		pauseScreen = new PauseScreen(this);
 		startTime = TimeUtils.millis();
 		//Le initialize sert juste pour le HelpScreen pour les fonts
 		initialize();
@@ -56,6 +65,13 @@ public class GameSpace extends Game {
 	@Override
 	public void render() {
 		super.render();
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			pauseGame();
+		}
+	}
+
+	public void pauseGame() {
+		this.setScreen(pauseScreen);
 	}
 
 	/**

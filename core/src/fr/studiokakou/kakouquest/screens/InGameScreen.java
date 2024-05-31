@@ -151,9 +151,9 @@ public class InGameScreen implements Screen {
 	public void render(float delta) {
 		InGameScreen.stateTime += delta;
 
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+		/*if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			Gdx.app.exit();
-		}
+		}*/
 
 		Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

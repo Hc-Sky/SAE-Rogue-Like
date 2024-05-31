@@ -53,9 +53,9 @@ public class MenuScreen implements Screen {
         /*
           Echap pour quitter l'écran
          */
-        if (input.isKeyPressed(Input.Keys.ESCAPE)){
+        /*if (input.isKeyPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
-        }
+        }*/
         /*
           Initialisation de l'écran
          */
