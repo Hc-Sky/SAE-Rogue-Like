@@ -20,6 +20,31 @@ public class GetCoreProperties {
         }
     }
 
+    public static void savePlayerStats(String key, int value) {
+        properties.setProperty(key, Integer.toString(value));
+        try (FileOutputStream out = new FileOutputStream(PROPERTIES_FILE)) {
+            properties.store(out, null);
+            System.out.println("Saved player stats");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int loadPlayerStats(String key) {
+        Properties prop = loadPropertiesFile();
+        String info = prop.getProperty(key);
+        try {
+            //log ce qui est chargé
+            System.out.println("Loaded player stats: " + key + " " + info);
+            return Integer.parseInt(info);
+        } catch (NumberFormatException e) {
+            //log l'erreur avec la key et la valeur
+            System.out.println("Error loading player stats: " + key + " " + info);
+            return 0;
+        }
+    }
+
+
     /**
      * Récupère une propriété booléenne à partir du fichier settings.properties.
      *

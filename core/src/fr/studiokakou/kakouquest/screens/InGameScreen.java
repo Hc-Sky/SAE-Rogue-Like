@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
@@ -152,6 +153,14 @@ public class InGameScreen implements Screen {
 		InGameScreen.stateTime += delta;
 
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+			GetCoreProperties.savePlayerStats("playerHP", player.getHp());
+			GetCoreProperties.savePlayerStats("playerMaxHp", player.getMax_hp());
+			GetCoreProperties.savePlayerStats("playerStamina", (int) player.getStamina());
+			GetCoreProperties.savePlayerStats("playerMaxStamina", player.getMax_stamina());
+			GetCoreProperties.savePlayerStats("playerLevel", currentLevel);
+			GetCoreProperties.savePlayerStats("playerStrength", player.getStrength());
+			GetCoreProperties.savePlayerStats("playerSpeed", (int) player.getSpeed());
+			GetCoreProperties.savePlayerStats("playerCurrentWeapon", player.getCurrentWeapon().getId());
 			Gdx.app.exit();
 		}
 
@@ -239,4 +248,5 @@ public class InGameScreen implements Screen {
 		this.game.dispose();
 		this.map.dispose();
 	}
+
 }
