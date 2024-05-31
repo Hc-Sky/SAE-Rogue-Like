@@ -118,7 +118,7 @@ public class InGameScreen implements Screen {
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(500); // Simulate loading time (optional)
+					Thread.sleep(2000); // Simulate loading time (optional)
 
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
