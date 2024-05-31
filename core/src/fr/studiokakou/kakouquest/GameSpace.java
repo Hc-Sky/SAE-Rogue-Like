@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
+import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.*;
 
 /**
@@ -31,6 +32,8 @@ public class GameSpace extends Game {
 
 
 	public BitmapFont font;
+
+	private Player player;
 
 
 	/**
@@ -82,4 +85,16 @@ public class GameSpace extends Game {
 		font = new BitmapFont();
 	}
 
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void removeAvatarChoiceScreen() {
+		screen.dispose(); // Libère les ressources de l'écran de sélection d'avatar
+		screen = null; // Définit l'écran de sélection d'avatar comme nul
+	}
 }

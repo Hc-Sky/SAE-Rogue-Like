@@ -87,11 +87,10 @@ public class InGameScreen implements Screen {
 	 *
 	 * @param game Le jeu
 	 */
-	public InGameScreen(GameSpace game){
-		this.game=game;
+	public InGameScreen(GameSpace game, String selectedAvatarTexture) {
+		this.game = game;
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
-
 
 		this.currentLevel = 1;
 
@@ -104,7 +103,7 @@ public class InGameScreen implements Screen {
 		this.map = new Map(this.map_width, this.map_height);
 
 		// Initialisation du joueur
-		this.player = new Player(map.getPlayerSpawn(),"player");
+		this.player = new Player(map.getPlayerSpawn(), "player", selectedAvatarTexture);
 		this.cam = new Camera(this.player);
 	}
 
