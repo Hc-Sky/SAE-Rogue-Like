@@ -10,15 +10,24 @@ import fr.studiokakou.kakouquest.GameSpace;
 import static com.badlogic.gdx.Gdx.input;
 
 public class MenuScreen implements Screen {
-    // Constants for the buttons
-    private static final int PLAY_BUTTON_HEIGHT = 200;
-    private static final int PLAY_BUTTON_WIDTH = 400;
+    // Dimensions des boutons
+    private static final int PLAY_BUTTON_WIDTH = 453;
+    private static final int PLAY_BUTTON_HEIGHT = 227;
+    private static final int PLAY_BUTTON_SELECTED_WIDTH = 528;
+    private static final int PLAY_BUTTON_SELECTED_HEIGHT = 314;
+
+    private static final int SETTINGS_BUTTON_WIDTH = 349;
+    private static final int SETTINGS_BUTTON_HEIGHT = 158;
+    private static final int SETTINGS_BUTTON_SELECTED_WIDTH = 390;
+    private static final int SETTINGS_BUTTON_SELECTED_HEIGHT = 204;
+
+    private static final int EXIT_BUTTON_WIDTH = 311;
     private static final int EXIT_BUTTON_HEIGHT = 70;
-    private static final int EXIT_BUTTON_WIDTH = 300;
-    private static final int SETTINGS_BUTTON_HEIGHT = 150;
-    private static final int SETTINGS_BUTTON_WIDTH = 300;
-    private static final int HELP_BUTTON_HEIGHT = 120;
+    private static final int EXIT_BUTTON_SELECTED_WIDTH = 352;
+    private static final int EXIT_BUTTON_SELECTED_HEIGHT = 123;
+
     private static final int HELP_BUTTON_WIDTH = 120;
+    private static final int HELP_BUTTON_HEIGHT = 120;
 
     // Espace de jeu
     GameSpace game;
@@ -67,65 +76,86 @@ public class MenuScreen implements Screen {
         // Dessiner l'image de fond
         game.batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // Définition de l'abscisse pour chaque bouton en fonction de la taille (résolution) de l'écran
-        int xposPlay = Gdx.graphics.getWidth() / 2 - PLAY_BUTTON_WIDTH / 2;
-        int xposExit = Gdx.graphics.getWidth() / 2 - EXIT_BUTTON_WIDTH / 2;
-        int xposSettings = Gdx.graphics.getWidth() / 2 - SETTINGS_BUTTON_WIDTH / 2;
-        int xposHelp = Gdx.graphics.getWidth() - HELP_BUTTON_WIDTH - 30;
+        // Calculer les dimensions et positions des boutons
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
 
-        // Définition des ordonnées
-        int yposPlay = Gdx.graphics.getHeight() / 2 + 40;
-        int yposExit = Gdx.graphics.getHeight() / 4 - 20;
-        int yposSettings = Gdx.graphics.getHeight() / 2 - SETTINGS_BUTTON_HEIGHT + 10;
-        int yposHelp = Gdx.graphics.getHeight() - HELP_BUTTON_HEIGHT - 250;
+        // Calcul des ratios pour les tailles des boutons
+        float playButtonWidth = screenWidth * (PLAY_BUTTON_WIDTH / 1920f);
+        float playButtonHeight = screenHeight * (PLAY_BUTTON_HEIGHT / 1080f);
+        float playButtonSelectedWidth = screenWidth * (PLAY_BUTTON_SELECTED_WIDTH / 1920f);
+        float playButtonSelectedHeight = screenHeight * (PLAY_BUTTON_SELECTED_HEIGHT / 1080f);
+
+        float settingsButtonWidth = screenWidth * (SETTINGS_BUTTON_WIDTH / 1920f);
+        float settingsButtonHeight = screenHeight * (SETTINGS_BUTTON_HEIGHT / 1080f);
+        float settingsButtonSelectedWidth = screenWidth * (SETTINGS_BUTTON_SELECTED_WIDTH / 1920f);
+        float settingsButtonSelectedHeight = screenHeight * (SETTINGS_BUTTON_SELECTED_HEIGHT / 1080f);
+
+        float exitButtonWidth = screenWidth * (EXIT_BUTTON_WIDTH / 1920f);
+        float exitButtonHeight = screenHeight * (EXIT_BUTTON_HEIGHT / 1080f);
+        float exitButtonSelectedWidth = screenWidth * (EXIT_BUTTON_SELECTED_WIDTH / 1920f);
+        float exitButtonSelectedHeight = screenHeight * (EXIT_BUTTON_SELECTED_HEIGHT / 1080f);
+
+        float helpButtonWidth = screenWidth * (HELP_BUTTON_WIDTH / 1920f);
+        float helpButtonHeight = screenHeight * (HELP_BUTTON_HEIGHT / 1080f);
+
+        float xposPlay = (screenWidth - playButtonWidth) / 2;
+        float xposExit = (screenWidth - exitButtonWidth) / 2;
+        float xposSettings = (screenWidth - settingsButtonWidth) / 2;
+        float xposHelp = screenWidth - helpButtonWidth - 30;
+
+        float yposPlay = screenHeight / 2 + 40;
+        float yposExit = screenHeight / 4 - 20;
+        float yposSettings = screenHeight / 2 - settingsButtonHeight + 10;
+        float yposHelp = screenHeight - helpButtonHeight - 250;
 
         // Bouton Play
-        if (Gdx.input.getX() < xposPlay + PLAY_BUTTON_WIDTH &&
+        if (Gdx.input.getX() < xposPlay + playButtonWidth &&
                 Gdx.input.getX() > xposPlay &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() < yposPlay + PLAY_BUTTON_HEIGHT &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() > yposPlay) {
-            game.batch.draw(playButtonSelected, xposPlay - 34, yposPlay - 45, PLAY_BUTTON_WIDTH + 67, PLAY_BUTTON_HEIGHT + 77);
+                screenHeight - Gdx.input.getY() < yposPlay + playButtonHeight &&
+                screenHeight - Gdx.input.getY() > yposPlay) {
+            game.batch.draw(playButtonSelected, xposPlay - (playButtonSelectedWidth - playButtonWidth) / 2, yposPlay - (playButtonSelectedHeight - playButtonHeight) / 2, playButtonSelectedWidth, playButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new InGameScreen(game));
             }
         } else {
-            game.batch.draw(playButton, xposPlay, yposPlay, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+            game.batch.draw(playButton, xposPlay, yposPlay, playButtonWidth, playButtonHeight);
         }
 
         // Bouton Exit
-        if (Gdx.input.getX() < xposExit + EXIT_BUTTON_WIDTH &&
+        if (Gdx.input.getX() < xposExit + exitButtonWidth &&
                 Gdx.input.getX() > xposExit &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() < yposExit + EXIT_BUTTON_HEIGHT &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() > yposExit) {
-            game.batch.draw(exitButtonSelected, xposExit - 18, yposExit - 28, EXIT_BUTTON_WIDTH + 39, EXIT_BUTTON_HEIGHT + 53);
+                screenHeight - Gdx.input.getY() < yposExit + exitButtonHeight &&
+                screenHeight - Gdx.input.getY() > yposExit) {
+            game.batch.draw(exitButtonSelected, xposExit - (exitButtonSelectedWidth - exitButtonWidth) / 2, yposExit - (exitButtonSelectedHeight - exitButtonHeight) / 2, exitButtonSelectedWidth, exitButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 Gdx.app.exit();
             }
         } else {
-            game.batch.draw(exitButton, xposExit, yposExit, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+            game.batch.draw(exitButton, xposExit, yposExit, exitButtonWidth, exitButtonHeight);
         }
 
         // Bouton Settings
-        if (Gdx.input.getX() < xposSettings + SETTINGS_BUTTON_WIDTH &&
+        if (Gdx.input.getX() < xposSettings + settingsButtonWidth &&
                 Gdx.input.getX() > xposSettings &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() < yposSettings + SETTINGS_BUTTON_HEIGHT &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() > yposSettings) {
-            game.batch.draw(settingsButtonSelected, xposSettings - 18, yposSettings - 22, SETTINGS_BUTTON_WIDTH + 35, SETTINGS_BUTTON_HEIGHT + 44);
+                screenHeight - Gdx.input.getY() < yposSettings + settingsButtonHeight &&
+                screenHeight - Gdx.input.getY() > yposSettings) {
+            game.batch.draw(settingsButtonSelected, xposSettings - (settingsButtonSelectedWidth - settingsButtonWidth) / 2, yposSettings - (settingsButtonSelectedHeight - settingsButtonHeight) / 2, settingsButtonSelectedWidth, settingsButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new SettingsScreen(game));
             }
         } else {
-            game.batch.draw(settingsButton, xposSettings, yposSettings, SETTINGS_BUTTON_WIDTH, SETTINGS_BUTTON_HEIGHT);
+            game.batch.draw(settingsButton, xposSettings, yposSettings, settingsButtonWidth, settingsButtonHeight);
         }
 
         // Bouton Help (Règles du jeu)
-        game.batch.draw(helpButton, xposHelp, yposHelp, HELP_BUTTON_WIDTH, HELP_BUTTON_HEIGHT);
-        if (Gdx.input.getX() < xposHelp + HELP_BUTTON_WIDTH &&
+        game.batch.draw(helpButton, xposHelp, yposHelp, helpButtonWidth, helpButtonHeight);
+        if (Gdx.input.getX() < xposHelp + helpButtonWidth &&
                 Gdx.input.getX() > xposHelp &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() < yposHelp + HELP_BUTTON_HEIGHT &&
-                Gdx.graphics.getHeight() - Gdx.input.getY() > yposHelp) {
+                screenHeight - Gdx.input.getY() < yposHelp + helpButtonHeight &&
+                screenHeight - Gdx.input.getY() > yposHelp) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new HelpScreen(game));
