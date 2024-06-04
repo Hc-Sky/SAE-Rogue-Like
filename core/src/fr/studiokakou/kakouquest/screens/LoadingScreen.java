@@ -44,7 +44,7 @@ public class LoadingScreen implements Screen {
     private Texture getRandomTexture() {
         Random random = new Random();
         // 1 chance sur 20 de charger "fede.png" au lieu de "icon.png"
-        if (random.nextInt(20) == 0) {
+        if (random.nextInt(15) == 0) {
             Gdx.app.log("LoadingScreen", "Loading fede.png");
             return new Texture(Gdx.files.internal("assets/window/fede.png"));
         } else {
