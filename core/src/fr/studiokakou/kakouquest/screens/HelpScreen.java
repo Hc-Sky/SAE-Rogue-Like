@@ -19,11 +19,13 @@ public class HelpScreen implements Screen {
      */
     GameSpace game;
     Texture backButton;
+    Texture backButtonSelected;
     Texture text;
 
     public HelpScreen(GameSpace game){
         this.game = game;
         backButton = new Texture("assets/buttons/back_button.png");
+        backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
         text = new Texture("assets/window/regles_du_jeu.png");
     }
 
@@ -61,16 +63,17 @@ public class HelpScreen implements Screen {
 
 
         //Bouton Back
-        game.batch.draw(backButton, 620, 25, 230, 70);
         if (Gdx.input.getX() < 620 + 230 &&
                 Gdx.input.getX() > 620 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 15 + 70 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > 15) {
+            game.batch.draw(backButtonSelected, 620, 10, 230, 110);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new MenuScreen(game));
             }
         }
+        else {game.batch.draw(backButton, 620, 10, 230, 110);}
 
         game.batch.end();
     }
