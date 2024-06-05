@@ -51,6 +51,7 @@ public class SettingsScreen implements Screen {
     private TextureRegion leftRegionInventoryKey;
 
     Texture backButton;
+    Texture backButtonSelected;
 
     // Variable to track which key is being modified
     private String keyBeingModified = null;
@@ -83,6 +84,7 @@ public class SettingsScreen implements Screen {
         leftRegionInventoryKey = new TextureRegion(inventoryKey, 0, 0, inventoryKey.getWidth() / 2, inventoryKey.getHeight());
 
         backButton = new Texture("assets/buttons/back_button.png");
+        backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
     }
 
     @Override
@@ -100,16 +102,17 @@ public class SettingsScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
 
-        game.batch.draw(backButton, 30, 30, 230, 70);
         if (Gdx.input.getX() < 30 + 230 &&
                 Gdx.input.getX() > 30 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 30 + 70 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > 30) {
+            game.batch.draw(backButtonSelected, 30, 30, 230, 110);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new MenuScreen(game));
             }
         }
+        else {game.batch.draw(backButton, 30, 30, 230, 110);}
 
         // Draw the text and keys
         drawTextAndKeys();
