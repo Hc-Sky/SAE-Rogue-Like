@@ -69,6 +69,7 @@ public class MenuScreen implements Screen {
         }
 
         // Initialisation de l'écran
+
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
