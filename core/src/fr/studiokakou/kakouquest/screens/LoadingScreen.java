@@ -43,7 +43,7 @@ public class LoadingScreen implements Screen {
 
     private Texture getRandomTexture() {
         Random random = new Random();
-        // 1 chance sur 20 de charger "fede.png" au lieu de "icon.png"
+        // 1 chance sur 15 de charger "fede.png" au lieu de "icon.png"
         if (random.nextInt(15) == 0) {
             Gdx.app.log("LoadingScreen", "Loading fede.png");
             return new Texture(Gdx.files.internal("assets/window/fede.png"));
@@ -69,16 +69,18 @@ public class LoadingScreen implements Screen {
 
         if (texture != null) {
             // Dessiner l'image
-            float textureX = (float) (Gdx.graphics.getWidth() / 2 -250);
-            float textureY = ((float) Gdx.graphics.getHeight() / 2 -100);
-            batch.draw(texture, textureX, textureY, 500,500);
+            float textureWidth = texture.getWidth() * 3f; // Agrandir l'image proportionnellement
+            float textureHeight = texture.getHeight() * 3f;
+            float textureX = (Gdx.graphics.getWidth() - textureWidth) / 2;
+            float textureY = (Gdx.graphics.getHeight() - textureHeight) / 2;
+            batch.draw(texture, textureX, textureY, textureWidth, textureHeight);
         } else {
             Gdx.app.log("LoadingScreen", "Texture is null");
         }
 
         GlyphLayout layout = new GlyphLayout(font, loadingMessage);
         float x = (Gdx.graphics.getWidth() - layout.width) / 2;
-        float y = (Gdx.graphics.getHeight() + layout.height) / 2 - 250; // Décalage de 50 pixels vers le bas
+        float y = (Gdx.graphics.getHeight() + layout.height) / 2 - texture.getHeight() * 2f; // Décalage en fonction de la hauteur de l'image
 
         font.draw(batch, layout, x, y);
         batch.end();
