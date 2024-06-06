@@ -15,109 +15,55 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
-/**
- * Écran de jeu principal.
- * Cette classe gère l'écran de jeu principal.
- *
- * @version 1.0
- */
 public class InGameScreen implements Screen {
 
-	/**
-	 * Durée entre chaque frame.
-	 */
-	public static float FRAME_DURATION=0.17f;
+	public static float FRAME_DURATION = 0.17f;
 
-	/**
-	 * Espace de jeu.
-	 */
 	GameSpace game;
-	/**
-	 * Batch pour le rendu.
-	 */
 	SpriteBatch batch;
-	/**
-	 * Batch pour l'HUD.
-	 */
 	SpriteBatch hudBatch;
 
-	/**
-	 * Temps écoulé depuis le début du jeu.
-	 */
-	public static float stateTime=0f;
+	public static float stateTime = 0f;
 
-	/**
-	 * Joueur.
-	 */
 	Player player;
-	/**
-	 * Caméra.
-	 */
 	Camera cam;
-
-	/**
-	 * HUD du jeu.
-	 */
 	Hud hud;
 
-	/**
-	 * Niveau actuel.
-	 */
 	int currentLevel;
-	/**
-	 * Carte du jeu.
-	 */
 	Map map;
-	/**
-	 * Hauteur de la carte.
-	 */
 	public int map_height;
-	/**
-	 * Largeur de la carte.
-	 */
 	public int map_width;
 
-	/**
-	 * Temps de départ du jeu.
-	 */
 	long startTime;
+	private boolean paused;
 
-	/**
-	 * Constructeur de l'écran de jeu.
-	 *
-	 * @param game Le jeu
-	 */
-	public InGameScreen(GameSpace game){
-		this.game=game;
+	private boolean initialized = false;
+
+	public InGameScreen(GameSpace game) {
+		this.game = game;
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
-
 
 		this.currentLevel = 1;
 
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
 
-		// Initialisation de la carte
 		this.map_height = 80;
 		this.map_width = 80;
 		this.map = new Map(this.map_width, this.map_height);
 
-		// Initialisation du joueur
-		this.player = new Player(map.getPlayerSpawn(),"player");
+		this.player = new Player(map.getPlayerSpawn(), "player");
 		this.cam = new Camera(this.player);
 	}
 
-	/**
-	 * Passe au niveau suivant.
-	 */
-	public void nextLevel(){
-		InGameScreen.stateTime=0f;
+	public void nextLevel() {
+		InGameScreen.stateTime = 0f;
 		System.out.println("next level");
-		this.currentLevel+=1;
+		this.currentLevel += 1;
 
 		this.map = new Map(this.map_width, this.map_height);
-		this.player.hasPlayerSpawn=false;
+		this.player.hasPlayerSpawn = false;
 		this.player.setPos(map.getPlayerSpawn());
 
 		startTime = TimeUtils.millis();
@@ -126,48 +72,47 @@ public class InGameScreen implements Screen {
 		this.map.genInteractive(currentLevel, this);
 	}
 
-	/**
-	 * Affiche l'écran de jeu.
-	 */
 	@Override
 	public void show() {
+		if (!initialized) {
+			InGameScreen.stateTime = 0f;
 
-		InGameScreen.stateTime=0f;
+			Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
+			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
+			pm.dispose();
 
-		// Définit le curseur
-		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
-		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
-		pm.dispose();
+			this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
 
-		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
+			startTime = TimeUtils.millis();
 
-		startTime = TimeUtils.millis();
+			this.map.spawnMonsters(currentLevel);
+			this.map.genInteractive(currentLevel, this);
 
-		this.map.spawnMonsters(currentLevel);
-		this.map.genInteractive(currentLevel, this);
+			initialized = true;
+		}
 	}
 
 	@Override
 	public void render(float delta) {
+		if (paused) return;
+
 		InGameScreen.stateTime += delta;
 
-		// Gestion de la pause
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			game.previousScreen = this;
 			game.setScreen(new PauseScreen(game));
+			pause();
 			return;
 		}
-		/*if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-			Gdx.app.exit();
-		}*/
 
-		Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
+		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
+		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
 			player.spawnPlayer();
 		}
 
-		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning) {
 			player.getKeyboardMove(this.map);
 			player.getOrientation();
 			player.dash(this.map);
@@ -175,7 +120,6 @@ public class InGameScreen implements Screen {
 
 		cam.update();
 
-		// Met à jour la position des monstres
 		this.map.moveMonsters(this.player);
 		this.map.updateInteractive(this.player);
 
@@ -183,7 +127,6 @@ public class InGameScreen implements Screen {
 
 		batch.begin();
 
-		// Dessine la carte
 		this.map.drawMap(this.batch);
 		this.map.drawInteractive(this.batch);
 		this.map.drawMonsters(batch);
@@ -196,13 +139,12 @@ public class InGameScreen implements Screen {
 
 		this.map.checkDeadMonster();
 
-
 		hudBatch.begin();
 		this.hud.draw(hudBatch);
 		hudBatch.end();
 
-		if (player.hp<=0){
-			this.currentLevel=0;
+		if (player.hp <= 0) {
+			this.currentLevel = 0;
 			this.player.playerDeath();
 			this.nextLevel();
 		}
@@ -210,25 +152,23 @@ public class InGameScreen implements Screen {
 		this.map.updateRemoveInteractive();
 	}
 
-	/**
-	 * Redimensionne l'écran de jeu.
-	 *
-	 * @param width Largeur
-	 * @param height Hauteur
-	 */
 	@Override
 	public void resize(int width, int height) {
-		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width,height);
+		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 
 	@Override
 	public void pause() {
-		// TODO
+		game.setPaused(true);
 	}
 
 	@Override
 	public void resume() {
-		// TODO
+
+	}
+
+	public void resumeGame() {
+		game.setPaused(false);
 	}
 
 	@Override
@@ -236,9 +176,6 @@ public class InGameScreen implements Screen {
 		// TODO
 	}
 
-	/**
-	 * Libère les ressources utilisées par l'écran de jeu.
-	 */
 	@Override
 	public void dispose() {
 		this.game.dispose();

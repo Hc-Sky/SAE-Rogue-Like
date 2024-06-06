@@ -52,6 +52,8 @@ public class SettingsScreen implements Screen {
 
     Texture backButton;
     Texture backButtonSelected;
+    Texture resumeButton;
+    Texture resumeButtonSelected;
 
     // Variable to track which key is being modified
     private String keyBeingModified = null;
@@ -88,6 +90,8 @@ public class SettingsScreen implements Screen {
 
         backButton = new Texture("assets/buttons/back_button.png");
         backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
+        resumeButton = new Texture("assets/buttons/resume_button.png");
+        resumeButtonSelected = new Texture("assets/buttons/resume_button_selected.png");
 
         background = new Texture("assets/window/settings_background.png"); // Charger l'image de fond
 
@@ -124,6 +128,7 @@ public class SettingsScreen implements Screen {
         // Dessiner l'image de fond
         game.hudBatch.draw(background, (screenWidth - backgroundWidth) / 2, (screenHeight - backgroundHeight) / 2, backgroundWidth, backgroundHeight);
 
+        // Dessiner le bouton Back
         if (Gdx.input.getX() < 30 + 230 &&
                 Gdx.input.getX() > 30 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 30 + 70 &&
@@ -135,6 +140,29 @@ public class SettingsScreen implements Screen {
             }
         } else {
             game.hudBatch.draw(backButton, 30, 30, 230, 110);
+        }
+
+        // Dessiner le bouton Resume si le jeu est en pause
+        if (game.isPaused()) { // Vérifier si le jeu est en pause
+            int resumeButtonX = 280; // Ajuster la position X pour le bouton Resume
+            int resumeButtonY = 30; // Même position Y que le bouton Back
+            int resumeButtonWidth = 230; // Largeur du bouton Resume
+            int resumeButtonHeight = 110; // Hauteur du bouton Resume
+
+            if (Gdx.input.getX() < resumeButtonX + resumeButtonWidth &&
+                    Gdx.input.getX() > resumeButtonX &&
+                    Gdx.graphics.getHeight() - Gdx.input.getY() < resumeButtonY + resumeButtonHeight &&
+                    Gdx.graphics.getHeight() - Gdx.input.getY() > resumeButtonY) {
+                game.hudBatch.draw(resumeButtonSelected, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    game.setScreen(game.previousScreen);
+                    if (game.previousScreen instanceof InGameScreen) {
+                        ((InGameScreen) game.previousScreen).resumeGame();
+                    }
+                }
+            } else {
+                game.hudBatch.draw(resumeButton, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
+            }
         }
 
         // Draw the text and keys
@@ -272,5 +300,6 @@ public class SettingsScreen implements Screen {
         dashKey.dispose();
         inventoryKey.dispose();
         backButton.dispose();
+        resumeButton.dispose();
     }
 }
