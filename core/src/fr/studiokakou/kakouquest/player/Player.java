@@ -234,6 +234,8 @@ public class Player {
      */
     FRAME_ROWS = 4;
 
+    private String selectedAvatarTexture;
+
     /**
      * Constructeur de Player.
      * Sert à créer un objet Player.
@@ -242,14 +244,15 @@ public class Player {
      * @param name  the name
      */
 
-    public Player(Point spawn,String name){
+    public Player(Point spawn,String name, String selectedAvatarTexture){
 
         this.name = name;
+        this.selectedAvatarTexture = selectedAvatarTexture;
 
-        //player animations
-        this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
-        this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
-        this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
+        // player animations avec l'avatar sélectionné
+        this.idleAnimation = Utils.getAnimation("assets/entities/" + selectedAvatarTexture + "_idle.png", FRAME_COLS, FRAME_ROWS);
+        this.runAnimation = Utils.getAnimation("assets/entities/" + selectedAvatarTexture + "_run.png", FRAME_COLS, FRAME_ROWS);
+        this.runAnimationRevert = Utils.getAnimationRevert("assets/entities/" + selectedAvatarTexture + "_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
         this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);

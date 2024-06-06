@@ -73,7 +73,7 @@ public class GameModeChoice implements Screen {
                 Gdx.graphics.getHeight() - Gdx.input.getY() > yposSolo) {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
-                game.setScreen(new InGameScreen(game));
+                game.setScreen(new AvatarChoiceScreen(game));
             }
         }
 
