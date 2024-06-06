@@ -72,10 +72,10 @@ public class MenuScreen implements Screen {
 
         Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.begin();
+        game.hudBatch.begin();
 
         // Dessiner l'image de fond
-        game.batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        game.hudBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Calculer les dimensions et positions des boutons
         float screenWidth = Gdx.graphics.getWidth();
@@ -115,13 +115,13 @@ public class MenuScreen implements Screen {
                 Gdx.input.getX() > xposPlay &&
                 screenHeight - Gdx.input.getY() < yposPlay + playButtonHeight &&
                 screenHeight - Gdx.input.getY() > yposPlay) {
-            game.batch.draw(playButtonSelected, xposPlay - (playButtonSelectedWidth - playButtonWidth) / 2, yposPlay - (playButtonSelectedHeight - playButtonHeight) / 2, playButtonSelectedWidth, playButtonSelectedHeight);
+            game.hudBatch.draw(playButtonSelected, xposPlay - (playButtonSelectedWidth - playButtonWidth) / 2, yposPlay - (playButtonSelectedHeight - playButtonHeight) / 2, playButtonSelectedWidth, playButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new InGameScreen(game));
             }
         } else {
-            game.batch.draw(playButton, xposPlay, yposPlay, playButtonWidth, playButtonHeight);
+            game.hudBatch.draw(playButton, xposPlay, yposPlay, playButtonWidth, playButtonHeight);
         }
 
         // Bouton Exit
@@ -129,12 +129,12 @@ public class MenuScreen implements Screen {
                 Gdx.input.getX() > xposExit &&
                 screenHeight - Gdx.input.getY() < yposExit + exitButtonHeight &&
                 screenHeight - Gdx.input.getY() > yposExit) {
-            game.batch.draw(exitButtonSelected, xposExit - (exitButtonSelectedWidth - exitButtonWidth) / 2, yposExit - (exitButtonSelectedHeight - exitButtonHeight) / 2, exitButtonSelectedWidth, exitButtonSelectedHeight);
+            game.hudBatch.draw(exitButtonSelected, xposExit - (exitButtonSelectedWidth - exitButtonWidth) / 2, yposExit - (exitButtonSelectedHeight - exitButtonHeight) / 2, exitButtonSelectedWidth, exitButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 Gdx.app.exit();
             }
         } else {
-            game.batch.draw(exitButton, xposExit, yposExit, exitButtonWidth, exitButtonHeight);
+            game.hudBatch.draw(exitButton, xposExit, yposExit, exitButtonWidth, exitButtonHeight);
         }
 
         // Bouton Settings
@@ -142,17 +142,17 @@ public class MenuScreen implements Screen {
                 Gdx.input.getX() > xposSettings &&
                 screenHeight - Gdx.input.getY() < yposSettings + settingsButtonHeight &&
                 screenHeight - Gdx.input.getY() > yposSettings) {
-            game.batch.draw(settingsButtonSelected, xposSettings - (settingsButtonSelectedWidth - settingsButtonWidth) / 2, yposSettings - (settingsButtonSelectedHeight - settingsButtonHeight) / 2, settingsButtonSelectedWidth, settingsButtonSelectedHeight);
+            game.hudBatch.draw(settingsButtonSelected, xposSettings - (settingsButtonSelectedWidth - settingsButtonWidth) / 2, yposSettings - (settingsButtonSelectedHeight - settingsButtonHeight) / 2, settingsButtonSelectedWidth, settingsButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new SettingsScreen(game));
             }
         } else {
-            game.batch.draw(settingsButton, xposSettings, yposSettings, settingsButtonWidth, settingsButtonHeight);
+            game.hudBatch.draw(settingsButton, xposSettings, yposSettings, settingsButtonWidth, settingsButtonHeight);
         }
 
         // Bouton Help (Règles du jeu)
-        game.batch.draw(helpButton, xposHelp, yposHelp, helpButtonWidth, helpButtonHeight);
+        game.hudBatch.draw(helpButton, xposHelp, yposHelp, helpButtonWidth, helpButtonHeight);
         if (Gdx.input.getX() < xposHelp + helpButtonWidth &&
                 Gdx.input.getX() > xposHelp &&
                 screenHeight - Gdx.input.getY() < yposHelp + helpButtonHeight &&
@@ -162,7 +162,7 @@ public class MenuScreen implements Screen {
                 game.setScreen(new HelpScreen(game));
             }
         }
-        game.batch.end();
+        game.hudBatch.end();
     }
 
     @Override

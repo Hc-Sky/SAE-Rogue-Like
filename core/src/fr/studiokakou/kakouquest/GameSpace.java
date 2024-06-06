@@ -98,4 +98,8 @@ public class GameSpace extends Game {
 		font = new BitmapFont();
 	}
 
+	public InGameScreen getInGameScreen() {
+		return (InGameScreen) this.getScreen();
+	}
+
 }

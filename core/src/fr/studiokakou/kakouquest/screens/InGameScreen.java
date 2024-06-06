@@ -151,6 +151,11 @@ public class InGameScreen implements Screen {
 	public void render(float delta) {
 		InGameScreen.stateTime += delta;
 
+		// Gestion de la pause
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			game.setScreen(new PauseScreen(game));
+			return;
+		}
 		/*if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			Gdx.app.exit();
 		}*/
