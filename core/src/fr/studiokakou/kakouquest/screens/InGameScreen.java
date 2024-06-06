@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
@@ -59,6 +60,7 @@ public class InGameScreen implements Screen {
 	 * HUD du jeu.
 	 */
 	Hud hud;
+	BitmapFont font;
 
 	/**
 	 * Niveau actuel.
@@ -88,10 +90,9 @@ public class InGameScreen implements Screen {
 	 * @param game Le jeu
 	 */
 	public InGameScreen(GameSpace game){
-		this.game=game;
+		this.game = game;
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
-
 
 		this.currentLevel = 1;
 
@@ -114,7 +115,7 @@ public class InGameScreen implements Screen {
 	public void nextLevel(){
 		InGameScreen.stateTime=0f;
 		System.out.println("next level");
-		this.currentLevel+=1;
+		this.currentLevel += 1;
 
 		this.map = new Map(this.map_width, this.map_height);
 		this.player.hasPlayerSpawn=false;
@@ -140,6 +141,8 @@ public class InGameScreen implements Screen {
 		pm.dispose();
 
 		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
+		font = new BitmapFont();
+		hud.setFont(font);
 
 		startTime = TimeUtils.millis();
 
@@ -164,6 +167,8 @@ public class InGameScreen implements Screen {
 
 		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
 			player.getKeyboardMove(this.map);
+			player.getKeyboardWeapon();
+			player.getKeyboardPotion();
 			player.getOrientation();
 			player.dash(this.map);
 		}
