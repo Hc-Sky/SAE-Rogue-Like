@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.item.Potion;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
@@ -16,6 +17,8 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * le type Player.
@@ -64,7 +67,15 @@ public class Player {
      */
 //weapon
     public MeleeWeapon currentWeapon;
+    public MeleeWeapon defaultWeapon;
+    public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
+    public int indexWeapon = -1;
 
+    /**
+     * les potions actuelles
+     */
+//potion
+    public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
     /**
      * si le joueur est en train de dash.
      */
@@ -261,7 +272,10 @@ public class Player {
         this.stamina = 100;
 
         //default weapon
-        this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.defaultWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.currentWeapon = defaultWeapon;
+        //default potion
+        this.potions = new HashMap<>();
     }
 
     /**
@@ -283,9 +297,13 @@ public class Player {
         this.speed=40f;
         this.max_stamina=100;
         this.stamina = 100;
+        this.indexWeapon = -1;
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.weapons.clear();
+        //default potion
+        this.potions.clear();
     }
 
     /**
@@ -412,6 +430,16 @@ public class Player {
     }
 
     /**
+     * Définit l'arme actuelle à l'index spécifié dans la liste currentWeapons.
+     *
+     * @param weapon la nouvelle arme à définir
+     */
+    public void setCurrentWeapon(MeleeWeapon weapon) {
+            currentWeapon = weapon;
+    }
+
+
+    /**
      * Permet de faire attaquer le joueur.
      */
     public void attack() {
@@ -453,9 +481,9 @@ public class Player {
             if (meleeWeaponRectangle.overlaps(mRectangle)){
                 boolean damaged = m.hit(this);
                 if (damaged){
-                    this.currentWeapon.resistance-=1;
+                    this.currentWeapon.resistance -= 1;
                     System.out.println(this.currentWeapon.resistance);
-                    if (currentWeapon.resistance<=0 && currentWeapon.resistance>-100){
+                    if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
                     }
                 }
@@ -522,6 +550,99 @@ public class Player {
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
             }
+        }
+    }
+
+    /**
+     * Permet de récupérer le choix de l'arme du joueur.
+     *
+     */
+    public void getKeyboardWeapon() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+            setCurrentWeapon(defaultWeapon);
+            indexWeapon = -1;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            if (weapons.size() >= 1) {
+                setCurrentWeapon(weapons.get(0));
+                indexWeapon = 0;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            if (weapons.size() >= 2) {
+                setCurrentWeapon(weapons.get(1));
+                indexWeapon = 1;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (weapons.size() >= 3) {
+                setCurrentWeapon(weapons.get(2));
+                indexWeapon = 2;
+            }
+        }
+    }
+
+    /**
+     * Permet de récupérer le choix de l'utilisation des potions.
+     */
+    public void getKeyboardPotion() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            usePotion(Potion.PotionType.HEALTH);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            usePotion(Potion.PotionType.STAMINA);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            usePotion(Potion.PotionType.STRENGTH);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            usePotion(Potion.PotionType.SPEED);
+        }
+    }
+
+    /**
+     * Permet d'utiliser les potions
+     */
+    public void usePotion(Potion.PotionType type) {
+        if (potions.containsKey(type)) {
+            int potionCount = potions.get(type);
+            if (potionCount >= 1) {
+                potions.put(type, potionCount - 1);
+                applyEffect(type);
+            }
+        }
+    }
+
+    /**
+     * Effet de la potion
+     * @param type
+     */
+    private void applyEffect(Potion.PotionType type) {
+        switch (type) {
+            case HEALTH:
+                this.hp = Math.min(this.hp + 50, 100);
+                break;
+            case STAMINA:
+                this.stamina = Math.min(this.stamina + 50, 100);
+                break;
+            case STRENGTH:
+                this.strength *= 2;
+                // Lancer un thread pour annuler l'effet après 30 secondes
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        this.strength /= 2;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
+            case SPEED:
+                this.speed *= 2;
+                // Lancer un thread pour annuler l'effet après 30 secondes
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        this.speed /= 2;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
         }
     }
 
