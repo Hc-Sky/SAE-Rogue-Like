@@ -10,19 +10,19 @@ import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.GetCoreProperties;
 
 import static com.badlogic.gdx.Gdx.input;
+import static fr.studiokakou.kakouquest.keybinds.Keybinds.updateKeys;
 
 public class SettingsScreen implements Screen {
     private final static int TEXT_HEIGHT = Gdx.graphics.getWidth() / 24; // Adjusted height based on overall width
     private final static int LETTER_WIDTH = Gdx.graphics.getWidth() / 40; // Base width per letter
     int ecart = 50;
     int xposText = ((Gdx.graphics.getWidth() / 4)) - 100;
-    int yposUp = Gdx.graphics.getHeight() - 150;
+    int yposUp = Gdx.graphics.getHeight() - 200;
     int yposDown = yposUp - TEXT_HEIGHT - ecart;
     int yposLeft = yposDown - TEXT_HEIGHT - ecart;
     int yposRight = yposLeft - TEXT_HEIGHT - ecart;
     int yposInteract = yposRight - TEXT_HEIGHT - ecart;
     int yposDash = yposInteract - TEXT_HEIGHT - ecart;
-    int yposInventory = yposDash - TEXT_HEIGHT - ecart;
 
     GameSpace game;
 
@@ -32,7 +32,6 @@ public class SettingsScreen implements Screen {
     Texture rightText;
     Texture interactText;
     Texture dashText;
-    Texture inventoryText;
 
     Texture upKey;
     Texture downKey;
@@ -40,7 +39,6 @@ public class SettingsScreen implements Screen {
     Texture rightKey;
     Texture interactionKey;
     Texture dashKey;
-    Texture inventoryKey;
 
     private TextureRegion leftRegionUpKey;
     private TextureRegion leftRegionDownKey;
@@ -48,7 +46,6 @@ public class SettingsScreen implements Screen {
     private TextureRegion leftRegionRightKey;
     private TextureRegion leftRegionInteractionKey;
     private TextureRegion leftRegionDashKey;
-    private TextureRegion leftRegionInventoryKey;
 
     Texture backButton;
     Texture backButtonSelected;
@@ -70,7 +67,6 @@ public class SettingsScreen implements Screen {
         rightText = new Texture("assets/window/right_text.png");
         interactText = new Texture("assets/window/interact_text.png");
         dashText = new Texture("assets/window/dash_text.png");
-        inventoryText = new Texture("assets/window/inventory_text.png");
 
         upKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_UP")) + ".png");
         downKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DOWN")) + ".png");
@@ -78,7 +74,6 @@ public class SettingsScreen implements Screen {
         rightKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_RIGHT")) + ".png");
         interactionKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INTERRACT")) + ".png");
         dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DASH")) + ".png");
-        inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INVENTORY")) + ".png");
 
         leftRegionUpKey = new TextureRegion(upKey, 0, 0, upKey.getWidth() / 2, upKey.getHeight());
         leftRegionDownKey = new TextureRegion(downKey, 0, 0, downKey.getWidth() / 2, downKey.getHeight());
@@ -86,7 +81,6 @@ public class SettingsScreen implements Screen {
         leftRegionRightKey = new TextureRegion(rightKey, 0, 0, rightKey.getWidth() / 2, rightKey.getHeight());
         leftRegionInteractionKey = new TextureRegion(interactionKey, 0, 0, interactionKey.getWidth() / 2, interactionKey.getHeight());
         leftRegionDashKey = new TextureRegion(dashKey, 0, 0, dashKey.getWidth() / 2, dashKey.getHeight());
-        leftRegionInventoryKey = new TextureRegion(inventoryKey, 0, 0, inventoryKey.getWidth() / 2, inventoryKey.getHeight());
 
         backButton = new Texture("assets/buttons/back_button.png");
         backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
@@ -94,7 +88,6 @@ public class SettingsScreen implements Screen {
         resumeButtonSelected = new Texture("assets/buttons/resume_button_selected.png");
 
         background = new Texture("assets/window/settings_background.png"); // Charger l'image de fond
-
     }
 
     @Override
@@ -135,6 +128,7 @@ public class SettingsScreen implements Screen {
                 Gdx.graphics.getHeight() - Gdx.input.getY() > 30) {
             game.hudBatch.draw(backButtonSelected, 30, 30, 230, 110);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                updateKeys();
                 this.dispose();
                 game.setScreen(new MenuScreen(game));
             }
@@ -155,6 +149,7 @@ public class SettingsScreen implements Screen {
                     Gdx.graphics.getHeight() - Gdx.input.getY() > resumeButtonY) {
                 game.hudBatch.draw(resumeButtonSelected, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    updateKeys();
                     game.setScreen(game.previousScreen);
                     if (game.previousScreen instanceof InGameScreen) {
                         ((InGameScreen) game.previousScreen).resumeGame();
@@ -191,7 +186,6 @@ public class SettingsScreen implements Screen {
         int widthRight = "Droite".length() * LETTER_WIDTH;
         int widthInteract = "Interagir".length() * LETTER_WIDTH;
         int widthDash = "Dash".length() * LETTER_WIDTH;
-        int widthInventory = "Inventaire".length() * LETTER_WIDTH;
 
         game.hudBatch.draw(upText, xposText, yposUp, widthUp, TEXT_HEIGHT);
         game.hudBatch.draw(downText, xposText, yposDown, widthDown, TEXT_HEIGHT);
@@ -199,7 +193,6 @@ public class SettingsScreen implements Screen {
         game.hudBatch.draw(rightText, xposText, yposRight, widthRight, TEXT_HEIGHT);
         game.hudBatch.draw(interactText, xposText, yposInteract, widthInteract, TEXT_HEIGHT);
         game.hudBatch.draw(dashText, xposText, yposDash, widthDash, TEXT_HEIGHT);
-        game.hudBatch.draw(inventoryText, xposText, yposInventory, widthInventory, TEXT_HEIGHT);
 
         game.hudBatch.draw(leftRegionUpKey, xposText + 1000, yposUp, TEXT_HEIGHT, TEXT_HEIGHT);
         game.hudBatch.draw(leftRegionDownKey, xposText + 1000, yposDown, TEXT_HEIGHT, TEXT_HEIGHT);
@@ -207,7 +200,6 @@ public class SettingsScreen implements Screen {
         game.hudBatch.draw(leftRegionRightKey, xposText + 1000, yposRight, TEXT_HEIGHT, TEXT_HEIGHT);
         game.hudBatch.draw(leftRegionInteractionKey, xposText + 1000, yposInteract, TEXT_HEIGHT, TEXT_HEIGHT);
         game.hudBatch.draw(leftRegionDashKey, xposText + 1000, yposDash, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.hudBatch.draw(leftRegionInventoryKey, xposText + 1000, yposInventory, TEXT_HEIGHT, TEXT_HEIGHT);
     }
 
     private void checkForClicks() {
@@ -223,8 +215,6 @@ public class SettingsScreen implements Screen {
             keyBeingModified = "KEY_INTERRACT";
         } else if (isKeyClicked(xposText + 1000, yposDash, TEXT_HEIGHT, TEXT_HEIGHT)) {
             keyBeingModified = "KEY_DASH";
-        } else if (isKeyClicked(xposText + 1000, yposInventory, TEXT_HEIGHT, TEXT_HEIGHT)) {
-            keyBeingModified = "KEY_INVENTORY";
         }
     }
 
@@ -256,7 +246,6 @@ public class SettingsScreen implements Screen {
         rightKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_RIGHT")) + ".png");
         interactionKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INTERRACT")) + ".png");
         dashKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_DASH")) + ".png");
-        inventoryKey = new Texture("assets/keys/animated/" + Input.Keys.toString(GetCoreProperties.getIntProperty("KEY_INVENTORY")) + ".png");
 
         leftRegionUpKey = new TextureRegion(upKey, 0, 0, upKey.getWidth() / 2, upKey.getHeight());
         leftRegionDownKey = new TextureRegion(downKey, 0, 0, downKey.getWidth() / 2, downKey.getHeight());
@@ -264,7 +253,6 @@ public class SettingsScreen implements Screen {
         leftRegionRightKey = new TextureRegion(rightKey, 0, 0, rightKey.getWidth() / 2, rightKey.getHeight());
         leftRegionInteractionKey = new TextureRegion(interactionKey, 0, 0, interactionKey.getWidth() / 2, interactionKey.getHeight());
         leftRegionDashKey = new TextureRegion(dashKey, 0, 0, dashKey.getWidth() / 2, dashKey.getHeight());
-        leftRegionInventoryKey = new TextureRegion(inventoryKey, 0, 0, inventoryKey.getWidth() / 2, inventoryKey.getHeight());
     }
 
     @Override
@@ -291,14 +279,12 @@ public class SettingsScreen implements Screen {
         rightText.dispose();
         interactText.dispose();
         dashText.dispose();
-        inventoryText.dispose();
         upKey.dispose();
         downKey.dispose();
         leftKey.dispose();
         rightKey.dispose();
         interactionKey.dispose();
         dashKey.dispose();
-        inventoryKey.dispose();
         backButton.dispose();
         resumeButton.dispose();
     }
