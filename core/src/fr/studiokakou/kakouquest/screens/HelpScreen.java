@@ -56,10 +56,10 @@ public class HelpScreen implements Screen {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 
-        game.batch.begin();
+        game.hudBatch.begin();
 
         // Texte des règles du jeu
-        game.batch.draw(text, 30, 40, TEXT_WIDTH, TEXT_HEIGHT);
+        game.hudBatch.draw(text, 30, 40, TEXT_WIDTH, TEXT_HEIGHT);
 
 
         //Bouton Back
@@ -67,15 +67,15 @@ public class HelpScreen implements Screen {
                 Gdx.input.getX() > 620 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 15 + 70 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > 15) {
-            game.batch.draw(backButtonSelected, 620, 10, 230, 110);
+            game.hudBatch.draw(backButtonSelected, 620, 10, 230, 110);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new MenuScreen(game));
             }
         }
-        else {game.batch.draw(backButton, 620, 10, 230, 110);}
+        else {game.hudBatch.draw(backButton, 620, 10, 230, 110);}
 
-        game.batch.end();
+        game.hudBatch.end();
     }
 
     @Override

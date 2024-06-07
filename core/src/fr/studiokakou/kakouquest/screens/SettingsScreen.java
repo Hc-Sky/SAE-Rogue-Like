@@ -15,7 +15,7 @@ public class SettingsScreen implements Screen {
     private final static int TEXT_HEIGHT = Gdx.graphics.getWidth() / 24; // Adjusted height based on overall width
     private final static int LETTER_WIDTH = Gdx.graphics.getWidth() / 40; // Base width per letter
     int ecart = 50;
-    int xposText = ((Gdx.graphics.getWidth() / 4)) - 180;
+    int xposText = ((Gdx.graphics.getWidth() / 4)) - 100;
     int yposUp = Gdx.graphics.getHeight() - 150;
     int yposDown = yposUp - TEXT_HEIGHT - ecart;
     int yposLeft = yposDown - TEXT_HEIGHT - ecart;
@@ -52,9 +52,14 @@ public class SettingsScreen implements Screen {
 
     Texture backButton;
     Texture backButtonSelected;
+    Texture resumeButton;
+    Texture resumeButtonSelected;
 
     // Variable to track which key is being modified
     private String keyBeingModified = null;
+
+    // Image de fond
+    Texture background;
 
     public SettingsScreen(GameSpace game) {
         this.game = game;
@@ -85,6 +90,11 @@ public class SettingsScreen implements Screen {
 
         backButton = new Texture("assets/buttons/back_button.png");
         backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
+        resumeButton = new Texture("assets/buttons/resume_button.png");
+        resumeButtonSelected = new Texture("assets/buttons/resume_button_selected.png");
+
+        background = new Texture("assets/window/settings_background.png"); // Charger l'image de fond
+
     }
 
     @Override
@@ -100,19 +110,60 @@ public class SettingsScreen implements Screen {
 
         Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.begin();
+        game.hudBatch.begin();
 
+        // Calculer les dimensions de l'image de fond pour qu'elle remplisse l'écran tout en conservant ses proportions
+        float aspectRatio = 1129.0f / 959.0f;
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        float backgroundWidth = screenWidth;
+        float backgroundHeight = screenHeight;
+
+        if (screenWidth / screenHeight > aspectRatio) {
+            backgroundWidth = screenHeight * aspectRatio;
+        } else {
+            backgroundHeight = screenWidth / aspectRatio;
+        }
+
+        // Dessiner l'image de fond
+        game.hudBatch.draw(background, (screenWidth - backgroundWidth) / 2, (screenHeight - backgroundHeight) / 2, backgroundWidth, backgroundHeight);
+
+        // Dessiner le bouton Back
         if (Gdx.input.getX() < 30 + 230 &&
                 Gdx.input.getX() > 30 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() < 30 + 70 &&
                 Gdx.graphics.getHeight() - Gdx.input.getY() > 30) {
-            game.batch.draw(backButtonSelected, 30, 30, 230, 110);
+            game.hudBatch.draw(backButtonSelected, 30, 30, 230, 110);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
                 game.setScreen(new MenuScreen(game));
             }
+        } else {
+            game.hudBatch.draw(backButton, 30, 30, 230, 110);
         }
-        else {game.batch.draw(backButton, 30, 30, 230, 110);}
+
+        // Dessiner le bouton Resume si le jeu est en pause
+        if (game.isPaused()) { // Vérifier si le jeu est en pause
+            int resumeButtonX = 280; // Ajuster la position X pour le bouton Resume
+            int resumeButtonY = 30; // Même position Y que le bouton Back
+            int resumeButtonWidth = 230; // Largeur du bouton Resume
+            int resumeButtonHeight = 110; // Hauteur du bouton Resume
+
+            if (Gdx.input.getX() < resumeButtonX + resumeButtonWidth &&
+                    Gdx.input.getX() > resumeButtonX &&
+                    Gdx.graphics.getHeight() - Gdx.input.getY() < resumeButtonY + resumeButtonHeight &&
+                    Gdx.graphics.getHeight() - Gdx.input.getY() > resumeButtonY) {
+                game.hudBatch.draw(resumeButtonSelected, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    game.setScreen(game.previousScreen);
+                    if (game.previousScreen instanceof InGameScreen) {
+                        ((InGameScreen) game.previousScreen).resumeGame();
+                    }
+                }
+            } else {
+                game.hudBatch.draw(resumeButton, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
+            }
+        }
 
         // Draw the text and keys
         drawTextAndKeys();
@@ -120,7 +171,7 @@ public class SettingsScreen implements Screen {
         // Check for clicks and update the keyBeingModified variable
         checkForClicks();
 
-        game.batch.end();
+        game.hudBatch.end();
 
         // If a key is being modified, capture the next key press
         if (keyBeingModified != null) {
@@ -142,21 +193,21 @@ public class SettingsScreen implements Screen {
         int widthDash = "Dash".length() * LETTER_WIDTH;
         int widthInventory = "Inventaire".length() * LETTER_WIDTH;
 
-        game.batch.draw(upText, xposText, yposUp, widthUp, TEXT_HEIGHT);
-        game.batch.draw(downText, xposText, yposDown, widthDown, TEXT_HEIGHT);
-        game.batch.draw(leftText, xposText, yposLeft, widthLeft, TEXT_HEIGHT);
-        game.batch.draw(rightText, xposText, yposRight, widthRight, TEXT_HEIGHT);
-        game.batch.draw(interactText, xposText, yposInteract, widthInteract, TEXT_HEIGHT);
-        game.batch.draw(dashText, xposText, yposDash, widthDash, TEXT_HEIGHT);
-        game.batch.draw(inventoryText, xposText, yposInventory, widthInventory, TEXT_HEIGHT);
+        game.hudBatch.draw(upText, xposText, yposUp, widthUp, TEXT_HEIGHT);
+        game.hudBatch.draw(downText, xposText, yposDown, widthDown, TEXT_HEIGHT);
+        game.hudBatch.draw(leftText, xposText, yposLeft, widthLeft, TEXT_HEIGHT);
+        game.hudBatch.draw(rightText, xposText, yposRight, widthRight, TEXT_HEIGHT);
+        game.hudBatch.draw(interactText, xposText, yposInteract, widthInteract, TEXT_HEIGHT);
+        game.hudBatch.draw(dashText, xposText, yposDash, widthDash, TEXT_HEIGHT);
+        game.hudBatch.draw(inventoryText, xposText, yposInventory, widthInventory, TEXT_HEIGHT);
 
-        game.batch.draw(leftRegionUpKey, xposText + 1000, yposUp, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.batch.draw(leftRegionDownKey, xposText + 1000, yposDown, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.batch.draw(leftRegionLeftKey, xposText + 1000, yposLeft, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.batch.draw(leftRegionRightKey, xposText + 1000, yposRight, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.batch.draw(leftRegionInteractionKey, xposText + 1000, yposInteract, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.batch.draw(leftRegionDashKey, xposText + 1000, yposDash, TEXT_HEIGHT, TEXT_HEIGHT);
-        game.batch.draw(leftRegionInventoryKey, xposText + 1000, yposInventory, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionUpKey, xposText + 1000, yposUp, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionDownKey, xposText + 1000, yposDown, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionLeftKey, xposText + 1000, yposLeft, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionRightKey, xposText + 1000, yposRight, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionInteractionKey, xposText + 1000, yposInteract, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionDashKey, xposText + 1000, yposDash, TEXT_HEIGHT, TEXT_HEIGHT);
+        game.hudBatch.draw(leftRegionInventoryKey, xposText + 1000, yposInventory, TEXT_HEIGHT, TEXT_HEIGHT);
     }
 
     private void checkForClicks() {
@@ -249,5 +300,6 @@ public class SettingsScreen implements Screen {
         dashKey.dispose();
         inventoryKey.dispose();
         backButton.dispose();
+        resumeButton.dispose();
     }
 }

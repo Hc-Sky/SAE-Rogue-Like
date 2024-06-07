@@ -38,6 +38,7 @@ public class GameSpace extends Game {
 	public Screen previousScreen;
 
 	private PauseScreen pauseScreen;
+	private boolean paused;
 
 
 
@@ -57,6 +58,7 @@ public class GameSpace extends Game {
 		initialize();
 		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
 		this.setScreen(new MenuScreen(this));
+		paused = false;
 	}
 
 	/**
@@ -65,13 +67,6 @@ public class GameSpace extends Game {
 	@Override
 	public void render() {
 		super.render();
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-			pauseGame();
-		}
-	}
-
-	public void pauseGame() {
-		this.setScreen(pauseScreen);
 	}
 
 	/**
@@ -98,4 +93,19 @@ public class GameSpace extends Game {
 		font = new BitmapFont();
 	}
 
+	public InGameScreen getInGameScreen() {
+		return (InGameScreen) this.getScreen();
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
+	public void setPreviousScreen(Screen screen) {
+		this.previousScreen = screen;
+	}
 }
