@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
@@ -39,6 +40,13 @@ public class InGameScreen implements Screen {
 
 	private boolean initialized = false;
 
+	private boolean isCountingDown = false;
+	private float countdownTimer = 0;
+	private Texture[] countdownTextures;
+	private int countdownIndex = 0;
+	private static final float COUNTDOWN_INTERVAL = 0.5f; // 0.5 second interval
+	private Texture background;
+
 	public InGameScreen(GameSpace game) {
 		this.game = game;
 		this.batch = game.batch;
@@ -55,6 +63,13 @@ public class InGameScreen implements Screen {
 
 		this.player = new Player(map.getPlayerSpawn(), "player");
 		this.cam = new Camera(this.player);
+
+		// Load countdown textures
+		countdownTextures = new Texture[3];
+		countdownTextures[0] = new Texture("assets/window/3.png");
+		countdownTextures[1] = new Texture("assets/window/2.png");
+		countdownTextures[2] = new Texture("assets/window/1.png");
+		background = new Texture("assets/window/settings_background.png");
 	}
 
 	public void nextLevel() {
@@ -94,7 +109,14 @@ public class InGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		if (paused) return;
+		if (paused) {
+			System.out.println("Game is paused");
+		}
+
+		if (isCountingDown) {
+			renderCountdown(delta);
+			return;
+		}
 
 		InGameScreen.stateTime += delta;
 
@@ -152,6 +174,46 @@ public class InGameScreen implements Screen {
 		this.map.updateRemoveInteractive();
 	}
 
+	private void renderCountdown(float delta) {
+		countdownTimer -= delta;
+		if (countdownTimer <= 0) {
+			countdownIndex++;
+			countdownTimer = COUNTDOWN_INTERVAL;
+		}
+
+		if (countdownIndex >= countdownTextures.length) {
+			isCountingDown = false;
+			paused = false;
+			System.out.println("Countdown finished, resuming game");
+			game.setPaused(false); // Assurez-vous que le jeu reprend
+			return;
+		}
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		hudBatch.begin();
+		// Calculer les dimensions de l'image de fond pour qu'elle remplisse l'écran tout en conservant ses proportions
+		float aspectRatio = 1129.0f / 959.0f;
+		float screenWidth = Gdx.graphics.getWidth();
+		float screenHeight = Gdx.graphics.getHeight();
+		float backgroundWidth = screenWidth;
+		float backgroundHeight = screenHeight;
+
+		if (screenWidth / screenHeight > aspectRatio) {
+			backgroundWidth = screenHeight * aspectRatio;
+		} else {
+			backgroundHeight = screenWidth / aspectRatio;
+		}
+
+		// Dessiner l'image de fond
+		game.hudBatch.draw(background, (screenWidth - backgroundWidth) / 2, (screenHeight - backgroundHeight) / 2, backgroundWidth, backgroundHeight);
+
+		Texture currentTexture = countdownTextures[countdownIndex];
+		float textureWidth = currentTexture.getWidth();
+		float textureHeight = currentTexture.getHeight();
+		hudBatch.draw(currentTexture, (screenWidth - textureWidth) / 2, (screenHeight - textureHeight) / 2);
+		hudBatch.end();
+	}
+
 	@Override
 	public void resize(int width, int height) {
 		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
@@ -159,16 +221,26 @@ public class InGameScreen implements Screen {
 
 	@Override
 	public void pause() {
+		paused = true;
 		game.setPaused(true);
 	}
 
 	@Override
 	public void resume() {
-
+		// Ne rien faire ici
+		System.out.println("Game resumed");
 	}
 
 	public void resumeGame() {
-		game.setPaused(false);
+		startCountdown();
+	}
+
+	private void startCountdown() {
+		isCountingDown = true;
+		countdownTimer = COUNTDOWN_INTERVAL;
+		countdownIndex = 0;
+		paused = true; // Ensure the game is paused during the countdown
+		System.out.println("Starting countdown");
 	}
 
 	@Override
@@ -180,5 +252,8 @@ public class InGameScreen implements Screen {
 	public void dispose() {
 		this.game.dispose();
 		this.map.dispose();
+		for (Texture texture : countdownTextures) {
+			texture.dispose();
+		}
 	}
 }
