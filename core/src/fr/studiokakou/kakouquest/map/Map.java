@@ -363,7 +363,7 @@ public class Map {
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(1, 5) == 1){
+            if (Utils.randint(1, 1) == 1){
                 if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
                     this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
                 }
