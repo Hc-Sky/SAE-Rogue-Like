@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.GameSpace;
+import org.w3c.dom.Text;
 
 public class HelpScreen implements Screen {
     /**
@@ -20,12 +21,16 @@ public class HelpScreen implements Screen {
     GameSpace game;
     Texture backButton;
     Texture backButtonSelected;
+    Texture resumeButton;
+    Texture resumeButtonSelected;
     Texture text;
 
     public HelpScreen(GameSpace game){
         this.game = game;
         backButton = new Texture("assets/buttons/back_button.png");
         backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
+        resumeButton = new Texture("assets/buttons/resume_button.png");
+        resumeButtonSelected = new Texture("assets/buttons/resume_button_selected.png");
         text = new Texture("assets/window/regles_du_jeu.png");
     }
 
@@ -74,6 +79,29 @@ public class HelpScreen implements Screen {
             }
         }
         else {game.hudBatch.draw(backButton, 620, 10, 230, 110);}
+
+        // Dessiner le bouton Resume si le jeu est en pause
+        if (game.isPaused()) { // Vérifier si le jeu est en pause
+            int resumeButtonX = 900; // Ajuster la position X pour le bouton Resume
+            int resumeButtonY = 10; // Même position Y que le bouton Back
+            int resumeButtonWidth = 230; // Largeur du bouton Resume
+            int resumeButtonHeight = 110; // Hauteur du bouton Resume
+
+            if (Gdx.input.getX() < resumeButtonX + resumeButtonWidth &&
+                    Gdx.input.getX() > resumeButtonX &&
+                    Gdx.graphics.getHeight() - Gdx.input.getY() < resumeButtonY + resumeButtonHeight &&
+                    Gdx.graphics.getHeight() - Gdx.input.getY() > resumeButtonY) {
+                game.hudBatch.draw(resumeButtonSelected, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    game.setScreen(game.previousScreen);
+                    if (game.previousScreen instanceof InGameScreen) {
+                        ((InGameScreen) game.previousScreen).resumeGame();
+                    }
+                }
+            } else {
+                game.hudBatch.draw(resumeButton, resumeButtonX, resumeButtonY, resumeButtonWidth, resumeButtonHeight);
+            }
+        }
 
         game.hudBatch.end();
     }
