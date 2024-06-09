@@ -28,52 +28,28 @@ import java.util.ArrayList;
  */
 public class Player {
 
-    /**
-     * la position du joueur.
-     */
-//player pos
+    //player pos
     public Point pos;
-    /**
-     * la dernière position du joueur.
-     */
     Point lastPos;
 
-    /**
-     * le nom du joueur.
-     */
-//player stats
+    //player stats
     public String name;
-    /**
-     * les points de vie.
-     */
     public int hp;
     public int max_hp;
-    /**
-     * la force.
-     */
     public int strength;
-    /**
-     * la vitesse.
-     */
     public float speed;
-    /**
-     * la stamina.
-     */
     public float stamina;
     public int max_stamina;
+    public int playerLevel;
+    public double experience;
+    public double experienceToNextLevel;
 
-    /**
-     * l'arme actuelle.
-     */
-//weapon
+    //player weapons
     public MeleeWeapon currentWeapon;
     public MeleeWeapon defaultWeapon;
     public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
     public int indexWeapon = -1;
 
-    /**
-     * les potions actuelles
-     */
 //potion
     public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
     /**
@@ -273,6 +249,9 @@ public class Player {
         this.speed=40f;
         this.max_stamina=100;
         this.stamina = 100;
+        this.playerLevel = 1;
+        this.experience = 0;
+        this.experienceToNextLevel = 60;
 
         //default weapon
         this.defaultWeapon = MeleeWeapon.RUSTY_SWORD();
@@ -479,8 +458,8 @@ public class Player {
         if (this.staminaTimer==null || this.staminaTimer.plusSeconds(5).isBefore(LocalDateTime.now())){
             if (this.stamina < this.max_stamina){
                 this.stamina = this.stamina + 20*Gdx.graphics.getDeltaTime();
-                if (this.stamina>100){
-                    this.stamina=100;
+                if (this.stamina>max_stamina){
+                    this.stamina=max_stamina;
                 }
             }
         }
@@ -732,5 +711,24 @@ public class Player {
     public void takeDamage(int damage){
         this.hp -= damage;
         this.bloodStateTime=0f;
+    }
+
+    public void upgradeStat(){
+        System.out.println("Level up !");
+    }
+
+    public void gainExperience(double experience){
+        this.experience += experience;
+        while (this.experience >= this.experienceToNextLevel){
+            this.playerLevel += 1;
+            double surplus = this.experience - this.experienceToNextLevel;
+            this.experience = 0;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.3;
+            this.upgradeStat();
+            if (surplus > 0){
+                this.experience = surplus;
+            }
+        }
+        System.out.println("Experience : " + this.experience + " / " + this.experienceToNextLevel);
     }
 }

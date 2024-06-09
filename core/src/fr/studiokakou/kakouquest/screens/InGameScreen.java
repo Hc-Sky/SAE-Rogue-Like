@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.entity.Monster;
@@ -220,6 +221,10 @@ public class InGameScreen implements Screen {
 		hudBatch.begin();
 		this.hud.draw(hudBatch);
 		hudBatch.end();
+
+
+		ShapeRenderer shapeRenderer = new ShapeRenderer();
+		this.hud.drawXpBar(shapeRenderer);
 
 		if (player.hp<=0){
 			this.currentLevel=0;

@@ -38,6 +38,7 @@ public class Monster {
     public float attackPause;
 
     LocalDateTime currentAttackTime;
+    public int xp;
     /** The hit points of the monster. */
     public int hp;
     /** The range in which the monster can detect the player. */
@@ -85,13 +86,14 @@ public class Monster {
      * @param detectRange The range in which the monster can detect the player.
      * @param currentLevel The current level of the monster.
      */
-    public Monster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel){
+    public Monster(String name, String idleAnimationPath, String runAnimationPath, int hp, int damage, float attackPause, float speed, int detectRange, int currentLevel, int xp){
         this.name=name;
         this.speed = speed;
         this.damage = damage;
         this.attackPause=attackPause;
         this.hp = hp;
         this.detectRange = detectRange;
+        this.xp = xp;
         this.idleAnimation = Utils.getAnimation(idleAnimationPath, FRAME_COLS, FRAME_ROWS);
         if (Objects.equals(this.name, "Big Zombie")){
             this.runAnimation = Utils.getAnimation(runAnimationPath, FRAME_COLS, 5);
@@ -228,6 +230,7 @@ public class Monster {
         this.hp -= player.currentWeapon.damage*(player.strength/10);
         if (this.hp <= 0){
             this.isDying=true;
+            player.gainExperience(this.xp);
         }
     }
 
@@ -355,42 +358,42 @@ public class Monster {
     }
 
     static Monster BIG_DEMON(int currentLevel){
-        return new Monster("Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 400, 25, 1200, 40f, 150, currentLevel);
+        return new Monster("Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 400, 25, 1200, 40f, 150, currentLevel, 280);
     }
     static Monster BIG_ZOMBIE(int currentLevel){
-        return new Monster("Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 450, 35, 1500, 45f, 200, currentLevel);
+        return new Monster("Big Zombie", "assets/entities/big_zombie_idle.png", "assets/entities/big_zombie_run.png", 450, 35, 1500, 45f, 200, currentLevel, 330);
     }
     static Monster CHORT(int currentLevel){
-        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 70, 15, 700, 60f, 80, currentLevel);
+        return new Monster("Chort", "assets/entities/chort_idle.png", "assets/entities/chort_run.png", 70, 15, 700, 60f, 80, currentLevel, 155);
     }
     static Monster GOBLIN(int currentLevel){
-        return new Monster("Goblin", "assets/entities/goblin_idle.png", "assets/entities/goblin_run.png", 60, 10, 700, 50f, 100, currentLevel);
+        return new Monster("Goblin", "assets/entities/goblin_idle.png", "assets/entities/goblin_run.png", 60, 10, 700, 50f, 100, currentLevel, 55);
     }
     static Monster IMP(int currentLevel){
-        return new Monster("Imp", "assets/entities/imp_idle.png", "assets/entities/imp_run.png", 35, 15, 600, 60f, 100, currentLevel);
+        return new Monster("Imp", "assets/entities/imp_idle.png", "assets/entities/imp_run.png", 35, 15, 600, 60f, 100, currentLevel, 105);
     }
     static Monster MASKED_ORC(int currentLevel){
-        return new Monster("Masked Orc", "assets/entities/masked_orc_idle.png", "assets/entities/masked_orc_run.png", 150, 20, 600, 50f, 120, currentLevel);
+        return new Monster("Masked Orc", "assets/entities/masked_orc_idle.png", "assets/entities/masked_orc_run.png", 150, 20, 600, 50f, 120, currentLevel, 80);
     }
     static Monster MUDDY(int currentLevel){
-        return new Monster("Muddy", "assets/entities/muddy.png", "assets/entities/muddy.png", 250, 40, 600, 15f, 200, currentLevel);
+        return new Monster("Muddy", "assets/entities/muddy.png", "assets/entities/muddy.png", 250, 40, 600, 15f, 200, currentLevel, 155);
     }
     static Monster OGRE(int currentLevel){
-        return new Monster("Ogre", "assets/entities/ogre_idle.png", "assets/entities/ogre_run.png", 500, 25, 2000, 50f, 200, currentLevel);
+        return new Monster("Ogre", "assets/entities/ogre_idle.png", "assets/entities/ogre_run.png", 500, 25, 2000, 50f, 200, currentLevel, 330);
     }
     static Monster ORC_WARRIOR(int currentLevel){
-        return new Monster("Orc Warrior", "assets/entities/orc_warrior_idle.png", "assets/entities/orc_warrior_run.png", 120, 20, 600, 50f, 120, currentLevel);
+        return new Monster("Orc Warrior", "assets/entities/orc_warrior_idle.png", "assets/entities/orc_warrior_run.png", 120, 20, 600, 50f, 120, currentLevel, 55);
     }
     static Monster SKELET(int currentLevel){
-        return new Monster("Skelet", "assets/entities/skelet_idle.png", "assets/entities/skelet_run.png", 30, 30, 300, 50f, 120, currentLevel);
+        return new Monster("Skelet", "assets/entities/skelet_idle.png", "assets/entities/skelet_run.png", 30, 30, 300, 50f, 120, currentLevel, 80);
     }
     static Monster SWAMPY(int currentLevel){
-        return new Monster("Swampy", "assets/entities/swampy.png", "assets/entities/swampy.png", 400, 50, 800, 18f, 200, currentLevel);
+        return new Monster("Swampy", "assets/entities/swampy.png", "assets/entities/swampy.png", 400, 50, 800, 18f, 200, currentLevel, 205);
     }
     static Monster TINY_ZOMBIE(int currentLevel){
-        return new Monster("Tiny Zombie", "assets/entities/tiny_zombie_idle.png", "assets/entities/tiny_zombie_run.png", 20, 25, 600, 55f, 100, currentLevel);
+        return new Monster("Tiny Zombie", "assets/entities/tiny_zombie_idle.png", "assets/entities/tiny_zombie_run.png", 20, 25, 600, 55f, 100, currentLevel, 55);
     }
     static Monster WOGOL(int currentLevel){
-        return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 600, 50f, 150, currentLevel);
+        return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 600, 50f, 150, currentLevel, 130);
     }
 }
