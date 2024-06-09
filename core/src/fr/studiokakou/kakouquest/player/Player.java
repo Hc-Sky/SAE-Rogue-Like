@@ -252,7 +252,7 @@ public class Player {
         this.max_stamina=100;
         this.stamina = 100;
         this.playerLevel = 1;
-        this.experience = 1000;
+        this.experience = 0;
         this.experienceToNextLevel = 60;
 
         //default weapon
