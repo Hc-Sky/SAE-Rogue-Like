@@ -13,6 +13,8 @@ import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
@@ -250,7 +252,7 @@ public class Player {
         this.max_stamina=100;
         this.stamina = 100;
         this.playerLevel = 1;
-        this.experience = 0;
+        this.experience = 1000;
         this.experienceToNextLevel = 60;
 
         //default weapon
@@ -713,22 +715,20 @@ public class Player {
         this.bloodStateTime=0f;
     }
 
-    public void upgradeStat(){
-        System.out.println("Level up !");
-    }
-
-    public void gainExperience(double experience){
-        this.experience += experience;
-        while (this.experience >= this.experienceToNextLevel){
+    public void checkUpgrade(){
+        if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
             this.playerLevel += 1;
+            UpgradeCardScreen.upgrade();
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.3;
-            this.upgradeStat();
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.2;
             if (surplus > 0){
                 this.experience = surplus;
             }
         }
-        System.out.println("Experience : " + this.experience + " / " + this.experienceToNextLevel);
+    }
+
+    public void gainExperience(double experience){
+        this.experience += experience;
     }
 }

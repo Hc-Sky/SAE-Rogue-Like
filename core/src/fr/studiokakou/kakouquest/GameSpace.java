@@ -20,6 +20,8 @@ public class GameSpace extends Game {
 	 * Le SpriteBatch pour dessiner les éléments de l'HUD (interface utilisateur).
 	 */
 	public SpriteBatch hudBatch;
+
+	public SpriteBatch upgradeBatch;
 	/**
 	 * Le temps de démarrage de l'application.
 	 */
@@ -46,6 +48,7 @@ public class GameSpace extends Game {
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
+		upgradeBatch = new SpriteBatch();
 		startTime = TimeUtils.millis();
 		//Le initialize sert juste pour le HelpScreen pour les fonts
 		initialize();

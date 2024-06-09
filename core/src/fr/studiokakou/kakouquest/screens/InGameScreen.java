@@ -15,6 +15,8 @@ import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 /**
@@ -35,13 +37,11 @@ public class InGameScreen implements Screen {
 	 */
 	GameSpace game;
 	/**
-	 * Batch pour le rendu.
+	 * Batchs pour le rendu.
 	 */
 	SpriteBatch batch;
-	/**
-	 * Batch pour l'HUD.
-	 */
 	SpriteBatch hudBatch;
+	SpriteBatch upgradeBatch;
 
 	/**
 	 * Temps écoulé depuis le début du jeu.
@@ -94,6 +94,7 @@ public class InGameScreen implements Screen {
 		this.game = game;
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
+		this.upgradeBatch = game.upgradeBatch;
 
 		this.currentLevel = 1;
 
@@ -169,6 +170,8 @@ public class InGameScreen implements Screen {
 
 		this.map.spawnMonsters(currentLevel);
 		this.map.genInteractive(currentLevel, this);
+
+		UpgradeCardScreen.initUpgradeCards();
 	}
 
 	@Override
@@ -186,7 +189,7 @@ public class InGameScreen implements Screen {
 			player.spawnPlayer();
 		}
 
-		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning && ! UpgradeCardScreen.isUpgrading){
 			player.getKeyboardMove(this.map);
 			player.getKeyboardWeapon();
 			player.getKeyboardPotion();
@@ -197,8 +200,10 @@ public class InGameScreen implements Screen {
 		cam.update();
 
 		// Met à jour la position des monstres
-		this.map.moveMonsters(this.player);
-		this.map.updateInteractive(this.player);
+		if (! UpgradeCardScreen.isUpgrading){
+			this.map.moveMonsters(this.player);
+			this.map.updateInteractive(this.player);
+		}
 
 		batch.setProjectionMatrix(Camera.camera.combined);
 
@@ -210,26 +215,43 @@ public class InGameScreen implements Screen {
 		this.map.drawMonsters(batch);
 		this.map.updateHitsAnimation(this.batch);
 
-		player.regainStamina();
+		if (!UpgradeCardScreen.isUpgrading){
+			player.regainStamina();
+		}
 		player.draw(this.batch);
 
 		batch.end();
 
 		this.map.checkDeadMonster();
 
-
-		hudBatch.begin();
-		this.hud.draw(hudBatch);
-		hudBatch.end();
+		player.checkUpgrade();
 
 
-		ShapeRenderer shapeRenderer = new ShapeRenderer();
-		this.hud.drawXpBar(shapeRenderer);
+		if(! UpgradeCardScreen.isUpgrading){
+			hudBatch.begin();
+			this.hud.draw(hudBatch);
+			hudBatch.end();
 
-		if (player.hp<=0){
+			ShapeRenderer shapeRenderer = new ShapeRenderer();
+			this.hud.drawXpBar(shapeRenderer);
+		}
+
+		if (UpgradeCardScreen.isUpgrading){
+			upgradeBatch.begin();
+			UpgradeCardScreen.draw(upgradeBatch, player);
+			upgradeBatch.end();
+		}
+
+
+		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
 			this.currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();
+		}
+
+		if (UpgradeCardScreen.isUpgrading){
+			upgradeBatch.begin();
+			upgradeBatch.end();
 		}
 
 		this.map.updateRemoveInteractive();
