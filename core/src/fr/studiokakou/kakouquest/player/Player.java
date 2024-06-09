@@ -721,7 +721,7 @@ public class Player {
             UpgradeCardScreen.upgrade();
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.2;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.4;
             if (surplus > 0){
                 this.experience = surplus;
             }
