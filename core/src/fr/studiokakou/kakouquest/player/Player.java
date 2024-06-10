@@ -16,6 +16,7 @@ import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
@@ -51,6 +52,9 @@ public class Player {
     public MeleeWeapon defaultWeapon;
     public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
     public int indexWeapon = -1;
+
+    //player bow
+    public Bow bow;
 
 //potion
     public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
@@ -264,6 +268,10 @@ public class Player {
         this.currentWeapon = defaultWeapon;
         //default potion
         this.potions = new HashMap<>();
+
+        //bow
+        this.bow = new Bow(this);
+
     }
 
     /**
@@ -559,6 +567,15 @@ public class Player {
                 this.isRunning=false;
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
+            } else if (Gdx.input.isKeyPressed(Input.Keys.B)){
+                if (!bow.isLoading && !bow.isLoaded){
+                    bow.startAttack();
+                }
+            } else {
+                this.bow.isLoading = false;
+                if (this.bow.isLoaded){
+                    bow.attack();
+                }
             }
         }
     }
@@ -717,6 +734,8 @@ public class Player {
         if (!this.canAttack) {
             this.showAttack(batch);
         }
+
+        bow.draw(batch);
     }
 
     /**
