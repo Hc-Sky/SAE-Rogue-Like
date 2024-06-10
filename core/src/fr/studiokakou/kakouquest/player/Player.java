@@ -731,4 +731,40 @@ public class Player {
     public void gainExperience(double experience){
         this.experience += experience;
     }
+
+    //getter
+    public Point getPos() {
+        return pos;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMax_hp() {
+        return max_hp;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public float getStamina() {
+        return stamina;
+    }
+
+    public int getMax_stamina() {
+        return max_stamina;
+    }
+
+    public MeleeWeapon getCurrentWeapon() {
+        return currentWeapon;
+    }
+
+
+
 }
