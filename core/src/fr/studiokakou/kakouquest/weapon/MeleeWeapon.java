@@ -136,4 +136,48 @@ public class MeleeWeapon {
 	//dev weapon
 	public static MeleeWeapon DEV_SWORD () {return new MeleeWeapon("Dev sword", "assets/weapon/weapon_golden_sword.png", 200, -1, 120, 0.7f, 1);}
 
+	public int getId() {
+		switch (this.name) {
+			case "Anime sword":
+				return 8;
+			case "Baton with spikes":
+				return 6;
+			case "Big hammer":
+				return 8;
+			case "Cleaver":
+				return 5;
+			case "Double axe":
+				return 6;
+			case "Duel sword":
+				return 4;
+			case "Golden sword":
+				return 10;
+			case "Hammer":
+				return 3;
+			case "Katana":
+				return 8;
+			case "Knife":
+				return 1;
+			case "Knight sword":
+				return 4;
+			case "Lavish sword":
+				return 10;
+			case "Mace":
+				return 6;
+			case "Machete":
+				return 3;
+			case "Red gem sword":
+				return 9;
+			case "Regular sword":
+				return 3;
+			case "Saw sword":
+				return 4;
+			case "Throwing axe":
+				return 1;
+			case "Waraxe":
+				return 4;
+			default:
+				return 0;
+		}
+	}
 }

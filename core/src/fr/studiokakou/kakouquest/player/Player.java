@@ -738,11 +738,11 @@ public class Player {
     }
 
     public int getHp() {
-        return hp;
+        return this.hp;
     }
 
     public int getMax_hp() {
-        return max_hp;
+        return this.max_hp;
     }
 
     public int getStrength() {
@@ -764,7 +764,5 @@ public class Player {
     public MeleeWeapon getCurrentWeapon() {
         return currentWeapon;
     }
-
-
 
 }

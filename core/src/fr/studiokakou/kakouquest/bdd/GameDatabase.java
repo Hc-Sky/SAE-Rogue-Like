@@ -25,7 +25,7 @@ public class GameDatabase {
 	}
 
 	public void savePlayerStats(Player player) {
-		String sql = "INSERT INTO Player(hp, maxHp, strengh, speed, stamina, maxStamina, currentWeapon) VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO Player(hp, maxHp, strengh, speed, stamina, maxStamina, currentWeapon, currentLevel) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
