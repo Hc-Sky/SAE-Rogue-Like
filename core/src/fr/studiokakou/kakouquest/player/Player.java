@@ -765,4 +765,21 @@ public class Player {
         return currentWeapon;
     }
 
+    public MeleeWeapon getCurrentPotion() {
+        return currentWeapon;
+    }
+
+    public int getPlayerLevel() {
+        return playerLevel;
+    }
+
+    //potions
+    public HashMap<Potion.PotionType, Integer> getPotions() {
+        return potions;
+    }
+
+    //weapons
+    public ArrayList<MeleeWeapon> getWeapons() {
+        return weapons;
+    }
 }

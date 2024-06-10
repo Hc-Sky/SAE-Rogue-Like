@@ -24,7 +24,7 @@ public class GetCoreProperties {
         properties.setProperty(key, Integer.toString(value));
         try (FileOutputStream out = new FileOutputStream(PROPERTIES_FILE)) {
             properties.store(out, null);
-            System.out.println("Saved player stats");
+            System.out.println("Saved player stats " + key + " " + value);
         } catch (IOException e) {
             e.printStackTrace();
         }

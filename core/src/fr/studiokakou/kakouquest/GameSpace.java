@@ -61,6 +61,13 @@ public class GameSpace extends Game {
 		GetCoreProperties.loadPlayerStats("playerStrength");
 		GetCoreProperties.loadPlayerStats("playerSpeed");
 		GetCoreProperties.loadPlayerStats("playerCurrentWeapon");
+		GetCoreProperties.loadPlayerStats("playerCurrentPotion");
+		for (int i = 0; i < 3 ; i++) {
+			GetCoreProperties.loadPlayerStats("playerWeapon" + i);
+		}
+		for (int i = 0; i < 4; i++) {
+			GetCoreProperties.loadPlayerStats("playerPotion" + i);
+		}
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();

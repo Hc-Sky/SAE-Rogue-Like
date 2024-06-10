@@ -168,6 +168,25 @@ public class InGameScreen implements Screen {
 		InGameScreen.stateTime += delta;
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			GetCoreProperties.savePlayerStats("playerHP", player.getHp());
+			GetCoreProperties.savePlayerStats("playerMaxHp", player.getMax_hp());
+			GetCoreProperties.savePlayerStats("playerStamina", (int) player.getStamina());
+			GetCoreProperties.savePlayerStats("playerMaxStamina", player.getMax_stamina());
+			GetCoreProperties.savePlayerStats("playerLevel", currentLevel);
+			GetCoreProperties.savePlayerStats("playerStrength", player.getStrength());
+			GetCoreProperties.savePlayerStats("playerSpeed", (int) player.getSpeed());
+			GetCoreProperties.savePlayerStats("playerCurrentWeapon", player.getCurrentWeapon().getId());
+			GetCoreProperties.savePlayerStats("playerCurrentPotion", player.getCurrentPotion().getId());
+			System.out.println(player.getWeapons().size());
+			System.out.println(player.getPotions().size());
+			//weapons
+			for (int i = 0; i < player.getWeapons().size(); i++) {
+				GetCoreProperties.savePlayerStats("playerWeapon" + i, player.getWeapons().get(i).getId());
+			}
+			//potions
+			for (int i = 0; i < player.getPotions().size(); i++) {
+				GetCoreProperties.savePlayerStats("playerPotion" + i, player.getPotions().get(i));
+			}
 			game.previousScreen = this;
 			game.setScreen(new PauseScreen(game));
 			pause();
