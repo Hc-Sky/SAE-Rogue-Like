@@ -142,6 +142,8 @@ public class InGameScreen implements Screen {
 		    font = new BitmapFont();
             hud.setFont(font);
 
+			Monster.initExclamationMark();
+
 			this.map.spawnMonsters(currentLevel);
 			this.map.genInteractive(currentLevel, this);
 

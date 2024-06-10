@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -73,6 +74,10 @@ public class Monster {
 
     public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
 
+    public boolean onGuard = false;
+
+    public static Texture exclamationMark;
+
 
     /**
      * Constructs a new Monster with specified parameters.
@@ -110,6 +115,10 @@ public class Monster {
         InGameScreen.stateTime=0f;
 
         this.upgradeStats(currentLevel);
+    }
+
+    public static void initExclamationMark(){
+        exclamationMark = new Texture("assets/effects/exclamation.png");
     }
 
     /**
@@ -208,6 +217,9 @@ public class Monster {
      * @return True if the player is detected, false otherwise.
      */
     public boolean detectPlayer(Point playerPos){
+        if (onGuard){
+            return Utils.distance(this.pos, playerPos) <= this.detectRange*2;
+        }
         return Utils.distance(this.pos, playerPos) <= this.detectRange;
     }
 
@@ -261,6 +273,10 @@ public class Monster {
         }
 
         this.sprite.draw(batch);
+
+        if (onGuard) {
+            batch.draw(exclamationMark, this.pos.x + this.width / 2 - 3, this.pos.y + this.height + 3, 5, 14);
+        }
 
     }
 
@@ -316,10 +332,11 @@ public class Monster {
     }
 
     public void arrowHit(Player player){
-        this.hp -= Bow.BOW_DAMAGE;
+        this.hp -= Bow.BOW_DAMAGE*(player.strength/10);
         this.bloodStateTime=0f;
         this.isRed=true;
         this.hitStart=LocalDateTime.now();
+        this.onGuard = true;
 
         if (this.hp <= 0){
             this.isDying=true;
