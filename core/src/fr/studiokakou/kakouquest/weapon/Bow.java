@@ -76,7 +76,7 @@ public class Bow {
 
     public void updateArrows(SpriteBatch batch, Map map){
         for (Arrow arrow : arrows) {
-            arrow.update(Gdx.graphics.getDeltaTime(), batch, map);
+            arrow.update(Gdx.graphics.getDeltaTime(), batch, map, player);
         }
         for (int i = 0; i < arrows.size(); i++) {
             if (arrows.get(i).toRemove){

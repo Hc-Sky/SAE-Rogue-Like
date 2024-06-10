@@ -315,16 +315,15 @@ public class Monster {
         return false;
     }
 
-    public void arrowHit(){
-        System.out.println("hit start : " + this.hp);
+    public void arrowHit(Player player){
         this.hp -= Bow.BOW_DAMAGE;
-        System.out.println("hit end : " + this.hp);
         this.bloodStateTime=0f;
         this.isRed=true;
         this.hitStart=LocalDateTime.now();
 
         if (this.hp <= 0){
             this.isDying=true;
+            player.gainExperience(this.xp);
         }
     }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
+import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 public class Arrow {
@@ -24,12 +25,12 @@ public class Arrow {
         arrowTexture = new Texture("assets/weapon/weapon_arrow.png");
     }
 
-    public void checkHit(){
+    public void checkHit(Player player){
         Rectangle meleeWeaponRectangle = this.sprite.getBoundingRectangle();
         for (Monster m : Map.monsters){
             Rectangle mRectangle = m.sprite.getBoundingRectangle();
             if (meleeWeaponRectangle.overlaps(mRectangle)){
-                m.arrowHit();
+                m.arrowHit(player);
                 toRemove = true;
             }
         }
@@ -47,11 +48,11 @@ public class Arrow {
         return map.arePointsOnFloor(new Point[]{startPos.add((float) arrowTexture.getWidth() /2, (float) arrowTexture.getHeight() /2)});
     }
 
-    public void update(float delta, SpriteBatch batch, Map map) {
+    public void update(float delta, SpriteBatch batch, Map map, Player player) {
         startPos.x += ARROW_SPEED * delta * (float) Math.cos(Math.toRadians(rotation));
         startPos.y += ARROW_SPEED * delta * (float) Math.sin(Math.toRadians(rotation));
         draw(batch);
-        checkHit();
+        checkHit(player);
         if (!isArrowOnFloor(map)){
             toRemove = true;
         }

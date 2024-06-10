@@ -567,7 +567,7 @@ public class Player {
                 this.isRunning=false;
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.B)){
+            } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
                 if (!bow.isLoading && !bow.isLoaded){
                     bow.startAttack();
                 }
