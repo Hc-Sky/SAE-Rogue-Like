@@ -173,6 +173,11 @@ public class InGameScreen implements Screen {
 			return;
 		}
 
+
+		if (Gdx.input.isKeyPressed(Input.Keys.N)){
+			player.experience += 100;
+		}
+
 		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
