@@ -16,6 +16,7 @@ import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
@@ -51,6 +52,9 @@ public class Player {
     public MeleeWeapon defaultWeapon;
     public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
     public int indexWeapon = -1;
+
+    //player bow
+    public Bow bow;
 
 //potion
     public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
@@ -214,6 +218,10 @@ public class Player {
 
     private String selectedAvatarTexture;
 
+    //upgrade vars
+    public boolean betterDurability = false;
+    public boolean biggerWeapon = false;
+
     /**
      * Constructeur de Player.
      * Sert à créer un objet Player.
@@ -260,6 +268,10 @@ public class Player {
         this.currentWeapon = defaultWeapon;
         //default potion
         this.potions = new HashMap<>();
+
+        //bow
+        this.bow = new Bow(this);
+
     }
 
     /**
@@ -479,6 +491,11 @@ public class Player {
                 boolean damaged = m.hit(this);
                 if (damaged){
                     this.currentWeapon.resistance -= 1;
+                    if (this.betterDurability){
+                        if (Utils.randint(1, 2)==1){
+                            this.currentWeapon.resistance += 1;
+                        }
+                    }
                     System.out.println(this.currentWeapon.resistance);
                     if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
@@ -499,6 +516,10 @@ public class Player {
 
             this.currentWeapon.sprite.setPosition(this.attackPos.x-this.currentWeapon.width/2, this.attackPos.y);
             this.currentWeapon.sprite.setRotation(this.attackRotation-90f);
+
+            if (biggerWeapon){
+                this.currentWeapon.sprite.setSize((float) (this.currentWeapon.width*1.5), (float) (this.currentWeapon.height*1.5));
+            }
 
             this.currentWeapon.sprite.draw(batch);
 
@@ -546,6 +567,15 @@ public class Player {
                 this.isRunning=false;
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
+            } else if (Gdx.input.isKeyPressed(Input.Keys.B)){
+                if (!bow.isLoading && !bow.isLoaded){
+                    bow.startAttack();
+                }
+            } else {
+                this.bow.isLoading = false;
+                if (this.bow.isLoaded){
+                    bow.attack();
+                }
             }
         }
     }
@@ -648,7 +678,7 @@ public class Player {
      *
      * @param batch the batch
      */
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch, Map map){
 
         if (hasPlayerSpawn) {
             TextureRegion currentFrame;
@@ -704,6 +734,8 @@ public class Player {
         if (!this.canAttack) {
             this.showAttack(batch);
         }
+
+        bow.draw(batch, map);
     }
 
     /**
@@ -718,7 +750,7 @@ public class Player {
     public void checkUpgrade(){
         if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
             this.playerLevel += 1;
-            UpgradeCardScreen.upgrade();
+            UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
             this.experienceToNextLevel = this.experienceToNextLevel * 1.4;
