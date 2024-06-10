@@ -23,41 +23,22 @@ import java.util.HashMap;
  *
  */
 public class Hud {
-    /**
-     * The Player.
-     */
     Player player;
 
-    /**
-     * The Health bar.
-     */
     ArrayList<Texture> healthBar = new ArrayList<>();
-    /**
-     * The Health bar outside.
-     */
     Texture healthBarOutside;
 
-    /**
-     * The Stamina bar.
-     */
     ArrayList<Texture> staminaBar = new ArrayList<>();
 
-    /**
-     * The Current level.
-     */
     int currentLevel;
 
-    /**
-     * The Hud size.
-     */
     float hudSize;
 
     BitmapFont font;
 
-    /**
-     * The SnapeRenderer
-     */
     private ShapeRenderer shapeRenderer;
+
+    Texture arrowTexture;
 
     /**
      * Constructeur de l'HUD.
@@ -73,6 +54,8 @@ public class Hud {
 
         shapeRenderer = new ShapeRenderer();
         this.hudSize = hudSizeMult;
+
+        this.arrowTexture = new Texture("assets/weapon/weapon_arrow.png");
 
         //health bar textures
         this.healthBarOutside = new Texture("assets/hud/health/outside.png");
@@ -168,6 +151,10 @@ public class Hud {
 
         // texte du niveau actuel
         font.draw(batch, "Level : " + player.playerLevel, 100, 90);
+
+        // info pour l'arc
+        batch.draw(arrowTexture, Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight()-100, arrowTexture.getWidth() * hudSize, arrowTexture.getHeight() * hudSize);
+        font.draw(batch, "x " + player.bow.arrowCount, Gdx.graphics.getWidth() - 70, Gdx.graphics.getHeight()-100 + arrowTexture.getHeight()*hudSize/2);
 
 
     }

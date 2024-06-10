@@ -38,6 +38,8 @@ public class Chest {
      */
     public Potion potion;
 
+    public int nbArrows;
+
     boolean isOpened=false;
     boolean isOpenning = false;
     /**
@@ -101,6 +103,7 @@ public class Chest {
 
         this.meleeWeaponLoot = getRandomMeleeWeapon(currentLevel);
         this.potion = generateRandomPotion();
+        this.nbArrows = Utils.randint(0, 5);
     }
 
     /**
@@ -182,6 +185,7 @@ public class Chest {
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.isOpened = true;
             this.dropLoot();
+            player.bow.arrowCount += this.nbArrows;
             if (this.potion != null) {
                 this.dropItem();
             }
