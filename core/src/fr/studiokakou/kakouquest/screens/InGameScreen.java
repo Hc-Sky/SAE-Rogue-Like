@@ -136,7 +136,7 @@ public class InGameScreen implements Screen {
 			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
 			pm.dispose();
 
-			this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
+			this.hud = new Hud(this.player, this.currentLevel,cam.zoom);
 
 			startTime = TimeUtils.millis();
 		    font = new BitmapFont();
@@ -155,9 +155,6 @@ public class InGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		if (paused) {
-			System.out.println("Game is paused");
-		}
 
 		if (isCountingDown) {
 			renderCountdown(delta);

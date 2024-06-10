@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.item.Potion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Pixmap;
+import fr.studiokakou.kakouquest.utils.Utils;
 
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class Hud {
         int healthAmount = getHealthAmount();
 
         Point healthBarPos = new Point(100, Gdx.graphics.getHeight()-100);
-        Point staminaBarPos = new Point(78, Gdx.graphics.getHeight()-120);
+        Point staminaBarPos = new Point(65, Gdx.graphics.getHeight()-133);
         Point defaultWeaponIconPos = new Point(Gdx.graphics.getWidth() - 110, 50);
         Point weaponIcon1Pos = new Point(Gdx.graphics.getWidth() - 110, 180);
         Point weaponIcon2Pos = new Point(Gdx.graphics.getWidth() - 110, 310);
@@ -104,8 +105,15 @@ public class Hud {
             batch.draw(this.healthBar.get(healthAmount), healthBarPos.x, healthBarPos.y, this.healthBar.get(0).getWidth()*this.hudSize, this.healthBar.get(0).getHeight()*this.hudSize);
         }
         batch.draw(this.healthBarOutside, healthBarPos.x, healthBarPos.y, this.healthBarOutside.getWidth()*this.hudSize, this.healthBarOutside.getHeight()*this.hudSize);
+        //ecrit le texte de la vie
+        font.draw(batch, "HP : " + player.hp + "/" + player.max_hp, healthBarPos.x + healthBarOutside.getWidth()*this.hudSize + 10, healthBarPos.y+healthBarOutside.getHeight()*this.hudSize/2+10);
 
         batch.draw(this.staminaBar.get(getStaminaAmount()), staminaBarPos.x, staminaBarPos.y, this.staminaBar.get(0).getWidth()*this.hudSize, this.staminaBar.get(0).getHeight()*this.hudSize);
+        // ecrit le texte de la stamina
+        font.draw(batch, "Stamina : " + player.stamina + "/" + player.max_stamina, healthBarPos.x + healthBarOutside.getWidth()*this.hudSize + 10, healthBarPos.y+10);
+
+        Utils.bigMarkPoint(staminaBarPos, batch);
+        Utils.bigMarkPoint(healthBarPos, batch);
 
         Texture square = drawSquare(Color.WHITE);
         batch.draw(square, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
@@ -155,6 +163,7 @@ public class Hud {
                 font.draw(batch, potionCountText, potionIconPos.x + 35, potionIconPos.y + 15);
             }
         }
+
 
 
         // texte du niveau actuel
