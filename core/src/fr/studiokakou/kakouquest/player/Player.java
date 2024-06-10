@@ -287,12 +287,8 @@ public class Player {
      */
     public void playerDeath(){
         //default values
-        this.max_hp=100;
-        this.hp=100;
-        this.strength=10;
-        this.speed=40f;
-        this.max_stamina=100;
-        this.stamina = 100;
+        this.hp=max_hp;
+        this.stamina = max_stamina;
         this.indexWeapon = -1;
 
         //default weapon
@@ -753,7 +749,7 @@ public class Player {
             UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.4;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.2;
             if (surplus > 0){
                 this.experience = surplus;
             }

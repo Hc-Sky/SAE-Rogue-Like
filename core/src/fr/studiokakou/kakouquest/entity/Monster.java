@@ -138,6 +138,11 @@ public class Monster {
     public void upgradeStats(int currentLevel){
         this.hp = this.hp +(this.hp * currentLevel/4);
         this.damage = this.damage + (this.damage * currentLevel /4);
+        if (InGameScreen.currentLevel < 12) {
+            this.speed = this.speed * (1 + (float) currentLevel /10);
+        } else {
+            this.speed = this.speed * (1 + (float) 12 / 20);
+        }
     }
 
     /**

@@ -289,7 +289,7 @@ public class Map {
         Map.monsters.clear();
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        float tmp_current_level = (float) currentLevel /3;
+        float tmp_current_level = (float) (currentLevel/1.5);
         if (tmp_current_level<1){
             tmp_current_level=1;
         }

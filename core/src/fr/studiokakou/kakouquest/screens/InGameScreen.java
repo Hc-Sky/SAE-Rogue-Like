@@ -39,7 +39,7 @@ public class InGameScreen implements Screen {
 	Hud hud;
 	BitmapFont font;
 
-	int currentLevel;
+	public static int currentLevel;
 	Map map;
 	public int map_height;
 	public int map_width;
@@ -68,7 +68,7 @@ public class InGameScreen implements Screen {
 		this.hudBatch = game.hudBatch;
 		this.upgradeBatch = game.upgradeBatch;
 
-		this.currentLevel = 1;
+		currentLevel = 1;
 
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
@@ -104,9 +104,9 @@ public class InGameScreen implements Screen {
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
 						public void run() {
+							InGameScreen.currentLevel += 1;
 							InGameScreen.stateTime = 0f;
 							System.out.println("next level");
-							currentLevel += 1;
 
 							map = new Map(map_width, map_height);
 							player.hasPlayerSpawn = false;

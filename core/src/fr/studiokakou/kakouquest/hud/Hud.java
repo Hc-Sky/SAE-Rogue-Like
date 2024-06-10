@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.item.Potion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Pixmap;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 
@@ -30,13 +31,9 @@ public class Hud {
 
     ArrayList<Texture> staminaBar = new ArrayList<>();
 
-    int currentLevel;
-
     float hudSize;
 
     BitmapFont font;
-
-    private ShapeRenderer shapeRenderer;
 
     Texture arrowTexture;
 
@@ -50,9 +47,7 @@ public class Hud {
      */
     public Hud(Player player, int currentLevel, float hudSizeMult){
         this.player = player;
-        this.currentLevel = currentLevel;
 
-        shapeRenderer = new ShapeRenderer();
         this.hudSize = hudSizeMult;
 
         this.arrowTexture = new Texture("assets/weapon/weapon_arrow.png");
@@ -155,6 +150,9 @@ public class Hud {
         // info pour l'arc
         batch.draw(arrowTexture, Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight()-100, arrowTexture.getWidth() * hudSize, arrowTexture.getHeight() * hudSize);
         font.draw(batch, "x " + player.bow.arrowCount, Gdx.graphics.getWidth() - 70, Gdx.graphics.getHeight()-100 + arrowTexture.getHeight()*hudSize/2);
+
+        //étage actuel
+        font.draw(batch, "Floor : " + InGameScreen.currentLevel, (float) Gdx.graphics.getWidth() /2 - 30, Gdx.graphics.getHeight()-50);
 
 
     }
