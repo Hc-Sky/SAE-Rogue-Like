@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
@@ -16,73 +17,37 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
-/**
- * Écran de jeu principal.
- * Cette classe gère l'écran de jeu principal.
- *
- * @version 1.0
- */
 public class InGameScreen implements Screen {
 
-	/**
-	 * Durée entre chaque frame.
-	 */
-	public static float FRAME_DURATION=0.17f;
+	public static float FRAME_DURATION = 0.17f;
 
-	/**
-	 * Espace de jeu.
-	 */
 	GameSpace game;
-	/**
-	 * Batch pour le rendu.
-	 */
 	SpriteBatch batch;
-	/**
-	 * Batch pour l'HUD.
-	 */
 	SpriteBatch hudBatch;
 
-	/**
-	 * Temps écoulé depuis le début du jeu.
-	 */
-	public static float stateTime=0f;
+	public static float stateTime = 0f;
 
-	/**
-	 * Joueur.
-	 */
 	Player player;
-	/**
-	 * Caméra.
-	 */
 	Camera cam;
-
-	/**
-	 * HUD du jeu.
-	 */
 	Hud hud;
 	BitmapFont font;
 
-	/**
-	 * Niveau actuel.
-	 */
 	int currentLevel;
-	/**
-	 * Carte du jeu.
-	 */
 	Map map;
-	/**
-	 * Hauteur de la carte.
-	 */
 	public int map_height;
-	/**
-	 * Largeur de la carte.
-	 */
 	public int map_width;
 
-	/**
-	 * Temps de départ du jeu.
-	 */
 	long startTime;
+	private boolean paused;
+
+	private boolean initialized = false;
+
+	private boolean isCountingDown = false;
+	private float countdownTimer = 0;
+	private Texture[] countdownTextures;
+	private int countdownIndex = 0;
+	private static final float COUNTDOWN_INTERVAL = 0.5f; // 0.5 second interval
+	private Texture background;
 
 	/**
 	 * Constructeur de l'écran de jeu.
@@ -91,6 +56,7 @@ public class InGameScreen implements Screen {
 	 */
 	public InGameScreen(GameSpace game, String selectedAvatarTexture) {
 		this.game = game;
+
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
 
@@ -99,7 +65,6 @@ public class InGameScreen implements Screen {
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
 
-		// Initialisation de la carte
 		this.map_height = 80;
 		this.map_width = 80;
 		this.map = new Map(this.map_width, this.map_height);
@@ -107,6 +72,13 @@ public class InGameScreen implements Screen {
 		// Initialisation du joueur
 		this.player = new Player(map.getPlayerSpawn(), "player", selectedAvatarTexture);
 		this.cam = new Camera(this.player);
+
+		// Load countdown textures
+		countdownTextures = new Texture[3];
+		countdownTextures[0] = new Texture("assets/window/3.png");
+		countdownTextures[1] = new Texture("assets/window/2.png");
+		countdownTextures[2] = new Texture("assets/window/1.png");
+		background = new Texture("assets/window/settings_background.png");
 	}
 
 	/**
@@ -147,45 +119,56 @@ public class InGameScreen implements Screen {
 		}).start();
 	}
 
-	/**
-	 * Affiche l'écran de jeu.
-	 */
 	@Override
 	public void show() {
+		if (!initialized) {
+			InGameScreen.stateTime = 0f;
 
-		InGameScreen.stateTime=0f;
+			Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
+			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
+			pm.dispose();
 
-		// Définit le curseur
-		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
-		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth()/2, pm.getHeight()/2));
-		pm.dispose();
+			this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
 
-		this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
-		font = new BitmapFont();
-		hud.setFont(font);
+			startTime = TimeUtils.millis();
+		    font = new BitmapFont();
+            hud.setFont(font);
 
-		startTime = TimeUtils.millis();
+			this.map.spawnMonsters(currentLevel);
+			this.map.genInteractive(currentLevel, this);
 
-		this.map.spawnMonsters(currentLevel);
-		this.map.genInteractive(currentLevel, this);
+			initialized = true;
+		}
 	}
 
 	@Override
 	public void render(float delta) {
-		InGameScreen.stateTime += delta;
-
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-			Gdx.app.exit();
+		if (paused) {
+			System.out.println("Game is paused");
 		}
 
-		Gdx.gl.glClearColor(34/255f, 34/255f, 34/255f, 1);
+		if (isCountingDown) {
+			renderCountdown(delta);
+			return;
+		}
+
+		InGameScreen.stateTime += delta;
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			game.previousScreen = this;
+			game.setScreen(new PauseScreen(game));
+			pause();
+			return;
+		}
+
+		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning){
+		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
 			player.spawnPlayer();
 		}
 
-		if (player.hasPlayerSpawn && !player.isPlayerSpawning){
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning) {
 			player.getKeyboardMove(this.map);
 			player.getKeyboardWeapon();
 			player.getKeyboardPotion();
@@ -195,7 +178,6 @@ public class InGameScreen implements Screen {
 
 		cam.update();
 
-		// Met à jour la position des monstres
 		this.map.moveMonsters(this.player);
 		this.map.updateInteractive(this.player);
 
@@ -203,7 +185,6 @@ public class InGameScreen implements Screen {
 
 		batch.begin();
 
-		// Dessine la carte
 		this.map.drawMap(this.batch);
 		this.map.drawInteractive(this.batch);
 		this.map.drawMonsters(batch);
@@ -216,13 +197,12 @@ public class InGameScreen implements Screen {
 
 		this.map.checkDeadMonster();
 
-
 		hudBatch.begin();
 		this.hud.draw(hudBatch);
 		hudBatch.end();
 
-		if (player.hp<=0){
-			this.currentLevel=0;
+		if (player.hp <= 0) {
+			this.currentLevel = 0;
 			this.player.playerDeath();
 			this.nextLevel();
 		}
@@ -230,25 +210,73 @@ public class InGameScreen implements Screen {
 		this.map.updateRemoveInteractive();
 	}
 
-	/**
-	 * Redimensionne l'écran de jeu.
-	 *
-	 * @param width Largeur
-	 * @param height Hauteur
-	 */
+	private void renderCountdown(float delta) {
+		countdownTimer -= delta;
+		if (countdownTimer <= 0) {
+			countdownIndex++;
+			countdownTimer = COUNTDOWN_INTERVAL;
+		}
+
+		if (countdownIndex >= countdownTextures.length) {
+			isCountingDown = false;
+			paused = false;
+			System.out.println("Countdown finished, resuming game");
+			game.setPaused(false); // Assurez-vous que le jeu reprend
+			return;
+		}
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		hudBatch.begin();
+		// Calculer les dimensions de l'image de fond pour qu'elle remplisse l'écran tout en conservant ses proportions
+		float aspectRatio = 1129.0f / 959.0f;
+		float screenWidth = Gdx.graphics.getWidth();
+		float screenHeight = Gdx.graphics.getHeight();
+		float backgroundWidth = screenWidth;
+		float backgroundHeight = screenHeight;
+
+		if (screenWidth / screenHeight > aspectRatio) {
+			backgroundWidth = screenHeight * aspectRatio;
+		} else {
+			backgroundHeight = screenWidth / aspectRatio;
+		}
+
+		// Dessiner l'image de fond
+		game.hudBatch.draw(background, (screenWidth - backgroundWidth) / 2, (screenHeight - backgroundHeight) / 2, backgroundWidth, backgroundHeight);
+
+		Texture currentTexture = countdownTextures[countdownIndex];
+		float textureWidth = currentTexture.getWidth();
+		float textureHeight = currentTexture.getHeight();
+		hudBatch.draw(currentTexture, (screenWidth - textureWidth) / 2, (screenHeight - textureHeight) / 2);
+		hudBatch.end();
+	}
+
 	@Override
 	public void resize(int width, int height) {
-		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width,height);
+		this.batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 
 	@Override
 	public void pause() {
-		// TODO
+		paused = true;
+		game.setPaused(true);
 	}
 
 	@Override
 	public void resume() {
-		// TODO
+		// Ne rien faire ici
+		System.out.println("Game resumed");
+	}
+
+	public void resumeGame() {
+		startCountdown();
+	}
+
+	private void startCountdown() {
+		isCountingDown = true;
+		countdownTimer = COUNTDOWN_INTERVAL;
+		countdownIndex = 0;
+		paused = true; // Ensure the game is paused during the countdown
+		System.out.println("Starting countdown");
 	}
 
 	@Override
@@ -256,12 +284,12 @@ public class InGameScreen implements Screen {
 		// TODO
 	}
 
-	/**
-	 * Libère les ressources utilisées par l'écran de jeu.
-	 */
 	@Override
 	public void dispose() {
 		this.game.dispose();
 		this.map.dispose();
+		for (Texture texture : countdownTextures) {
+			texture.dispose();
+		}
 	}
 }

@@ -34,6 +34,5 @@ public class Keybinds {
         Keybinds.RIGHT_KEY = GetCoreProperties.getIntProperty("KEY_RIGHT");
         Keybinds.DASH_KEY = GetCoreProperties.getIntProperty("KEY_DASH");
         Keybinds.INTERRACT_KEY = GetCoreProperties.getIntProperty(("KEY_INTERRACT"));
-        Keybinds.INVENTORY_KEY = GetCoreProperties.getIntProperty(("KEY_INVENTORY"));
     }
 }
