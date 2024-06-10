@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
@@ -73,15 +74,21 @@ public class Bow {
         arrows.add(new Arrow(this.attackStartPoint, this.rotation));
     }
 
-    public void updateArrows(SpriteBatch batch){
+    public void updateArrows(SpriteBatch batch, Map map){
         for (Arrow arrow : arrows) {
-            arrow.update(Gdx.graphics.getDeltaTime(), batch);
+            arrow.update(Gdx.graphics.getDeltaTime(), batch, map);
+        }
+        for (int i = 0; i < arrows.size(); i++) {
+            if (arrows.get(i).toRemove){
+                arrows.remove(i);
+                i--;
+            }
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, Map map) {
 
-        updateArrows(batch);
+        updateArrows(batch, map);
 
         if (!isLoaded && !isLoading) {
             return;

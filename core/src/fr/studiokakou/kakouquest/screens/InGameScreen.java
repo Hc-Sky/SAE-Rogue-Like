@@ -210,7 +210,7 @@ public class InGameScreen implements Screen {
 		if (!UpgradeCardScreen.isUpgrading){
 			player.regainStamina();
 		}
-		player.draw(this.batch);
+		player.draw(this.batch, map);
 
 		batch.end();
 

@@ -11,6 +11,7 @@ import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -286,7 +287,9 @@ public class Monster {
 
         if (hitStart!= null && this.isRed && this.hitStart.plusNanos(200000000).isBefore(LocalDateTime.now())){
             this.isRed=false;
-            this.player_hitted.remove(this.player_hitted.get(0));
+            if (this.player_hitted.size()>0){
+                this.player_hitted.remove(this.player_hitted.get(0));
+            }
             this.hitStart=null;
             if (isDying){
                 this.isDead=true;
@@ -310,6 +313,19 @@ public class Monster {
             return true;
         }
         return false;
+    }
+
+    public void arrowHit(){
+        System.out.println("hit start : " + this.hp);
+        this.hp -= Bow.BOW_DAMAGE;
+        System.out.println("hit end : " + this.hp);
+        this.bloodStateTime=0f;
+        this.isRed=true;
+        this.hitStart=LocalDateTime.now();
+
+        if (this.hp <= 0){
+            this.isDying=true;
+        }
     }
 
 

@@ -678,7 +678,7 @@ public class Player {
      *
      * @param batch the batch
      */
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch, Map map){
 
         if (hasPlayerSpawn) {
             TextureRegion currentFrame;
@@ -735,7 +735,7 @@ public class Player {
             this.showAttack(batch);
         }
 
-        bow.draw(batch);
+        bow.draw(batch, map);
     }
 
     /**
