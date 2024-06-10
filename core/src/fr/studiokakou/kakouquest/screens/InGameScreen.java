@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.entity.Monster;
@@ -15,6 +16,8 @@ import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 public class InGameScreen implements Screen {
@@ -22,8 +25,12 @@ public class InGameScreen implements Screen {
 	public static float FRAME_DURATION = 0.17f;
 
 	GameSpace game;
+	/**
+	 * Batchs pour le rendu.
+	 */
 	SpriteBatch batch;
 	SpriteBatch hudBatch;
+	SpriteBatch upgradeBatch;
 
 	public static float stateTime = 0f;
 
@@ -59,6 +66,7 @@ public class InGameScreen implements Screen {
 
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
+		this.upgradeBatch = game.upgradeBatch;
 
 		this.currentLevel = 1;
 
@@ -137,6 +145,10 @@ public class InGameScreen implements Screen {
 			this.map.spawnMonsters(currentLevel);
 			this.map.genInteractive(currentLevel, this);
 
+		    this.map.spawnMonsters(currentLevel);
+		    this.map.genInteractive(currentLevel, this);
+
+		    UpgradeCardScreen.initUpgradeCards();
 			initialized = true;
 		}
 	}
@@ -168,7 +180,7 @@ public class InGameScreen implements Screen {
 			player.spawnPlayer();
 		}
 
-		if (player.hasPlayerSpawn && !player.isPlayerSpawning) {
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning && ! UpgradeCardScreen.isUpgrading){
 			player.getKeyboardMove(this.map);
 			player.getKeyboardWeapon();
 			player.getKeyboardPotion();
@@ -178,8 +190,11 @@ public class InGameScreen implements Screen {
 
 		cam.update();
 
-		this.map.moveMonsters(this.player);
-		this.map.updateInteractive(this.player);
+		// Met à jour la position des monstres
+		if (! UpgradeCardScreen.isUpgrading){
+			this.map.moveMonsters(this.player);
+			this.map.updateInteractive(this.player);
+		}
 
 		batch.setProjectionMatrix(Camera.camera.combined);
 
@@ -190,21 +205,43 @@ public class InGameScreen implements Screen {
 		this.map.drawMonsters(batch);
 		this.map.updateHitsAnimation(this.batch);
 
-		player.regainStamina();
+		if (!UpgradeCardScreen.isUpgrading){
+			player.regainStamina();
+		}
 		player.draw(this.batch);
 
 		batch.end();
 
 		this.map.checkDeadMonster();
 
-		hudBatch.begin();
-		this.hud.draw(hudBatch);
-		hudBatch.end();
+		player.checkUpgrade();
 
-		if (player.hp <= 0) {
-			this.currentLevel = 0;
+
+		if(! UpgradeCardScreen.isUpgrading){
+			hudBatch.begin();
+			this.hud.draw(hudBatch);
+			hudBatch.end();
+
+			ShapeRenderer shapeRenderer = new ShapeRenderer();
+			this.hud.drawXpBar(shapeRenderer);
+		}
+
+		if (UpgradeCardScreen.isUpgrading){
+			upgradeBatch.begin();
+			UpgradeCardScreen.draw(upgradeBatch, player);
+			upgradeBatch.end();
+		}
+
+
+		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
+			this.currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();
+		}
+
+		if (UpgradeCardScreen.isUpgrading){
+			upgradeBatch.begin();
+			upgradeBatch.end();
 		}
 
 		this.map.updateRemoveInteractive();

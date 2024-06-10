@@ -31,7 +31,7 @@ public class Boss extends Monster {
     public Boss(String name, String idleAnimationPath, String runAnimationPath, String attackAnimationPath,
                 String hitAnimationPath, String deathAnimationPath, int hp, int damage, float attackPause, float speed,
                 int detectRange, int currentLevel) {
-        super(name, idleAnimationPath, runAnimationPath, hp, damage, attackPause, speed, detectRange, currentLevel);
+        super(name, idleAnimationPath, runAnimationPath, hp, damage, attackPause, speed, detectRange, currentLevel, 1000);
         this.idleAnimation = Utils.getAnimation(idleAnimationPath, 6, 1);
         this.runAnimation = Utils.getAnimation(runAnimationPath, 12, 1);
         this.attackAnimation = Utils.getAnimation(attackAnimationPath, 15, 1);
