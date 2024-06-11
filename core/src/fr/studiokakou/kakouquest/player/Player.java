@@ -16,6 +16,7 @@ import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
@@ -51,6 +52,9 @@ public class Player {
     public MeleeWeapon defaultWeapon;
     public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
     public int indexWeapon = -1;
+
+    //player bow
+    public Bow bow;
 
 //potion
     public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
@@ -264,6 +268,10 @@ public class Player {
         this.currentWeapon = defaultWeapon;
         //default potion
         this.potions = new HashMap<>();
+
+        //bow
+        this.bow = new Bow(this);
+
     }
 
     /**
@@ -279,12 +287,8 @@ public class Player {
      */
     public void playerDeath(){
         //default values
-        this.max_hp=100;
-        this.hp=100;
-        this.strength=10;
-        this.speed=40f;
-        this.max_stamina=100;
-        this.stamina = 100;
+        this.hp=max_hp;
+        this.stamina = max_stamina;
         this.indexWeapon = -1;
 
         //default weapon
@@ -559,6 +563,15 @@ public class Player {
                 this.isRunning=false;
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
+            } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+                if (!bow.isLoading && !bow.isLoaded){
+                    bow.startAttack();
+                }
+            } else {
+                this.bow.isLoading = false;
+                if (this.bow.isLoaded){
+                    bow.attack();
+                }
             }
         }
     }
@@ -661,7 +674,7 @@ public class Player {
      *
      * @param batch the batch
      */
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch, Map map){
 
         if (hasPlayerSpawn) {
             TextureRegion currentFrame;
@@ -717,6 +730,8 @@ public class Player {
         if (!this.canAttack) {
             this.showAttack(batch);
         }
+
+        bow.draw(batch, map);
     }
 
     /**
@@ -734,7 +749,7 @@ public class Player {
             UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.4;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.2;
             if (surplus > 0){
                 this.experience = surplus;
             }

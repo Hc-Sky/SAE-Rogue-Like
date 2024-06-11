@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +12,7 @@ import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -72,6 +74,10 @@ public class Monster {
 
     public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
 
+    public boolean onGuard = false;
+
+    public static Texture exclamationMark;
+
 
     /**
      * Constructs a new Monster with specified parameters.
@@ -111,6 +117,10 @@ public class Monster {
         this.upgradeStats(currentLevel);
     }
 
+    public static void initExclamationMark(){
+        exclamationMark = new Texture("assets/effects/exclamation.png");
+    }
+
     /**
      * Sets the position of the monster.
      *
@@ -128,6 +138,11 @@ public class Monster {
     public void upgradeStats(int currentLevel){
         this.hp = this.hp +(this.hp * currentLevel/4);
         this.damage = this.damage + (this.damage * currentLevel /4);
+        if (InGameScreen.currentLevel < 12) {
+            this.speed = this.speed * (1 + (float) currentLevel /10);
+        } else {
+            this.speed = this.speed * (1 + (float) 12 / 20);
+        }
     }
 
     /**
@@ -207,6 +222,9 @@ public class Monster {
      * @return True if the player is detected, false otherwise.
      */
     public boolean detectPlayer(Point playerPos){
+        if (onGuard){
+            return Utils.distance(this.pos, playerPos) <= this.detectRange*2;
+        }
         return Utils.distance(this.pos, playerPos) <= this.detectRange;
     }
 
@@ -261,6 +279,10 @@ public class Monster {
 
         this.sprite.draw(batch);
 
+        if (onGuard) {
+            batch.draw(exclamationMark, this.pos.x + this.width / 2 - 3, this.pos.y + this.height + 3, 5, 14);
+        }
+
     }
 
     /**
@@ -286,7 +308,9 @@ public class Monster {
 
         if (hitStart!= null && this.isRed && this.hitStart.plusNanos(200000000).isBefore(LocalDateTime.now())){
             this.isRed=false;
-            this.player_hitted.remove(this.player_hitted.get(0));
+            if (this.player_hitted.size()>0){
+                this.player_hitted.remove(this.player_hitted.get(0));
+            }
             this.hitStart=null;
             if (isDying){
                 this.isDead=true;
@@ -310,6 +334,19 @@ public class Monster {
             return true;
         }
         return false;
+    }
+
+    public void arrowHit(Player player){
+        this.hp -= Bow.BOW_DAMAGE*(player.strength/10);
+        this.bloodStateTime=0f;
+        this.isRed=true;
+        this.hitStart=LocalDateTime.now();
+        this.onGuard = true;
+
+        if (this.hp <= 0){
+            this.isDying=true;
+            player.gainExperience(this.xp);
+        }
     }
 
 
