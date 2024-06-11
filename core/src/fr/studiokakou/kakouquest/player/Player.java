@@ -214,6 +214,10 @@ public class Player {
 
     private String selectedAvatarTexture;
 
+    //upgrade vars
+    public boolean betterDurability = false;
+    public boolean biggerWeapon = false;
+
     /**
      * Constructeur de Player.
      * Sert à créer un objet Player.
@@ -479,6 +483,11 @@ public class Player {
                 boolean damaged = m.hit(this);
                 if (damaged){
                     this.currentWeapon.resistance -= 1;
+                    if (this.betterDurability){
+                        if (Utils.randint(1, 2)==1){
+                            this.currentWeapon.resistance += 1;
+                        }
+                    }
                     System.out.println(this.currentWeapon.resistance);
                     if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
@@ -499,6 +508,10 @@ public class Player {
 
             this.currentWeapon.sprite.setPosition(this.attackPos.x-this.currentWeapon.width/2, this.attackPos.y);
             this.currentWeapon.sprite.setRotation(this.attackRotation-90f);
+
+            if (biggerWeapon){
+                this.currentWeapon.sprite.setSize((float) (this.currentWeapon.width*1.5), (float) (this.currentWeapon.height*1.5));
+            }
 
             this.currentWeapon.sprite.draw(batch);
 
@@ -718,7 +731,7 @@ public class Player {
     public void checkUpgrade(){
         if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
             this.playerLevel += 1;
-            UpgradeCardScreen.upgrade();
+            UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
             this.experienceToNextLevel = this.experienceToNextLevel * 1.4;
