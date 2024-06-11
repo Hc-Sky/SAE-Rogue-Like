@@ -766,5 +766,19 @@ public class Player {
     }
 
 
+    public int getPartie_id() {
+        return 0;
+    }
 
+    public int getPlayerLevel() {
+        return playerLevel;
+    }
+
+    public int getPlayerScore() {
+        return 0;
+    }
+
+    public double getGameScore() {
+        return experience;
+    }
 }

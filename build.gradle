@@ -58,6 +58,7 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+        implementation 'mysql:mysql-connector-java:8.0.26'
+
     }
 }

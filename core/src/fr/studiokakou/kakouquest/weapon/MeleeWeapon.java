@@ -136,4 +136,42 @@ public class MeleeWeapon {
 	//dev weapon
 	public static MeleeWeapon DEV_SWORD () {return new MeleeWeapon("Dev sword", "assets/weapon/weapon_golden_sword.png", 200, -1, 120, 0.7f, 1);}
 
+	public int getWeapon_id() {
+		return this.hashCode();
+	}
+
+	public String getWeapon_name() {
+		return this.name;
+	}
+
+	public int getWeapon_damage() {
+		return this.damage;
+	}
+
+	public int getWeapon_durability() {
+		return this.resistance;
+	}
+
+	public float getWeapon_range() {
+		return this.attackRange;
+	}
+
+	public float getWeapon_speed() {
+		return this.attackSpeed;
+	}
+
+
+	public int getRarety() {
+		if (this.damage > 80) {
+			return 5;
+		} else if (this.damage > 60) {
+			return 4;
+		} else if (this.damage > 40) {
+			return 3;
+		} else if (this.damage > 20) {
+			return 2;
+		} else {
+			return 1;
+		}
+	}
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.*;
+import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
