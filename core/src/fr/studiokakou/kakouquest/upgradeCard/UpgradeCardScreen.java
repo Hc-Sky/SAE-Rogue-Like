@@ -26,7 +26,11 @@ public class UpgradeCardScreen {
             else if (random == 5 && !player.biggerWeapon)
                 upgradeCards.add(possibleCards.get(random));
         } else if (Utils.randint(1, 15)==1) {
-            upgradeCards.add(possibleCards.get(6));
+            int random = Utils.randint(6,7);
+            if (random == 6)
+                upgradeCards.add(possibleCards.get(random));
+            else if (random == 7 && !player.isRadiant)
+                upgradeCards.add(possibleCards.get(random));
         }
 
         while (upgradeCards.size() < 3) {
@@ -58,5 +62,6 @@ public class UpgradeCardScreen {
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/better_durability_card.png"), "better_durability", 0));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/bigger_weapon_card.png"), "bigger_weapon", 0));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/lucky_one_card.png"), "lucky_one", 0));
+        possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/radiant_card.png"), "radiant", 0));
     }
 }
