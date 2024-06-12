@@ -19,5 +19,4 @@ jobs:
 
       - name: Test functions
         run: |
-          cd core/src
-          java -ea fr.studiokakou.kakouquest.utils.TestUtils
+          java -ea -cp core/src fr.studiokakou.kakouquest.utils.TestUtils
