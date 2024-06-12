@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
+import fr.studiokakou.kakouquest.interactive.Stairs;
+import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
@@ -68,7 +70,7 @@ public class InGameScreen implements Screen {
 		this.hudBatch = game.hudBatch;
 		this.upgradeBatch = game.upgradeBatch;
 
-		currentLevel = 1;
+		currentLevel = 4;
 
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
@@ -104,20 +106,39 @@ public class InGameScreen implements Screen {
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
 						public void run() {
-							InGameScreen.currentLevel += 1;
-							InGameScreen.stateTime = 0f;
-							System.out.println("next level");
+							if ((currentLevel+1) % 5 == 0){
+								InGameScreen.currentLevel++;
+								InGameScreen.stateTime = 0f;
+								System.out.println("boss level");
 
-							map = new Map(map_width, map_height);
-							player.hasPlayerSpawn = false;
-							player.setPos(map.getPlayerSpawn());
+								map = new BossMap(map_width,map_height);
+								System.out.println("1");
+								System.out.println("2");
+								player.hasPlayerSpawn = false;
+								System.out.println("3");
+								player.setPos(map.getPlayerSpawn());
+								System.out.println("4");
+								startTime = TimeUtils.millis();
+								System.out.println("boss spawn");
+								map.stairs = new Stairs(map.rooms.get(map.rooms.size()-1).getCenterOutOfMapPos(),InGameScreen.this);
+								game.setScreen(InGameScreen.this);
+							}
+							else {
+								InGameScreen.currentLevel += 1;
+								InGameScreen.stateTime = 0f;
+								System.out.println("next level");
 
-							startTime = TimeUtils.millis();
+								map = new Map(map_width, map_height);
+								player.hasPlayerSpawn = false;
+								player.setPos(map.getPlayerSpawn());
 
-							map.spawnMonsters(currentLevel);
-							map.genInteractive(currentLevel, InGameScreen.this);
+								startTime = TimeUtils.millis();
 
-							game.setScreen(InGameScreen.this);
+								map.spawnMonsters(currentLevel);
+								map.genInteractive(currentLevel, InGameScreen.this);
+
+								game.setScreen(InGameScreen.this);
+							}
 						}
 					});
 				} catch (InterruptedException e) {
