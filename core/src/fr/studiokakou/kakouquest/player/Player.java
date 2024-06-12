@@ -14,7 +14,6 @@ import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.Bow;
@@ -761,7 +760,7 @@ public class Player {
             UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.14;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.12;
             if (surplus > 0){
                 this.experience = surplus;
             }

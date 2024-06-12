@@ -491,5 +491,11 @@ public class Map {
         for (Floor f : this.floors){
             f.texture.dispose();
         }
+        for (Wall w : this.walls){
+            w.texture.dispose();
+        }
+        for (Monster m : Map.monsters){
+            m.dispose();
+        }
     }
 }
