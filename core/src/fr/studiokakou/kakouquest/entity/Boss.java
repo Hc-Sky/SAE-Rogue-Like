@@ -48,7 +48,7 @@ public class Boss extends Monster {
     }
 
     @Override
-    public void move(Player player, Map map) {
+    public void move(Player player, Map map, LocalDateTime radiantTimer) {
         if (isDying || isRed || isAttacking || isHit || !player.hasPlayerSpawn) {
             return;
         }

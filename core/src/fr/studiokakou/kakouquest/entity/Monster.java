@@ -60,6 +60,8 @@ public class Monster {
     //hit vars
     public ArrayList<String> player_hitted = new ArrayList<>();
     boolean isRed;
+    boolean isRedRadiant;
+    LocalDateTime radiantStart=null;
     LocalDateTime hitStart=null;
     Animation<TextureRegion> bloodEffect;
     float bloodStateTime=0f;
@@ -199,19 +201,36 @@ public class Monster {
         }
     }
 
+    public void takeRadiantDamage(){
+
+        this.hp -= 5;
+        this.isRedRadiant = true;
+        this.radiantStart = LocalDateTime.now();
+
+        if (this.hp <= 0){
+            this.isDying=true;
+        }
+    }
+
     /**
      * Moves the monster towards the player if in detection range.
      *
      * @param player The player.
      * @param map The map.
      */
-    public void move(Player player, Map map){
+    public void move(Player player, Map map, LocalDateTime radiantTimer){
         if (isDying || isRed || !player.hasPlayerSpawn){
             return;
         }
         Point playerPos = player.pos;
         if (Utils.distance(playerPos, this.pos)<=10){
             this.attack(player);
+        }
+        if (player.isRadiant && Utils.getDistance(playerPos, this.pos) <= 36){
+            if (radiantTimer==null || radiantTimer.plusNanos(1000000000).isBefore(LocalDateTime.now())){
+                this.takeRadiantDamage();
+                player.radiantTimer = LocalDateTime.now();
+            }
         }
         if (detectPlayer(playerPos)){
             this.isRunning = true;
@@ -309,7 +328,7 @@ public class Monster {
 
         this.sprite.flip(this.isFlip, false);
 
-        if (isRed){
+        if (isRed || isRedRadiant){
             this.sprite.setColor(1, 0, 0, 1f);
         }
 
@@ -351,6 +370,10 @@ public class Monster {
             if (isDying){
                 this.isDead=true;
             }
+        }
+
+        if (this.isRedRadiant && radiantStart!=null && radiantStart.plusNanos(150000000).isBefore(LocalDateTime.now())){
+            this.isRedRadiant = false;
         }
     }
 
@@ -428,6 +451,12 @@ public class Monster {
         if (currentLevel == 1) {
             possibleMonsters.get(currentLevel).add(Boss.createSlimeBoss(currentLevel));
         }
+    }
+
+    public void dispose(){
+        this.idleAnimation = null;
+        this.runAnimation = null;
+        this.bloodEffect = null;
     }
 
     static Monster BIG_DEMON(int currentLevel){

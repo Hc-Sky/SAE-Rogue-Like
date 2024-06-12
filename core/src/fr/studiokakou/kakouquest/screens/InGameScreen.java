@@ -107,6 +107,7 @@ public class InGameScreen implements Screen {
 							InGameScreen.currentLevel += 1;
 							InGameScreen.stateTime = 0f;
 							System.out.println("next level");
+							map.dispose();
 
 							map = new Map(map_width, map_height);
 							player.hasPlayerSpawn = false;
@@ -136,7 +137,7 @@ public class InGameScreen implements Screen {
 			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
 			pm.dispose();
 
-			this.hud = new Hud(this.player, this.currentLevel,cam.zoom);
+			this.hud = new Hud(this.player, currentLevel,cam.zoom);
 
 			startTime = TimeUtils.millis();
 		    font = new BitmapFont();
@@ -238,7 +239,7 @@ public class InGameScreen implements Screen {
 
 
 		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
-			this.currentLevel=0;
+			currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();
 		}

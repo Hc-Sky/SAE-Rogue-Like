@@ -60,6 +60,12 @@ public class UpgradeCard {
                     player.indexWeapon = player.weapons.size() - 1;
                 }
                 break;
+            case "radiant":
+                player.isRadiant = true;
+                break;
+            case "xp":
+                player.xpBoost = true;
+                break;
 
         }
     }

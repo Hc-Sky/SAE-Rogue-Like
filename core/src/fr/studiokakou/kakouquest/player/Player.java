@@ -2,6 +2,7 @@ package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,7 +14,6 @@ import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.Bow;
@@ -201,6 +201,10 @@ public class Player {
 
 
     Animation<TextureRegion> bloodEffect;
+
+    Texture radiant;
+    public LocalDateTime radiantTimer;
+
     /**
      * The Blood state time.
      */
@@ -221,6 +225,8 @@ public class Player {
     //upgrade vars
     public boolean betterDurability = false;
     public boolean biggerWeapon = false;
+    public boolean isRadiant = false;
+    public boolean xpBoost = false;
 
     /**
      * Constructeur de Player.
@@ -242,6 +248,8 @@ public class Player {
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
         this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
+
+        this.radiant = new Texture("assets/effects/radiation.png");
 
         //get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
@@ -677,6 +685,10 @@ public class Player {
     public void draw(SpriteBatch batch, Map map){
 
         if (hasPlayerSpawn) {
+            if (isRadiant){
+                batch.draw(radiant, this.center().x - (float) (radiant.getWidth()*1.5) /2, this.center().y - (float) (radiant.getHeight()*1.5) /2, (float) ((float) radiant.getWidth() *1.5), (float) ((float) radiant.getHeight() *1.5));
+            }
+
             TextureRegion currentFrame;
             if (this.isRunning){
                 if (!flip && this.lastPos.x > this.pos.x){
@@ -749,7 +761,7 @@ public class Player {
             UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.2;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.12;
             if (surplus > 0){
                 this.experience = surplus;
             }
@@ -758,5 +770,8 @@ public class Player {
 
     public void gainExperience(double experience){
         this.experience += experience;
+        if (this.xpBoost){
+            this.experience += experience*0.5;
+        }
     }
 }
