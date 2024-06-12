@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -326,8 +327,9 @@ public class Map {
      * @param player the player
      */
     public void moveMonsters(Player player){
+        LocalDateTime tmpDateTime = player.radiantTimer;
         for (Monster m : Map.monsters){
-            m.move(player, this);
+            m.move(player, this, tmpDateTime);
         }
     }
 
@@ -486,8 +488,11 @@ public class Map {
      * Disposes resources.
      */
     public void dispose(){
-        for (Floor f : this.floors){
-            f.texture.dispose();
+        for (Wall w : this.walls){
+            w.texture.dispose();
+        }
+        for (Monster m : Map.monsters){
+            m.dispose();
         }
     }
 }
