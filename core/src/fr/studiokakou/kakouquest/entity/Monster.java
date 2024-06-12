@@ -446,11 +446,6 @@ public class Monster {
         possibleMonsters.get(1).add(TINY_ZOMBIE(currentLevel));
         possibleMonsters.get(4).add(WOGOL(currentLevel));
         possibleMonsters.get(13).add(Boss.createSlimeBoss(currentLevel));
-
-        // Add Slime Boss from level 8
-        if (currentLevel == 1) {
-            possibleMonsters.get(currentLevel).add(Boss.createSlimeBoss(currentLevel));
-        }
     }
 
     static Monster BIG_DEMON(int currentLevel){

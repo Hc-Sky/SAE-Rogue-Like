@@ -3,8 +3,8 @@ package fr.studiokakou.kakouquest.map;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Boss;
 import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
+import fr.studiokakou.kakouquest.map.Point;
 
 public class BossMap extends Map {
 
@@ -21,18 +21,23 @@ public class BossMap extends Map {
         this.monsters.clear();
         this.walls.clear();
 
-        Room bossRoom = new Room(10, 10, this.map_width - 10, this.map_height - 10, true);
+        // Create a large room for the boss
+        Room bossRoom = new Room(10, 10, this.map_width - 20, this.map_height - 20, true);
         this.rooms.add(bossRoom);
 
+        // Generate floors and walls for the boss room
         this.genFloors();
         this.genWalls();
 
+        // Spawn the boss monster
         this.spawnBossMonster();
     }
 
     public void spawnBossMonster() {
         Monster bossMonster = Boss.createSlimeBoss(InGameScreen.currentLevel);
-        bossMonster.place(new Point(300, 1000));
+        // Place the boss in the center of the boss room
+        Point bossSpawnPoint = new Point(600, 500);
+        bossMonster.place(bossSpawnPoint);
         this.monsters.add(bossMonster);
     }
 
@@ -67,26 +72,45 @@ public class BossMap extends Map {
     }
 
     /**
-     * Obtient le point de spawn du joueur pour la carte du boss.
+     * Obtains the player's spawn point for the boss map.
      *
-     * @return Le point de spawn du joueur pour la carte du boss
+     * @return The player's spawn point for the boss map
      */
     @Override
     public Point getPlayerSpawn() {
-        // Pour la carte du boss, nous pouvons choisir un emplacement spécifique,
-        // comme le centre de la salle du boss.
-        // Vous pouvez ajuster cette logique selon vos besoins.
-
         if (!this.rooms.isEmpty()) {
-            // Nous supposons que la salle du boss est la première salle dans la liste des salles.
-            Room bossRoom = this.rooms.get(0);
-            return new Point(300, 500);
+            // Spawn the player at the center of the boss room
+            return new Point(300,500);
         } else {
-            // Si la liste des salles est vide, nous n'avons pas de point de spawn.
-            // Vous devrez ajuster cette logique selon votre implémentation.
-            // Par exemple, vous pourriez générer une exception ou retourner un point par défaut.
-            return new Point(300, 500); // Point de spawn par défaut (300, 500)
+            // Default spawn point if no rooms are generated
+            return new Point(300, 500);
         }
     }
 
+    /**
+     * Generates floors for the boss room.
+     */
+    public void genFloors() {
+        // Iterate over the area of the boss room and set floor tiles
+        for (int x = 10; x < this.map_width - 10; x++) {
+            for (int y = 10; y < this.map_height - 10; y++) {
+                this.floors.add(new Floor(x, y));
+            }
+        }
+    }
+
+    /**
+     * Generates walls for the boss room.
+     */
+    public void genWalls() {
+        // Iterate over the boundary of the boss room and set wall tiles
+        for (int x = 9; x <= this.map_width - 9; x++) {
+            this.walls.add(new Wall(new Point(x,9), "assets/map/wall_edge_left.png"));
+            this.walls.add(new Wall(new Point(x, this.map_height - 9),"assets/map/wall_edge_left.png"));
+        }
+        for (int y = 9; y <= this.map_height - 9; y++) {
+            this.walls.add(new Wall(new Point(9, y), "assets/map/wall_edge_left.png"));
+            this.walls.add(new Wall(new Point(this.map_width - 9, y),"assets/map/wall_edge_left.png"));
+        }
+    }
 }
