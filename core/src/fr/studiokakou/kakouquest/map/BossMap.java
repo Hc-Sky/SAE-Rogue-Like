@@ -32,7 +32,7 @@ public class BossMap extends Map {
 
     public void spawnBossMonster() {
         Monster bossMonster = Boss.createSlimeBoss(InGameScreen.currentLevel);
-        bossMonster.place(this.rooms.get(0).getCenterOutOfMap());
+        bossMonster.place(new Point(300, 1000));
         this.monsters.add(bossMonster);
     }
 
@@ -80,12 +80,12 @@ public class BossMap extends Map {
         if (!this.rooms.isEmpty()) {
             // Nous supposons que la salle du boss est la première salle dans la liste des salles.
             Room bossRoom = this.rooms.get(0);
-            return bossRoom.getCenterOutOfMap();
+            return new Point(300, 500);
         } else {
             // Si la liste des salles est vide, nous n'avons pas de point de spawn.
             // Vous devrez ajuster cette logique selon votre implémentation.
             // Par exemple, vous pourriez générer une exception ou retourner un point par défaut.
-            return new Point(100, 100); // Point de spawn par défaut (0, 0)
+            return new Point(300, 500); // Point de spawn par défaut (300, 500)
         }
     }
 
