@@ -112,14 +112,9 @@ public class InGameScreen implements Screen {
 								System.out.println("boss level");
 
 								map = new BossMap(map_width,map_height);
-								System.out.println("1");
-								System.out.println("2");
 								player.hasPlayerSpawn = false;
-								System.out.println("3");
 								player.setPos(map.getPlayerSpawn());
-								System.out.println("4");
 								startTime = TimeUtils.millis();
-								System.out.println("boss spawn");
 								map.stairs = new Stairs(map.rooms.get(map.rooms.size()-1).getCenterOutOfMapPos(),InGameScreen.this);
 								game.setScreen(InGameScreen.this);
 							}

@@ -85,7 +85,7 @@ public class BossMap extends Map {
             // Si la liste des salles est vide, nous n'avons pas de point de spawn.
             // Vous devrez ajuster cette logique selon votre implémentation.
             // Par exemple, vous pourriez générer une exception ou retourner un point par défaut.
-            return new Point(0, 0); // Point de spawn par défaut (0, 0)
+            return new Point(100, 100); // Point de spawn par défaut (0, 0)
         }
     }
 
