@@ -4,11 +4,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.interactive.Chest;
 import fr.studiokakou.kakouquest.interactive.OnGroundMeleeWeapon;
+import fr.studiokakou.kakouquest.interactive.OnGroundPotion;
 import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -37,6 +39,10 @@ public class Map {
      * The list of melee weapons on the ground.
      */
     public static ArrayList<OnGroundMeleeWeapon> onGroundMeleeWeapons = new ArrayList<>();
+    /**
+     * The list of potion on the ground.
+     */
+    public static ArrayList<OnGroundPotion> onGroundPotions = new ArrayList<>();
     /**
      * The stairs of the map.
      */
@@ -197,6 +203,11 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             weapon.draw(batch);
         }
+
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            potion.draw(batch);
+        }
+
     }
 
     /**
@@ -279,7 +290,7 @@ public class Map {
         Map.monsters.clear();
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        float tmp_current_level = (float) currentLevel /3;
+        float tmp_current_level = (float) (currentLevel/1.5);
         if (tmp_current_level<1){
             tmp_current_level=1;
         }
@@ -316,8 +327,9 @@ public class Map {
      * @param player the player
      */
     public void moveMonsters(Player player){
+        LocalDateTime tmpDateTime = player.radiantTimer;
         for (Monster m : Map.monsters){
-            m.move(player, this);
+            m.move(player, this, tmpDateTime);
         }
     }
 
@@ -353,7 +365,7 @@ public class Map {
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(1, 5) == 1){
+            if (Utils.randint(1, 4) == 1){
                 if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
                     this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
                 }
@@ -382,6 +394,9 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             weapon.refreshInteract(player, weapon == closestObject);
         }
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            potion.refreshInteract(player, potion == closestObject);
+        }
     }
 
     /**
@@ -398,6 +413,9 @@ public class Map {
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             this.distances.put(Utils.getDistance(weapon.pos, player.pos), weapon);
         }
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            this.distances.put(Utils.getDistance(potion.pos, player.pos), potion);
+        }
 
         return new TreeMap<>(this.distances);
     }
@@ -406,23 +424,34 @@ public class Map {
      * Updates the removal of interactive objects.
      */
     public void updateRemoveInteractive(){
-        ArrayList<OnGroundMeleeWeapon> toRemove = new ArrayList<>();
-        ArrayList<OnGroundMeleeWeapon> toAdd = new ArrayList<>();
+        ArrayList<OnGroundMeleeWeapon> meleeWeaponsToRemove = new ArrayList<>();
+        ArrayList<OnGroundMeleeWeapon> meleeWeaponsToAdd = new ArrayList<>();
+        ArrayList<OnGroundPotion> potionsToRemove = new ArrayList<>();
+        ArrayList<OnGroundPotion> potionsToAdd = new ArrayList<>();
 
         for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
             if (weapon.toDelete){
-                toRemove.add(weapon);
+                meleeWeaponsToRemove.add(weapon);
             }
-            if (weapon.toAdd!=null){
-                toAdd.add(weapon.toAdd);
+            if (weapon.toAdd != null){
+                meleeWeaponsToAdd.add(weapon.toAdd);
             }
         }
 
-        Map.onGroundMeleeWeapons.addAll(toAdd);
-
-        for (OnGroundMeleeWeapon weapon : toRemove){
-            Map.onGroundMeleeWeapons.remove(weapon);
+        for (OnGroundPotion potion : Map.onGroundPotions){
+            if (potion.toDelete){
+                potionsToRemove.add(potion);
+            }
+            if (potion.toAdd != null){
+                potionsToAdd.add(potion.toAdd);
+            }
         }
+
+        Map.onGroundMeleeWeapons.addAll(meleeWeaponsToAdd);
+        Map.onGroundPotions.addAll(potionsToAdd);
+
+        Map.onGroundMeleeWeapons.removeAll(meleeWeaponsToRemove);
+        Map.onGroundPotions.removeAll(potionsToRemove);
     }
 
     /**

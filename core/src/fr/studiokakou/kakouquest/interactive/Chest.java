@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import fr.studiokakou.kakouquest.GetProperties;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
@@ -13,8 +13,10 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+import fr.studiokakou.kakouquest.item.Potion;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * The type Chest.
@@ -31,6 +33,12 @@ public class Chest {
      * The Melee weapon loot.
      */
     public MeleeWeapon meleeWeaponLoot;
+    /**
+     * The Potion loot.
+     */
+    public Potion potion;
+
+    public int nbArrows;
 
     boolean isOpened=false;
     boolean isOpenning = false;
@@ -79,8 +87,7 @@ public class Chest {
     /**
      * Instantiates a new Chest.
      *
-     * @param pos          the pos
-     * @param currentLevel the current level
+     * @param pos the pos
      */
     public Chest(Point pos, int currentLevel){
         this.pos = pos;
@@ -89,12 +96,14 @@ public class Chest {
         this.closed = this.openningAnimation.getKeyFrames()[0];
         this.opened = this.openningAnimation.getKeyFrames()[2];
 
-        this.interactKeyCode = GetProperties.getIntProperty("KEY_INTERRACT");
+        this.interactKeyCode = GetCoreProperties.getIntProperty("KEY_INTERRACT");
         this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
 
         this.meleeWeaponLoot = getRandomMeleeWeapon(currentLevel);
+        this.potion = generateRandomPotion();
+        this.nbArrows = Utils.randint(0, 5);
     }
 
     /**
@@ -127,7 +136,20 @@ public class Chest {
             rarityMeleeWeapon = MeleeWeapon.possibleMeleeWeapon.get(rarity);
         }
 
-        return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size()-1)).getNew();
+        return rarityMeleeWeapon.get(Utils.randint(0, rarityMeleeWeapon.size() - 1)).getNew();
+    }
+
+    /**
+     * Generates a random potion.
+     *
+     * @return the generated potion
+     */
+    public Potion generateRandomPotion() {
+        if (Utils.randint(1, 2) == 1){
+            return Potion.generateRandomPotion();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -136,6 +158,16 @@ public class Chest {
     public void dropLoot(){
         Map.onGroundMeleeWeapons.add(new OnGroundMeleeWeapon(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.meleeWeaponLoot));
     }
+
+    /**
+     * Drop an item on the ground.
+     */
+    public void dropItem(){
+        Map.onGroundPotions.add(new OnGroundPotion(this.pos.add(0, -Floor.TEXTURE_HEIGHT), this.potion));
+    }
+
+
+
 
     /**
      * Refresh interact.
@@ -153,7 +185,12 @@ public class Chest {
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.isOpened = true;
             this.dropLoot();
+            player.bow.arrowCount += this.nbArrows;
+            if (this.potion != null) {
+                this.dropItem();
+            }
         }
+
 
         if (Utils.getDistance(this.pos, player.pos) <= 40){
             this.canInteract = true;

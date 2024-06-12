@@ -30,7 +30,7 @@ public class Boss extends Monster {
     public Boss(String name, String idleAnimationPath, String runAnimationPath, String attackAnimationPath,
                 String hitAnimationPath, String deathAnimationPath, int hp, int damage, float attackPause, float speed,
                 int detectRange, int currentLevel) {
-        super(name, idleAnimationPath, runAnimationPath, hp, damage, attackPause, speed, detectRange, currentLevel);
+        super(name, idleAnimationPath, runAnimationPath, hp, damage, attackPause, speed, detectRange, currentLevel, 1000);
         this.idleAnimation = Utils.getAnimation(idleAnimationPath, 1, 6);
         this.runAnimation = Utils.getAnimation(runAnimationPath, 1, 12);
         this.attackAnimation = Utils.getAnimation(attackAnimationPath, 1, 15);
@@ -47,7 +47,7 @@ public class Boss extends Monster {
     }
 
     @Override
-    public void move(Player player, Map map) {
+    public void move(Player player, Map map, LocalDateTime radiantTimer) {
         if (isDying || isRed || isAttacking || isHit || !player.hasPlayerSpawn) {
             return;
         }

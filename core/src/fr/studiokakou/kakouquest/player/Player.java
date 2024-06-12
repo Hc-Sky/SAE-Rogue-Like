@@ -2,20 +2,27 @@ package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.item.Potion;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
+import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * le type Player.
@@ -25,46 +32,33 @@ import java.time.LocalDateTime;
  */
 public class Player {
 
-    /**
-     * la position du joueur.
-     */
-//player pos
+    //player pos
     public Point pos;
-    /**
-     * la dernière position du joueur.
-     */
     Point lastPos;
 
-    /**
-     * le nom du joueur.
-     */
-//player stats
+    //player stats
     public String name;
-    /**
-     * les points de vie.
-     */
     public int hp;
     public int max_hp;
-    /**
-     * la force.
-     */
     public int strength;
-    /**
-     * la vitesse.
-     */
     public float speed;
-    /**
-     * la stamina.
-     */
     public float stamina;
     public int max_stamina;
+    public int playerLevel;
+    public double experience;
+    public double experienceToNextLevel;
 
-    /**
-     * l'arme actuelle.
-     */
-//weapon
+    //player weapons
     public MeleeWeapon currentWeapon;
+    public MeleeWeapon defaultWeapon;
+    public ArrayList<MeleeWeapon> weapons = new ArrayList<>(3);
+    public int indexWeapon = -1;
 
+    //player bow
+    public Bow bow;
+
+//potion
+    public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
     /**
      * si le joueur est en train de dash.
      */
@@ -208,6 +202,10 @@ public class Player {
 
 
     Animation<TextureRegion> bloodEffect;
+
+    Texture radiant;
+    public LocalDateTime radiantTimer;
+
     /**
      * The Blood state time.
      */
@@ -223,6 +221,13 @@ public class Player {
      */
     FRAME_ROWS = 4;
 
+    private String selectedAvatarTexture;
+
+    //upgrade vars
+    public boolean betterDurability = false;
+    public boolean biggerWeapon = false;
+    public boolean isRadiant = false;
+
     /**
      * Constructeur de Player.
      * Sert à créer un objet Player.
@@ -231,17 +236,20 @@ public class Player {
      * @param name  the name
      */
 
-    public Player(Point spawn,String name){
+    public Player(Point spawn,String name, String selectedAvatarTexture){
 
         this.name = name;
+        this.selectedAvatarTexture = selectedAvatarTexture;
 
-        //player animations
-        this.idleAnimation = Utils.getAnimation("assets/player/knight_1_idle.png", FRAME_COLS, FRAME_ROWS);
-        this.runAnimation = Utils.getAnimation("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
-        this.runAnimationRevert =  Utils.getAnimationRevert("assets/player/knight_1_run.png", FRAME_COLS, FRAME_ROWS);
+        // player animations avec l'avatar sélectionné
+        this.idleAnimation = Utils.getAnimation("assets/entities/" + selectedAvatarTexture + "_idle.png", FRAME_COLS, FRAME_ROWS);
+        this.runAnimation = Utils.getAnimation("assets/entities/" + selectedAvatarTexture + "_run.png", FRAME_COLS, FRAME_ROWS);
+        this.runAnimationRevert = Utils.getAnimationRevert("assets/entities/" + selectedAvatarTexture + "_run.png", FRAME_COLS, FRAME_ROWS);
         this.dashAnimation = Utils.getAnimation("assets/effects/dash.png", FRAME_COLS, 5, 0.07f);
         this.spawnAnimation = Utils.getAnimation("assets/effects/player_spawn.png", 1, 16, 0.06f);
         this.bloodEffect = Utils.getAnimation("assets/effects/blood.png", 6, 4, 0.02f);
+
+        this.radiant = new Texture("assets/effects/radiation.png");
 
         //get player texture height and width
         this.texture_width = Utils.getAnimationWidth(this.idleAnimation);
@@ -259,9 +267,19 @@ public class Player {
         this.speed=40f;
         this.max_stamina=100;
         this.stamina = 100;
+        this.playerLevel = 1;
+        this.experience = 0;
+        this.experienceToNextLevel = 60;
 
         //default weapon
-        this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.defaultWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.currentWeapon = defaultWeapon;
+        //default potion
+        this.potions = new HashMap<>();
+
+        //bow
+        this.bow = new Bow(this);
+
     }
 
     /**
@@ -277,15 +295,15 @@ public class Player {
      */
     public void playerDeath(){
         //default values
-        this.max_hp=100;
-        this.hp=100;
-        this.strength=10;
-        this.speed=40f;
-        this.max_stamina=100;
-        this.stamina = 100;
+        this.hp=max_hp;
+        this.stamina = max_stamina;
+        this.indexWeapon = -1;
 
         //default weapon
         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+        this.weapons.clear();
+        //default potion
+        this.potions.clear();
     }
 
     /**
@@ -360,8 +378,21 @@ public class Player {
     public void dash(Map map){    //used for the dash animation
         if (this.isDashing){
             if (this.dashFinalPoint == null && this.dashOrientation==null){
-                Point mousePos = Utils.mousePosUnproject(Camera.camera);
-                this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
+
+                Point direction = new Point(0, 0);
+                if (Gdx.input.isKeyPressed(Keybinds.UP_KEY)){
+                    direction = direction.add(0, 1);
+                } else if (Gdx.input.isKeyPressed(Keybinds.DOWN_KEY)){
+                    direction = direction.add(0, -1);
+                } if (Gdx.input.isKeyPressed(Keybinds.LEFT_KEY)){
+                    direction = direction.add(-1, 0);
+                } else if (Gdx.input.isKeyPressed(Keybinds.RIGHT_KEY)){
+                    direction = direction.add(1, 0);
+                }
+
+                //Point mousePos = Utils.mousePosUnproject(Camera.camera);
+                //this.dashFinalPoint = Utils.getPointDirection(this.pos, mousePos, Player.DASH_DISTANCE);
+                this.dashFinalPoint = this.pos.add(direction.mult(Player.DASH_DISTANCE));
                 this.dashStartPoint = this.pos;
                 this.dashOrientation = Point.getOrientation(this.pos, this.dashFinalPoint);
                 this.dashTimer = LocalDateTime.now();
@@ -412,6 +443,16 @@ public class Player {
     }
 
     /**
+     * Définit l'arme actuelle à l'index spécifié dans la liste currentWeapons.
+     *
+     * @param weapon la nouvelle arme à définir
+     */
+    public void setCurrentWeapon(MeleeWeapon weapon) {
+            currentWeapon = weapon;
+    }
+
+
+    /**
      * Permet de faire attaquer le joueur.
      */
     public void attack() {
@@ -435,8 +476,8 @@ public class Player {
         if (this.staminaTimer==null || this.staminaTimer.plusSeconds(5).isBefore(LocalDateTime.now())){
             if (this.stamina < this.max_stamina){
                 this.stamina = this.stamina + 20*Gdx.graphics.getDeltaTime();
-                if (this.stamina>100){
-                    this.stamina=100;
+                if (this.stamina>max_stamina){
+                    this.stamina=max_stamina;
                 }
             }
         }
@@ -453,9 +494,14 @@ public class Player {
             if (meleeWeaponRectangle.overlaps(mRectangle)){
                 boolean damaged = m.hit(this);
                 if (damaged){
-                    this.currentWeapon.resistance-=1;
+                    this.currentWeapon.resistance -= 1;
+                    if (this.betterDurability){
+                        if (Utils.randint(1, 2)==1){
+                            this.currentWeapon.resistance += 1;
+                        }
+                    }
                     System.out.println(this.currentWeapon.resistance);
-                    if (currentWeapon.resistance<=0 && currentWeapon.resistance>-100){
+                    if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
                     }
                 }
@@ -474,6 +520,10 @@ public class Player {
 
             this.currentWeapon.sprite.setPosition(this.attackPos.x-this.currentWeapon.width/2, this.attackPos.y);
             this.currentWeapon.sprite.setRotation(this.attackRotation-90f);
+
+            if (biggerWeapon){
+                this.currentWeapon.sprite.setSize((float) (this.currentWeapon.width*1.5), (float) (this.currentWeapon.height*1.5));
+            }
 
             this.currentWeapon.sprite.draw(batch);
 
@@ -521,7 +571,109 @@ public class Player {
                 this.isRunning=false;
             } if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
                 this.attack();
+            } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+                if (!bow.isLoading && !bow.isLoaded){
+                    bow.startAttack();
+                }
+            } else {
+                this.bow.isLoading = false;
+                if (this.bow.isLoaded){
+                    bow.attack();
+                }
             }
+        }
+    }
+
+    /**
+     * Permet de récupérer le choix de l'arme du joueur.
+     *
+     */
+    public void getKeyboardWeapon() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+            setCurrentWeapon(defaultWeapon);
+            indexWeapon = -1;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            if (weapons.size() >= 1) {
+                setCurrentWeapon(weapons.get(0));
+                indexWeapon = 0;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            if (weapons.size() >= 2) {
+                setCurrentWeapon(weapons.get(1));
+                indexWeapon = 1;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (weapons.size() >= 3) {
+                setCurrentWeapon(weapons.get(2));
+                indexWeapon = 2;
+            }
+        }
+    }
+
+    /**
+     * Permet de récupérer le choix de l'utilisation des potions.
+     */
+    public void getKeyboardPotion() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            usePotion(Potion.PotionType.HEALTH);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            usePotion(Potion.PotionType.STAMINA);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            usePotion(Potion.PotionType.STRENGTH);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            usePotion(Potion.PotionType.SPEED);
+        }
+    }
+
+    /**
+     * Permet d'utiliser les potions
+     */
+    public void usePotion(Potion.PotionType type) {
+        if (potions.containsKey(type)) {
+            int potionCount = potions.get(type);
+            if (potionCount >= 1) {
+                potions.put(type, potionCount - 1);
+                applyEffect(type);
+            }
+        }
+    }
+
+    /**
+     * Effet de la potion
+     * @param type
+     */
+    private void applyEffect(Potion.PotionType type) {
+        switch (type) {
+            case HEALTH:
+                this.hp = Math.min(this.hp + 50, 100);
+                break;
+            case STAMINA:
+                this.stamina = Math.min(this.stamina + 50, 100);
+                break;
+            case STRENGTH:
+                this.strength *= 2;
+                // Lancer un thread pour annuler l'effet après 30 secondes
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        this.strength /= 2;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
+            case SPEED:
+                this.speed *= 2;
+                // Lancer un thread pour annuler l'effet après 30 secondes
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        this.speed /= 2;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
         }
     }
 
@@ -530,9 +682,13 @@ public class Player {
      *
      * @param batch the batch
      */
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch, Map map){
 
         if (hasPlayerSpawn) {
+            if (isRadiant){
+                batch.draw(radiant, this.center().x - (float) (radiant.getWidth()*1.5) /2, this.center().y - (float) (radiant.getHeight()*1.5) /2, (float) ((float) radiant.getWidth() *1.5), (float) ((float) radiant.getHeight() *1.5));
+            }
+
             TextureRegion currentFrame;
             if (this.isRunning){
                 if (!flip && this.lastPos.x > this.pos.x){
@@ -586,6 +742,8 @@ public class Player {
         if (!this.canAttack) {
             this.showAttack(batch);
         }
+
+        bow.draw(batch, map);
     }
 
     /**
@@ -595,5 +753,22 @@ public class Player {
     public void takeDamage(int damage){
         this.hp -= damage;
         this.bloodStateTime=0f;
+    }
+
+    public void checkUpgrade(){
+        if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
+            this.playerLevel += 1;
+            UpgradeCardScreen.upgrade(this);
+            double surplus = this.experience - this.experienceToNextLevel;
+            this.experience = 0;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.14;
+            if (surplus > 0){
+                this.experience = surplus;
+            }
+        }
+    }
+
+    public void gainExperience(double experience){
+        this.experience += experience;
     }
 }

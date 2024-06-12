@@ -1,12 +1,15 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.screens.SplashScreen;
+import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.*;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -20,6 +23,8 @@ public class GameSpace extends Game {
 	 * Le SpriteBatch pour dessiner les éléments de l'HUD (interface utilisateur).
 	 */
 	public SpriteBatch hudBatch;
+
+	public SpriteBatch upgradeBatch;
 	/**
 	 * Le temps de démarrage de l'application.
 	 */
@@ -33,6 +38,13 @@ public class GameSpace extends Game {
 
 	public BitmapFont font;
 
+	public Screen previousScreen;
+	private Player player;
+
+	private PauseScreen pauseScreen;
+	private boolean paused;
+
+
 
 	/**
 	 * Méthode appelée lors de la création de l'application.
@@ -44,10 +56,14 @@ public class GameSpace extends Game {
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
+		upgradeBatch = new SpriteBatch();
+		pauseScreen = new PauseScreen(this);
 		startTime = TimeUtils.millis();
-
-		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage)
-		this.setScreen(new InGameScreen(this));
+		//Le initialize sert juste pour le HelpScreen pour les fonts
+		initialize();
+		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
+		this.setScreen(new MenuScreen(this));
+		paused = false;
 	}
 
 	/**
@@ -76,5 +92,37 @@ public class GameSpace extends Game {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
+	}
+
+	public void initialize() {
+		font = new BitmapFont();
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void removeAvatarChoiceScreen() {
+		screen.dispose(); // Libère les ressources de l'écran de sélection d'avatar
+		screen = null; // Définit l'écran de sélection d'avatar comme nul
+	}
+	public InGameScreen getInGameScreen() {
+		return (InGameScreen) this.getScreen();
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
+	public void setPreviousScreen(Screen screen) {
+		this.previousScreen = screen;
 	}
 }
