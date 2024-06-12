@@ -62,6 +62,10 @@ public class UpgradeCard {
                 break;
             case "radiant":
                 player.isRadiant = true;
+                break;
+            case "xp":
+                player.xpBoost = true;
+                break;
 
         }
     }

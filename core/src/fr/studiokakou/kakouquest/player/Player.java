@@ -226,6 +226,7 @@ public class Player {
     public boolean betterDurability = false;
     public boolean biggerWeapon = false;
     public boolean isRadiant = false;
+    public boolean xpBoost = false;
 
     /**
      * Constructeur de Player.
@@ -769,5 +770,8 @@ public class Player {
 
     public void gainExperience(double experience){
         this.experience += experience;
+        if (this.xpBoost){
+            this.experience += experience*0.5;
+        }
     }
 }
