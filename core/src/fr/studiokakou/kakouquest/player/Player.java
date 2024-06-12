@@ -765,12 +765,16 @@ public class Player {
         return currentWeapon;
     }
 
-    public MeleeWeapon getCurrentPotion() {
-        return currentWeapon;
-    }
-
     public int getPlayerLevel() {
         return playerLevel;
+    }
+
+    public double getExperience() {
+        return experience;
+    }
+
+    public double getExperienceToNextLevel() {
+        return experienceToNextLevel;
     }
 
     //potions
@@ -782,4 +786,52 @@ public class Player {
     public ArrayList<MeleeWeapon> getWeapons() {
         return weapons;
     }
+
+
+
+    //setters
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setMax_hp(int max_hp) {
+        this.max_hp = max_hp;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public void setStamina(float stamina) {
+        this.stamina = stamina;
+    }
+
+    public void setMax_stamina(int max_stamina) {
+        this.max_stamina = max_stamina;
+    }
+
+    public void setPlayerLevel(int playerLevel) {
+        this.playerLevel = playerLevel;
+    }
+
+    public void setPotions(HashMap<Potion.PotionType, Integer> potions) {
+        this.potions = potions;
+    }
+
+    public void setWeapons(ArrayList<MeleeWeapon> weapons) {
+        this.weapons = weapons;
+    }
+
+    public void setExperience(double experience) {
+        this.experience = experience;
+    }
+
+    public void setExperienceToNextLevel(double experienceToNextLevel) {
+        this.experienceToNextLevel = experienceToNextLevel;
+    }
+
 }

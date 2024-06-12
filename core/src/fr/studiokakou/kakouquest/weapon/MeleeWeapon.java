@@ -18,8 +18,8 @@ public class MeleeWeapon {
 
 	//weapon texture
 	public String texturePath;
-	public Texture texture;
-	public Sprite sprite;
+	public transient Texture texture;
+	public transient Sprite sprite;
 
 	//weapon stats
 	public int damage;
@@ -58,6 +58,26 @@ public class MeleeWeapon {
 		//weapon texture
 		this.texturePath = texturePath;
 		this.texture = new Texture(texturePath);
+		this.sprite = new Sprite(this.texture);
+		this.sprite.setScale(this.size);
+		this.height = this.sprite.getHeight();
+		this.width = this.sprite.getWidth();
+		this.sprite.setOrigin(this.width/2, 0);
+		this.sprite.flip(true, false);
+	}
+
+	public MeleeWeapon(MeleeWeapon meleeWeapon) {
+		this.name = meleeWeapon.name;
+		this.damage = meleeWeapon.damage;
+		this.maxResistance = meleeWeapon.maxResistance;
+		this.resistance = meleeWeapon.resistance;
+		this.attackRange = meleeWeapon.attackRange;
+		this.attackSpeed = meleeWeapon.attackSpeed;
+		this.size = meleeWeapon.size;
+
+		//weapon texture
+		this.texturePath = meleeWeapon.texturePath;
+		this.texture = new Texture(meleeWeapon.texturePath);
 		this.sprite = new Sprite(this.texture);
 		this.sprite.setScale(this.size);
 		this.height = this.sprite.getHeight();
@@ -180,4 +200,60 @@ public class MeleeWeapon {
 				return 0;
 		}
 	}
+
+	//getter
+
+	public String getName() {
+		return name;
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public int getResistance() {
+		return resistance;
+	}
+
+	public float getAttackRange() {
+		return attackRange;
+	}
+
+	public float getAttackSpeed() {
+		return attackSpeed;
+	}
+
+	public float getSize() {
+		return size;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public Texture getTexture() {
+		return texture;
+	}
+
+	public Sprite getSprite() {
+		return sprite;
+	}
+
+	public int getMaxResistance() {
+		return maxResistance;
+	}
+
+	//get durability
+	public int getDurability() {
+		return resistance;
+	}
+
+
+
+
+
 }

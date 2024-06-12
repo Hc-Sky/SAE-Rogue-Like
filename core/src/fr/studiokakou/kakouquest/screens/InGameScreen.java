@@ -88,6 +88,40 @@ public class InGameScreen implements Screen {
 		countdownTextures[1] = new Texture("assets/window/2.png");
 		countdownTextures[2] = new Texture("assets/window/1.png");
 		background = new Texture("assets/window/settings_background.png");
+
+		player.setHp(GetCoreProperties.loadPlayerStats("playerHP"));
+		player.setMax_hp(GetCoreProperties.loadPlayerStats("playerMaxHp"));
+		player.setStamina(GetCoreProperties.loadPlayerStats("playerStamina"));
+		player.setMax_stamina(GetCoreProperties.loadPlayerStats("playerMaxStamina"));
+		player.setPlayerLevel(GetCoreProperties.loadPlayerStats("playerLevel"));
+		player.setStrength(GetCoreProperties.loadPlayerStats("playerStrength"));
+		player.setSpeed(GetCoreProperties.loadPlayerStats("playerSpeed"));
+		player.setExperience(GetCoreProperties.loadPlayerStats("playerXp"));
+		player.setExperienceToNextLevel(GetCoreProperties.loadPlayerStats("playerXpToNextLevel"));
+		if (GetCoreProperties.loadMeleeWeaponFromJson("SaveCurrentWeapon.json") == null) {
+			player.setCurrentWeapon(MeleeWeapon.RUSTY_SWORD());
+		} else {
+			player.setCurrentWeapon(new MeleeWeapon(GetCoreProperties.loadMeleeWeaponFromJson("SaveCurrentWeapon.json")));
+		}
+
+		for (int i = 0; i < 3 ; i++) {
+			GetCoreProperties.loadMeleeWeaponFromJson("playerWeapons" + i + ".json");
+		}
+		for (int i = 0; i < 4; i++) {
+			GetCoreProperties.loadPlayerStats("playerPotions" + i);
+		}
+
+		System.out.println("HP: " + player.getHp());
+		System.out.println("Max HP: " + player.getMax_hp());
+		System.out.println("Stamina: " + player.getStamina());
+		System.out.println("Max Stamina: " + player.getMax_stamina());
+		System.out.println("Level: " + currentLevel);
+		System.out.println("Strength: " + player.getStrength());
+		System.out.println("Speed: " + player.getSpeed());
+		System.out.println("XP: " + player.getExperience());
+		System.out.println("XP to next level: " + player.getExperienceToNextLevel());
+  		System.out.println("Current weapon: " + player.getCurrentWeapon().getName());
+
 	}
 
 	/**
@@ -172,20 +206,22 @@ public class InGameScreen implements Screen {
 			GetCoreProperties.savePlayerStats("playerMaxHp", player.getMax_hp());
 			GetCoreProperties.savePlayerStats("playerStamina", (int) player.getStamina());
 			GetCoreProperties.savePlayerStats("playerMaxStamina", player.getMax_stamina());
-			GetCoreProperties.savePlayerStats("playerLevel", currentLevel);
+			GetCoreProperties.savePlayerStats("playerLevel", player.getPlayerLevel());
 			GetCoreProperties.savePlayerStats("playerStrength", player.getStrength());
 			GetCoreProperties.savePlayerStats("playerSpeed", (int) player.getSpeed());
-			GetCoreProperties.savePlayerStats("playerCurrentWeapon", player.getCurrentWeapon().getId());
-			GetCoreProperties.savePlayerStats("playerCurrentPotion", player.getCurrentPotion().getId());
-			System.out.println(player.getWeapons().size());
-			System.out.println(player.getPotions().size());
+			GetCoreProperties.savePlayerStats("playerXp", (int) player.getExperience());
+			GetCoreProperties.savePlayerStats("playerXpToNextLevel", (int) player.getExperienceToNextLevel());
+			GetCoreProperties.saveMeleeWeaponToJson(player.getCurrentWeapon(), "SaveCurrentWeapon.json");
 			//weapons
 			for (int i = 0; i < player.getWeapons().size(); i++) {
-				GetCoreProperties.savePlayerStats("playerWeapon" + i, player.getWeapons().get(i).getId());
+				GetCoreProperties.saveMeleeWeaponToJson(player.getWeapons().get(i), "playerWeapons" + i + ".json");
 			}
-			//potions
+			//potions hash map
 			for (int i = 0; i < player.getPotions().size(); i++) {
-				GetCoreProperties.savePlayerStats("playerPotion" + i, player.getPotions().get(i));
+				Integer potion = player.getPotions().get(i);
+				if (potion != null) {
+					GetCoreProperties.savePlayerStats("playerPotions" + i, potion);
+				}
 			}
 			game.previousScreen = this;
 			game.setScreen(new PauseScreen(game));

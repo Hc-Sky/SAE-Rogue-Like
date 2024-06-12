@@ -53,22 +53,6 @@ public class GameSpace extends Game {
 	public void create() {
 		// Mise à jour des raccourcis clavier
 		Keybinds.updateKeys();
-		GetCoreProperties.loadPlayerStats("playerHP");
-		GetCoreProperties.loadPlayerStats("playerMaxHP");
-		GetCoreProperties.loadPlayerStats("playerStamina");
-		GetCoreProperties.loadPlayerStats("playerMaxStamina");
-		GetCoreProperties.loadPlayerStats("playerLevel");
-		GetCoreProperties.loadPlayerStats("playerStrength");
-		GetCoreProperties.loadPlayerStats("playerSpeed");
-		GetCoreProperties.loadPlayerStats("playerCurrentWeapon");
-		GetCoreProperties.loadPlayerStats("playerCurrentPotion");
-		for (int i = 0; i < 3 ; i++) {
-			GetCoreProperties.loadPlayerStats("playerWeapon" + i);
-		}
-		for (int i = 0; i < 4; i++) {
-			GetCoreProperties.loadPlayerStats("playerPotion" + i);
-		}
-
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
 		upgradeBatch = new SpriteBatch();
