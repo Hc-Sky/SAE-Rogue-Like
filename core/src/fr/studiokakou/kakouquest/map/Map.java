@@ -488,9 +488,6 @@ public class Map {
      * Disposes resources.
      */
     public void dispose(){
-        for (Floor f : this.floors){
-            f.texture.dispose();
-        }
         for (Wall w : this.walls){
             w.texture.dispose();
         }
