@@ -17,12 +17,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Build
-        run: mvn --batch-mode -DskipTests package
-
-      - name: Test
-        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
-
       - name: Test functions
         run: |
           cd core/src
