@@ -453,6 +453,12 @@ public class Monster {
         }
     }
 
+    public void dispose(){
+        this.idleAnimation = null;
+        this.runAnimation = null;
+        this.bloodEffect = null;
+    }
+
     static Monster BIG_DEMON(int currentLevel){
         return new Monster("Big Demon", "assets/entities/big_demon_idle.png", "assets/entities/big_demon_run.png", 400, 25, 1200, 40f, 150, currentLevel, 280);
     }
