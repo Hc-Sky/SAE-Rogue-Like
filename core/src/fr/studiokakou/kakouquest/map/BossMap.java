@@ -1,8 +1,10 @@
 package fr.studiokakou.kakouquest.map;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Boss;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.map.Point;
 
@@ -22,12 +24,32 @@ public class BossMap extends Map {
         this.walls.clear();
 
         // Create a large room for the boss
-        Room bossRoom = new Room(10, 10, this.map_width - 20, this.map_height - 20, true);
+        Room bossRoom = new Room(100, 300, this.map_width - 50, this.map_height - 50, true);
         this.rooms.add(bossRoom);
 
         // Generate floors and walls for the boss room
-        this.genFloors();
-        this.genWalls();
+        // Generate a 30x30 square of floors starting from (100, 100)
+        int startX = 100;
+        int startY = 100;
+        int size = 300;
+
+        for (int x = startX; x < startX + size; x++) {
+            for (int y = startY; y < startY + size; y++) {
+                this.floors.add(new Floor(x, y));
+            }
+        }
+
+        // Top and Bottom walls
+        for (int x = startX; x < startX + size; x++) {
+            this.walls.add(new Wall(new Point(x, startY - 1), "assets/map/wall_left.png")); // Top wall
+            this.walls.add(new Wall(new Point(x, startY + size), "assets/map/wall_mid.png")); // Bottom wall
+        }
+
+        // Left and Right walls
+        for (int y = startY; y < startY + size; y++) {
+            this.walls.add(new Wall(new Point(startX - 1, y), "assets/map/wall_edge_left.png")); // Left wall
+            this.walls.add(new Wall(new Point(startX + size, y), "assets/map/wall_edge_right.png")); // Right wall
+        }
 
         // Spawn the boss monster
         this.spawnBossMonster();
@@ -36,16 +58,20 @@ public class BossMap extends Map {
     public void spawnBossMonster() {
         Monster bossMonster = Boss.createSlimeBoss(InGameScreen.currentLevel);
         // Place the boss in the center of the boss room
-        Point bossSpawnPoint = new Point(600, 500);
+        Point bossSpawnPoint = new Point(200, 200);
         bossMonster.place(bossSpawnPoint);
         this.monsters.add(bossMonster);
     }
 
     @Override
     public void drawMap(SpriteBatch batch) {
-        super.drawMap(batch);
-        // Additional drawing for boss map (e.g., boss room indicators)
-        // Add your additional drawing code here
+        for (Floor f : this.floors){
+            batch.draw(f.texture, f.pos.x, f.pos.y);
+        }
+
+        for (Wall w : this.walls){
+            w.draw(batch);
+        }
     }
 
     @Override
@@ -80,10 +106,10 @@ public class BossMap extends Map {
     public Point getPlayerSpawn() {
         if (!this.rooms.isEmpty()) {
             // Spawn the player at the center of the boss room
-            return new Point(300,500);
+            return new Point(100,105);
         } else {
             // Default spawn point if no rooms are generated
-            return new Point(300, 500);
+            return new Point(100, 105);
         }
     }
 

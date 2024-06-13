@@ -16,6 +16,7 @@ import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Map;
+import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
@@ -117,7 +118,7 @@ public class InGameScreen implements Screen {
 
 								startTime = TimeUtils.millis();
 
-								map.stairs = new Stairs(map.rooms.get(map.rooms.size()-1).getCenterOutOfMapPos(),InGameScreen.this);
+								map.stairs = new Stairs(new Point(150,150),InGameScreen.this);
 
 								game.setScreen(InGameScreen.this);
 							}
@@ -222,6 +223,7 @@ public class InGameScreen implements Screen {
 		batch.setProjectionMatrix(Camera.camera.combined);
 
 		batch.begin();
+		map.drawMap(batch);
 
 		this.map.drawMap(this.batch);
 		this.map.drawInteractive(this.batch);
