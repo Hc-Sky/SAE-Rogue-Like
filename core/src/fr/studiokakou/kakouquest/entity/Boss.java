@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
@@ -44,6 +45,19 @@ public class Boss extends Monster {
         this.deathAnimation = new Animation<>(DEATH_ANIMATION_DURATION / deathFrameCount, Utils.getAnimation(deathAnimationPath, 1, deathFrameCount).getKeyFrames());
 
         this.sprite = new Sprite(idleAnimation.getKeyFrame(0)); // Initialiser le sprite avec la première frame de l'animation idle
+    }
+
+    @Override
+    public boolean canMove(Point orientation, Map map){
+        Point newPos = this.pos.add(orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
+        Point hitboxTopLeft = newPos.add(this.width-280, this.height-150);
+        Point hitboxBottomLeft = newPos.add(this.width-280, 50);
+        Point hitboxTopRight = newPos.add(this.width-200, this.height-150);
+        Point hitboxBottomRight = newPos.add(this.width-200, 50);
+
+        Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
+
+        return map.arePointsOnFloor(points);
     }
 
     @Override
@@ -95,6 +109,8 @@ public class Boss extends Monster {
         } else if (isAttacking) {
             attackStateTime += Gdx.graphics.getDeltaTime();
             currentFrame = this.attackAnimation.getKeyFrame(attackStateTime, false);
+            System.out.println(this.width);
+            System.out.println(this.height);
             if (this.attackAnimation.isAnimationFinished(attackStateTime)) {
                 this.isAttacking = false;
             }
@@ -156,6 +172,6 @@ public class Boss extends Monster {
                 "assets/entities/slime_boss_attack.png",
                 "assets/entities/slime_boss_hit.png",
                 "assets/entities/slime_boss_death.png",
-                2000, 50, 300, 30f, 150, currentLevel); // Réduire attackPause à 500 ms pour des attaques plus fréquentes
+                2000, 50, 300, 30f, 200, currentLevel); // Réduire attackPause à 500 ms pour des attaques plus fréquentes
     }
 }
