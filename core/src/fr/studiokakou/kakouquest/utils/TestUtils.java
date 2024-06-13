@@ -9,7 +9,6 @@ public class TestUtils {
 
         float speed = 2.0f;
 
-        assert Utils.getPointDirection(p1, p2, speed).equals(new Point((float) 1.8944272, (float) 1)) : "Not the correct resul point";
-
+        assert Utils.getPointDirection(p1, p2, speed).equals(new Point((float) 1.8944272, (float) 3.7888544)) : "Not the correct result point";
     }
 }
