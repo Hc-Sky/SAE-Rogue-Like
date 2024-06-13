@@ -19,7 +19,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          ./gradlew build
+          ./core/gradlew build
 
       - name: Run TestUtils main class
-        run: java -cp core/build/classes/java/main fr.studiokakou.kakouquest.utils.TestUtils
+        run: java -ea -cp core/build/classes/java/main fr.studiokakou.kakouquest.utils.TestUtils
