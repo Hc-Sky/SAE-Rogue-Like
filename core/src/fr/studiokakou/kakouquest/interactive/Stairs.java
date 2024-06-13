@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GetCoreProperties;
+import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
@@ -63,15 +64,30 @@ public class Stairs {
      * @param isClosest Indique si le joueur est le plus proche des escaliers.
      */
     public void refreshInteract(Player player, boolean isClosest){
+        boolean canInteractNow = canInteract();
 
-        if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
+        if (canInteractNow && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.interact();
         }
 
         if (Utils.getDistance(this.pos, player.pos) <= 40 &&  isClosest){
-            this.canInteract = true;
+            this.canInteract = canInteractNow;
         } else {
             this.canInteract = false;
+        }
+    }
+
+    /**
+     * Vérifie si le joueur peut interagir avec les escaliers.
+     * Le joueur peut interagir si le niveau actuel n'est pas un multiple de 5,
+     * ou si c'est un multiple de 5 et que le boss de la BossMap est vaincu.
+     */
+    private boolean canInteract() {
+        int currentLevel = this.gameScreen.currentLevel;
+        if (currentLevel % 5 == 0) {
+            return BossMap.isBossDefeated();
+        } else {
+            return true;
         }
     }
 
@@ -87,7 +103,7 @@ public class Stairs {
      * @param batch Batch pour dessiner les textures.
      */
     public void draw(SpriteBatch batch){
-        if (canInteract){
+        if (canInteract()){
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
             batch.draw(currentKeyFrame, this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
         }

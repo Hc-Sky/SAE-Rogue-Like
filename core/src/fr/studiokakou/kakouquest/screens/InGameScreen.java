@@ -118,7 +118,7 @@ public class InGameScreen implements Screen {
 
 								startTime = TimeUtils.millis();
 
-								map.stairs = new Stairs(new Point(240,550),InGameScreen.this);
+								map.stairs = new Stairs(new Point(240,610),InGameScreen.this);
 
 								game.setScreen(InGameScreen.this);
 							}
