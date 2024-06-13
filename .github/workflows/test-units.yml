@@ -22,4 +22,5 @@ jobs:
 
       - name: Test functions
         run: |
+          ls -a
           java -ea -cp core/src fr.studiokakou.kakouquest.utils.TestUtils
