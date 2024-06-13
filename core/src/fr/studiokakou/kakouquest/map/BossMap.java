@@ -1,12 +1,9 @@
 package fr.studiokakou.kakouquest.map;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Boss;
 import fr.studiokakou.kakouquest.entity.Monster;
-import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.map.Point;
 
 public class BossMap extends Map {
 
@@ -16,40 +13,14 @@ public class BossMap extends Map {
     }
 
     public void generateBossRoom() {
-        this.floors.clear();
         this.bridges.clear();
         this.rooms.clear();
         this.chests.clear();
-        this.monsters.clear();
-        this.walls.clear();
+        monsters.clear();
 
         // Create a large room for the boss
-        Room bossRoom = new Room(100, 300, this.map_width - 50, this.map_height - 50, true);
+        Room bossRoom = new Room(0, 0, 15, 15, true);
         this.rooms.add(bossRoom);
-
-        // Generate floors and walls for the boss room
-        // Generate a 30x30 square of floors starting from (100, 100)
-        int startX = 100;
-        int startY = 100;
-        int size = 300;
-
-        for (int x = startX; x < startX + size; x++) {
-            for (int y = startY; y < startY + size; y++) {
-                this.floors.add(new Floor(x, y));
-            }
-        }
-
-        // Top and Bottom walls
-        for (int x = startX; x < startX + size; x++) {
-            this.walls.add(new Wall(new Point(x, startY - 1), "assets/map/wall_left.png")); // Top wall
-            this.walls.add(new Wall(new Point(x, startY + size), "assets/map/wall_mid.png")); // Bottom wall
-        }
-
-        // Left and Right walls
-        for (int y = startY; y < startY + size; y++) {
-            this.walls.add(new Wall(new Point(startX - 1, y), "assets/map/wall_edge_left.png")); // Left wall
-            this.walls.add(new Wall(new Point(startX + size, y), "assets/map/wall_edge_right.png")); // Right wall
-        }
 
         // Spawn the boss monster
         this.spawnBossMonster();
@@ -58,20 +29,9 @@ public class BossMap extends Map {
     public void spawnBossMonster() {
         Monster bossMonster = Boss.createSlimeBoss(InGameScreen.currentLevel);
         // Place the boss in the center of the boss room
-        Point bossSpawnPoint = new Point(200, 200);
+        Point bossSpawnPoint = new Point(300, 300); // Adjust to the center of the room
         bossMonster.place(bossSpawnPoint);
-        this.monsters.add(bossMonster);
-    }
-
-    @Override
-    public void drawMap(SpriteBatch batch) {
-        for (Floor f : this.floors){
-            batch.draw(f.texture, f.pos.x, f.pos.y);
-        }
-
-        for (Wall w : this.walls){
-            w.draw(batch);
-        }
+        monsters.add(bossMonster);
     }
 
     @Override
@@ -89,7 +49,7 @@ public class BossMap extends Map {
     }
 
     public boolean isBossDefeated() {
-        for (Monster monster : this.monsters) {
+        for (Monster monster : monsters) {
             if (monster instanceof Boss && monster.isDead) {
                 return true; // Boss monster is defeated
             }
@@ -106,10 +66,10 @@ public class BossMap extends Map {
     public Point getPlayerSpawn() {
         if (!this.rooms.isEmpty()) {
             // Spawn the player at the center of the boss room
-            return new Point(100,105);
+            return new Point(150, 150); // Adjust to the center of the room
         } else {
             // Default spawn point if no rooms are generated
-            return new Point(100, 105);
+            return new Point(150, 150); // Adjust to a default point
         }
     }
 
@@ -118,10 +78,18 @@ public class BossMap extends Map {
      */
     public void genFloors() {
         // Iterate over the area of the boss room and set floor tiles
-        for (int x = 10; x < this.map_width - 10; x++) {
-            for (int y = 10; y < this.map_height - 10; y++) {
+        for (int x = 0; x < 30; x++) {
+            for (int y = 0; y < 30; y++) {
                 this.floors.add(new Floor(x, y));
             }
+        }
+        for (int x = 12; x <= 18; x++) {
+            for (int y = 34; y < 40; y++) {
+                this.floors.add(new Floor(x, y));
+            }
+        }
+        for (int y = 31; y < 34; y++) {
+            this.floors.add(new Floor(15, y));
         }
     }
 
@@ -129,14 +97,28 @@ public class BossMap extends Map {
      * Generates walls for the boss room.
      */
     public void genWalls() {
-        // Iterate over the boundary of the boss room and set wall tiles
-        for (int x = 9; x <= this.map_width - 9; x++) {
-            this.walls.add(new Wall(new Point(x,9), "assets/map/wall_edge_left.png"));
-            this.walls.add(new Wall(new Point(x, this.map_height - 9),"assets/map/wall_edge_left.png"));
+        int startX = 0;
+        int startY = 0;
+        int endX = 30;
+        int endY = 29;
+
+        // Top and bottom walls
+        for (int x = startX; x < endX; x++) {
+            this.walls.add(new Wall(new Point(x, startY - 1), "assets/map/wall_mid.png")); // Top wall
+            this.walls.add(new Wall(new Point(x, startY), "assets/map/wall_top_mid.png")); // Row above top wall
+
+            this.walls.add(new Wall(new Point(x, endY + 1), "assets/map/wall_right.png"));   // Bottom wall
+            this.walls.add(new Wall(new Point(x, endY + 2), "assets/map/wall_top_mid.png")); // Row below bottom wall
         }
-        for (int y = 9; y <= this.map_height - 9; y++) {
-            this.walls.add(new Wall(new Point(9, y), "assets/map/wall_edge_left.png"));
-            this.walls.add(new Wall(new Point(this.map_width - 9, y),"assets/map/wall_edge_left.png"));
+
+        // Left and right walls
+        for (int y = startY-1; y < endY+2; y++) {
+            this.walls.add(new Wall(new Point(startX - 1, y), "assets/map/wall_outer_mid_left.png")); // Left wall
+            this.walls.add(new Wall(new Point(endX, y), "assets/map/wall_outer_mid_right.png"));   // Right wall
         }
+
+        // Add additional walls at the corners to complete the frame
+        //this.walls.add(new Wall(new Point(startX - 1, startY - 1), "assets/map/wall_outer_top_left.png")); // Top left corner
+        //this.walls.add(new Wall(new Point(endX, startY - 1), "assets/map/wall_outer_top_right.png")); // Top right corner
     }
 }

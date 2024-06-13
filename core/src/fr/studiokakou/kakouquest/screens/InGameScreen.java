@@ -112,13 +112,13 @@ public class InGameScreen implements Screen {
 								InGameScreen.stateTime = 0f;
 								System.out.println("boss level");
 
-								map = new BossMap(map_width,map_height);
+								map = new BossMap(10,10);
 								player.hasPlayerSpawn = false;
 								player.setPos(map.getPlayerSpawn());
 
 								startTime = TimeUtils.millis();
 
-								map.stairs = new Stairs(new Point(150,150),InGameScreen.this);
+								map.stairs = new Stairs(new Point(240,550),InGameScreen.this);
 
 								game.setScreen(InGameScreen.this);
 							}
@@ -223,7 +223,6 @@ public class InGameScreen implements Screen {
 		batch.setProjectionMatrix(Camera.camera.combined);
 
 		batch.begin();
-		map.drawMap(batch);
 
 		this.map.drawMap(this.batch);
 		this.map.drawInteractive(this.batch);
