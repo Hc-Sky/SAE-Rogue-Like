@@ -26,6 +26,11 @@ public class LoadingScreen implements Screen {
             "On prépare la suite pour vous Sir Kakou..."
     };
 
+    /**
+     * Constructeur de l'écran de chargement.
+     *
+     * @param game Espace de jeu.
+     */
     public LoadingScreen(GameSpace game) {
         this.game = game;
         this.batch = new SpriteBatch();
@@ -35,12 +40,22 @@ public class LoadingScreen implements Screen {
         this.texture = null;
     }
 
+    /**
+     * Récupérer un message aléatoire parmi les messages de chargement.
+     *
+     * @return Message aléatoire.
+     */
     private String getRandomMessage() {
         Random random = new Random();
         int index = random.nextInt(MESSAGES.length);
         return MESSAGES[index];
     }
 
+    /**
+     * Récupérer une texture aléatoire parmi les textures disponibles.
+     *
+     * @return Texture aléatoire.
+     */
     private Texture getRandomTexture() {
         Random random = new Random();
         // 1 chance sur 15 de charger "fede.png" au lieu de "icon.png"
@@ -53,6 +68,9 @@ public class LoadingScreen implements Screen {
         }
     }
 
+    /**
+     * Afficher l'écran de chargement.
+     */
     @Override
     public void show() {
         // Réinitialiser le message et l'image chaque fois que l'écran de chargement est affiché
@@ -60,6 +78,11 @@ public class LoadingScreen implements Screen {
         this.texture = getRandomTexture();
     }
 
+    /**
+     * Dessiner l'écran de chargement.
+     *
+     * @param delta Delta time.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);

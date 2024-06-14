@@ -6,11 +6,25 @@ import java.util.List;
 public class Bridge {
     public ArrayList<Point> points;
 
+    /**
+     * Constructor of the Bridge class.
+     *
+     * @param room1 Première salle.
+     * @param room2 Deuxième salle.
+     * @param rooms Liste des salles.
+     */
     public Bridge(Room room1, Room room2, ArrayList<Room> rooms) {
         this.points = new ArrayList<>();
         generateBridge(room1, room2, rooms);
     }
 
+    /**
+     * Generate a bridge between two rooms.
+     *
+     * @param room1 Première salle.
+     * @param room2 Deuxième salle.
+     * @param rooms Liste des salles.
+     */
     public void generateBridge(Room room1, Room room2, ArrayList<Room> rooms) {
         Point center1 = room1.getCenter().add(-0.5f, -0.5f);
         Point center2 = room2.getCenter().add(-0.5f, -0.5f);
@@ -47,6 +61,12 @@ public class Bridge {
         }
     }
 
+    /**
+     * Check if a point is in a room.
+     *
+     * @param p     Point to check.
+     * @param rooms Liste des salles.
+     */
     public boolean isPointInRooms(Point p, ArrayList<Room> rooms){
         for (Room r : rooms){
             if (Room.isPointInRoom(p, r)){
@@ -56,6 +76,12 @@ public class Bridge {
         return false;
     }
 
+    /**
+     * Check if a point is in a room or touching it.
+     *
+     * @param p     Point to check.
+     * @param rooms Liste des salles.
+     */
     public boolean isPointInRoomsTouching(Point p, ArrayList<Room> rooms){
         for (Room r : rooms){
             if (Room.isPointInRoomTouching(p, r)){
@@ -65,6 +91,12 @@ public class Bridge {
         return false;
     }
 
+    /**
+     * Check if a point is in a bridge.
+     *
+     * @param point   Point to check.
+     * @param bridges Liste des ponts.
+     */
     public boolean isPointsInBridges(Point point, ArrayList<Bridge> bridges){
         for (Bridge b : bridges){
             if (!b.equals(this)){
@@ -78,6 +110,11 @@ public class Bridge {
         return false;
     }
 
+    /**
+     * Check if a point is a turn.
+     *
+     * @param pointIndex Index du point.
+     */
     public boolean isTurn(int pointIndex){
         if (pointIndex==0 || pointIndex==this.points.size()-1){
             return false;
@@ -88,6 +125,12 @@ public class Bridge {
         return false;
     }
 
+    /**
+     * Generate the walls of the bridge.
+     *
+     * @param rooms   Liste des salles.
+     * @param bridges Liste des ponts.
+     */
     public ArrayList<Wall> genBridgeWall(ArrayList<Room> rooms, ArrayList<Bridge> bridges){
         ArrayList<Wall> result = new ArrayList<>();
 

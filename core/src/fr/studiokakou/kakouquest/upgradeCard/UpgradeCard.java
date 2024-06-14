@@ -16,6 +16,13 @@ public class UpgradeCard {
     static int height = 502;
     static int width = 397;
 
+    /**
+     * Constructeur de la carte d'upgrade.
+     *
+     * @param texture Texture de la carte.
+     * @param upgradeName Nom de l'upgrade.
+     * @param upgradeAmount Montant de l'upgrade.
+     */
     public UpgradeCard(Texture texture, String upgradeName, int upgradeAmount) {
         this.texture = texture;
         this.sprite = new Sprite(texture);
@@ -23,6 +30,11 @@ public class UpgradeCard {
         this.upgradeAmount = upgradeAmount;
     }
 
+    /**
+     * Méthode pour appliquer l'upgrade au joueur lorsqu'il clique sur la carte.
+     *
+     * @param player Joueur.
+     */
     public void clicked(Player player) {
         switch (upgradeName) {
             case "hp":
@@ -70,6 +82,13 @@ public class UpgradeCard {
         }
     }
 
+    /**
+     * Méthode pour dessiner la carte d'upgrade.
+     *
+     * @param batch Batch.
+     * @param pos Position.
+     * @param player Joueur.
+     */
     public void draw(SpriteBatch batch, int pos, Player player) {
         this.sprite.setX(((float) Gdx.graphics.getWidth() / 3)-((float) width /2) + (pos*width + (pos-1)*40));
         this.sprite.setY(((float) Gdx.graphics.getHeight() / 2) - ((float) height /2));

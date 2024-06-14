@@ -36,6 +36,11 @@ public class Bow {
 
     public ArrayList<Arrow> arrows = new ArrayList<>();
 
+    /**
+     * Constructor of the bow.
+     *
+     * @param player Joueur.
+     */
     public Bow(Player player) {
         loading = new Texture("assets/weapon/weapon_bow.png");
         loaded = new Texture("assets/weapon/weapon_bow_2.png");
@@ -50,6 +55,9 @@ public class Bow {
         this.sprite = new Sprite(loaded);
     }
 
+    /**
+     * start the attack.
+     */
     public void startAttack(){
         if (arrowCount == 0) {
             return;
@@ -61,7 +69,9 @@ public class Bow {
         }
 
     }
-
+    /**
+     * attack with the bow if it's loaded.
+     */
     public void attack(){
         if (!isLoaded) {
             return;
@@ -74,6 +84,12 @@ public class Bow {
         arrows.add(new Arrow(this.attackStartPoint, this.rotation));
     }
 
+    /**
+     * Update the arrows on the screen.
+     *
+     * @param batch The SpriteBatch used for rendering.
+     * @param map   The map used.
+     */
     public void updateArrows(SpriteBatch batch, Map map){
         for (Arrow arrow : arrows) {
             arrow.update(Gdx.graphics.getDeltaTime(), batch, map, player);
@@ -86,6 +102,12 @@ public class Bow {
         }
     }
 
+    /**
+     * Draw the bow on the screen.
+     *
+     * @param batch The SpriteBatch used for rendering.
+     * @param map   The map used.
+     */
     public void draw(SpriteBatch batch, Map map) {
 
         updateArrows(batch, map);

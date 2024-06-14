@@ -231,6 +231,7 @@ public class Hud {
         return staminaAmount;
     }
 
+
     private int getHealthAmount() {
         int healthAmount;
         if ((this.player.hp*100)/this.player.max_hp >= 98) {

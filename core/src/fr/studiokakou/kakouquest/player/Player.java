@@ -683,12 +683,10 @@ public class Player {
      * @param batch the batch
      */
     public void draw(SpriteBatch batch, Map map){
-
         if (hasPlayerSpawn) {
             if (isRadiant){
                 batch.draw(radiant, this.center().x - (float) (radiant.getWidth()*1.5) /2, this.center().y - (float) (radiant.getHeight()*1.5) /2, (float) ((float) radiant.getWidth() *1.5), (float) ((float) radiant.getHeight() *1.5));
             }
-
             TextureRegion currentFrame;
             if (this.isRunning){
                 if (!flip && this.lastPos.x > this.pos.x){
@@ -755,6 +753,11 @@ public class Player {
         this.bloodStateTime=0f;
     }
 
+    /**
+     * Permet de vérifier si le joueur peut être amélioré.
+     *
+     * @return the boolean
+     */
     public void checkUpgrade(){
         if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
             this.playerLevel += 1;
@@ -768,6 +771,11 @@ public class Player {
         }
     }
 
+    /**
+     * Permet de gagner de l'expérience.
+     *
+     * @param experience the experience
+     */
     public void gainExperience(double experience){
         this.experience += experience;
         if (this.xpBoost){

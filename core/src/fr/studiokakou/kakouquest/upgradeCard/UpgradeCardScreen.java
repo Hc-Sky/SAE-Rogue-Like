@@ -3,7 +3,6 @@ package fr.studiokakou.kakouquest.upgradeCard;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -16,6 +15,11 @@ public class UpgradeCardScreen {
     static ArrayList<UpgradeCard> possibleCards = new ArrayList<>();
     public static LocalDateTime appearTime;
 
+    /**
+     * Méthode pour lancer l'écran d'upgrade.
+     *
+     * @param player Joueur.
+     */
     public static void upgrade(Player player) {
         upgradeCards.clear();
         
