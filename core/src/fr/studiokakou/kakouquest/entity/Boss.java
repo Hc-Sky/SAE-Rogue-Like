@@ -68,6 +68,13 @@ public class Boss extends Monster {
         if (Utils.distance(playerPos, this.pos) <= 60) {
             this.attack(player);
         }
+        if (isAttacking) {
+            attackStateTime += Gdx.graphics.getDeltaTime();
+            // Si l'animation d'attaque dure depuis plus de 1 seconde, infligez des dégâts
+            if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
+                player.takeDamage(this.damage);
+            }
+        }
         if (detectPlayer(playerPos)) {
             this.isRunning = true;
             this.getOrientation(player);
@@ -136,6 +143,7 @@ public class Boss extends Monster {
 
             this.sprite.draw(batch);
         }
+
     }
 
     public void update(Player player) {
@@ -147,6 +155,7 @@ public class Boss extends Monster {
             }
         }
     }
+
 
     @Override
     public void takeDamage(Player player) {
@@ -170,6 +179,9 @@ public class Boss extends Monster {
             return;
         }
         if (this.currentAttackTime == null || this.currentAttackTime.plusNanos((long) (1000000 * this.attackPause)).isBefore(LocalDateTime.now())) {
+            if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
+                player.takeDamage(this.damage);
+            }
             this.currentAttackTime = LocalDateTime.now();
             this.isAttacking = true;
             attackStateTime = 0; // Réinitialiser attackStateTime lors du début de l'attaque
