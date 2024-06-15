@@ -11,12 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
@@ -35,6 +35,7 @@ public class InGameScreen implements Screen {
 	public static float stateTime = 0f;
 
 	Player player;
+	public static String username;
 	Camera cam;
 	Hud hud;
 	BitmapFont font;
@@ -78,7 +79,7 @@ public class InGameScreen implements Screen {
 		this.map = new Map(this.map_width, this.map_height);
 
 		// Initialisation du joueur
-		this.player = new Player(map.getPlayerSpawn(), "player", selectedAvatarTexture);
+		this.player = new Player(map.getPlayerSpawn(), loadUsername(), selectedAvatarTexture);
 		this.cam = new Camera(this.player);
 
 		// Load countdown textures
@@ -334,4 +335,11 @@ public class InGameScreen implements Screen {
 			texture.dispose();
 		}
 	}
+	private String loadUsername() {
+		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
+			return "guest";
+		}
+		return GetCoreProperties.getStringProperty("USERNAME");
+	}
 }
+

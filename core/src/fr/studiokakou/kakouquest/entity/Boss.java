@@ -95,17 +95,17 @@ public class Boss extends Monster {
                 String hitAnimationPath, String deathAnimationPath, int hp, int damage, float attackPause, float speed,
                 int detectRange, int currentLevel) {
         super(name, idleAnimationPath, runAnimationPath, hp, damage, attackPause, speed, detectRange, currentLevel, 1000);
-        this.idleAnimation = Utils.getAnimation(idleAnimationPath, 6, 1);
-        this.runAnimation = Utils.getAnimation(runAnimationPath, 12, 1);
-        this.attackAnimation = Utils.getAnimation(attackAnimationPath, 15, 1);
+        this.idleAnimation = Utils.getAnimation(idleAnimationPath, 1, 6);
+        this.runAnimation = Utils.getAnimation(runAnimationPath, 1, 12);
+        this.attackAnimation = Utils.getAnimation(attackAnimationPath, 1, 15);
 
         // Ajuster la durée de chaque frame pour l'animation hit
         int hitFrameCount = 5;
-        this.hitAnimation = new Animation<>(HIT_ANIMATION_DURATION / hitFrameCount, Utils.getAnimation(hitAnimationPath, hitFrameCount, 1).getKeyFrames());
+        this.hitAnimation = new Animation<>(HIT_ANIMATION_DURATION / hitFrameCount, Utils.getAnimation(hitAnimationPath, 1, hitFrameCount).getKeyFrames());
 
         // Ajuster la durée de chaque frame pour l'animation death
         int deathFrameCount = 22;
-        this.deathAnimation = new Animation<>(DEATH_ANIMATION_DURATION / deathFrameCount, Utils.getAnimation(deathAnimationPath, deathFrameCount, 1).getKeyFrames());
+        this.deathAnimation = new Animation<>(DEATH_ANIMATION_DURATION / deathFrameCount, Utils.getAnimation(deathAnimationPath, 1, deathFrameCount).getKeyFrames());
 
         this.sprite = new Sprite(idleAnimation.getKeyFrame(0)); // Initialiser le sprite avec la première frame de l'animation idle
     }

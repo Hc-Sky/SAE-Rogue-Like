@@ -97,4 +97,19 @@ public class GetCoreProperties {
             throw new RuntimeException("Erreur lors de l'écriture dans le fichier settings.properties", e);
         }
     }
+
+    /**
+     * Définit une propriété de chaîne de caractères dans le fichier settings.properties.
+     *
+     * @param key   La clé de la propriété
+     * @param value La nouvelle valeur de la propriété
+     */
+    public static void setStringProperty(String key, String value) {
+        properties.setProperty(key, value);
+        try (FileOutputStream out = new FileOutputStream(PROPERTIES_FILE)) {
+            properties.store(out, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
