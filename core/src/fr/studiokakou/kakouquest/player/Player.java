@@ -261,12 +261,12 @@ public class Player {
         this.lastPos = this.pos;
 
         //default values
-        this.max_hp=1000000;
-        this.hp=1000000;
-        this.strength=100000;
-        this.speed=200f;
-        this.max_stamina=100000;
-        this.stamina = 1000000;
+        this.max_hp=100;
+        this.hp=100;
+        this.strength=10;
+        this.speed=40f;
+        this.max_stamina=100;
+        this.stamina = 100;
         this.playerLevel = 1;
         this.experience = 0;
         this.experienceToNextLevel = 60;
