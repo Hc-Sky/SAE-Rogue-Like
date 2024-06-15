@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.GetCoreProperties;
+import fr.studiokakou.kakouquest.entity.Boss;
 import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Point;
@@ -24,7 +25,7 @@ public class Stairs {
     public Point pos;
 
     /** Indique si le joueur peut interagir avec les escaliers. */
-    boolean canInteract = false;
+    public boolean canInteract = false;
 
     /** Texture représentant les escaliers. */
     Texture texture;
@@ -32,7 +33,7 @@ public class Stairs {
     /** Référence à l'écran de jeu dans lequel les escaliers sont utilisés. */
     InGameScreen gameScreen;
 
-    //interact var
+    // Interact var
     /** Touche pour interagir avec les escaliers. */
     String interactKey;
 
@@ -47,7 +48,7 @@ public class Stairs {
      * @param pos Position des escaliers sur la carte.
      * @param gameScreen Référence à l'écran de jeu dans lequel les escaliers sont utilisés.
      */
-    public Stairs(Point pos, InGameScreen gameScreen){
+    public Stairs(Point pos, InGameScreen gameScreen) {
         this.pos = pos;
         this.gameScreen = gameScreen;
         this.texture = new Texture("assets/map/floor_ladder.png");
@@ -55,7 +56,7 @@ public class Stairs {
         this.interactKeyCode = GetCoreProperties.getIntProperty("KEY_INTERRACT");
         this.interactKey = Input.Keys.toString(this.interactKeyCode);
 
-        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
+        this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/" + this.interactKey + ".png", 2, 1, 1f);
     }
 
     /**
@@ -63,14 +64,14 @@ public class Stairs {
      * @param player Joueur actuel.
      * @param isClosest Indique si le joueur est le plus proche des escaliers.
      */
-    public void refreshInteract(Player player, boolean isClosest){
-        boolean canInteractNow = canInteract();
+    public void refreshInteract(Player player, boolean isClosest) {
+        boolean canInteractNow = canInteract(player);
 
-        if (canInteractNow && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
+        if (canInteractNow && Gdx.input.isKeyJustPressed(this.interactKeyCode)) {
             this.interact();
         }
 
-        if (Utils.getDistance(this.pos, player.pos) <= 40 &&  isClosest){
+        if (Utils.getDistance(this.pos, player.pos) <= 40 && isClosest) {
             this.canInteract = canInteractNow;
         } else {
             this.canInteract = false;
@@ -81,19 +82,17 @@ public class Stairs {
      * Vérifie si le joueur peut interagir avec les escaliers.
      * Le joueur peut interagir si le niveau actuel n'est pas un multiple de 5,
      * ou si c'est un multiple de 5 et que le boss de la BossMap est vaincu.
+     * @param player Le joueur actuel.
+     * @return true si le joueur peut interagir avec les escaliers, sinon false.
      */
-    private boolean canInteract() {
-        int currentLevel = this.gameScreen.currentLevel;
-        if (currentLevel % 5 == 0) {
-            return BossMap.isBossDefeated();
-        } else {
-            return true;
-        }
+    private boolean canInteract(Player player) {
+        return Utils.getDistance(this.pos, player.pos) <= 40;
     }
 
+
     /** Effectue l'interaction avec les escaliers, déclenchant le passage au niveau suivant. */
-    public void interact(){
-        if (this.canInteract){
+    public void interact() {
+        if (this.canInteract) {
             this.gameScreen.nextLevel();
         }
     }
@@ -102,10 +101,10 @@ public class Stairs {
      * Dessine les escaliers sur l'écran de jeu.
      * @param batch Batch pour dessiner les textures.
      */
-    public void draw(SpriteBatch batch){
-        if (canInteract()){
+    public void draw(SpriteBatch batch) {
+        if (this.canInteract) {
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
-            batch.draw(currentKeyFrame, this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
+            batch.draw(currentKeyFrame, this.pos.x, this.pos.y + 20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
         }
 
         batch.draw(this.texture, this.pos.x, this.pos.y);

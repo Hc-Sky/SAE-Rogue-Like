@@ -3,7 +3,10 @@ package fr.studiokakou.kakouquest.map;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.studiokakou.kakouquest.entity.Boss;
 import fr.studiokakou.kakouquest.entity.Monster;
+import fr.studiokakou.kakouquest.interactive.Chest;
+import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
+import fr.studiokakou.kakouquest.utils.Utils;
 
 public class BossMap extends Map {
 
@@ -50,13 +53,17 @@ public class BossMap extends Map {
 
     public static boolean isBossDefeated() {
         for (Monster monster : monsters) {
-            if (monster instanceof Boss && monster.isDead) {
+            if (monster instanceof Boss && monster.isDying) {
                 return true; // Boss monster is defeated
             }
         }
         return false; // Boss monster is still alive
     }
 
+    @Override
+    public void genInteractive(int currentLevel, InGameScreen gameScreen){
+        this.stairs = new Stairs(new Point(240,608),gameScreen);
+    }
     /**
      * Obtains the player's spawn point for the boss map.
      *

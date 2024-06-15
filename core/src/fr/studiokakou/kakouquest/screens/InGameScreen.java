@@ -118,7 +118,7 @@ public class InGameScreen implements Screen {
 
 								startTime = TimeUtils.millis();
 
-								map.stairs = new Stairs(new Point(240,608),InGameScreen.this);
+								map.genInteractive(currentLevel, InGameScreen.this);
 
 								game.setScreen(InGameScreen.this);
 							}
@@ -181,6 +181,16 @@ public class InGameScreen implements Screen {
 		if (isCountingDown) {
 			renderCountdown(delta);
 			return;
+		}
+
+		if (currentLevel%5 == 0){
+			if (BossMap.isBossDefeated()){
+				map.stairs.canInteract = true;
+				map.stairs.refreshInteract(player, true);
+			} else {
+				map.stairs.canInteract = false;
+				map.stairs.refreshInteract(player, false);
+			}
 		}
 
 		InGameScreen.stateTime += delta;

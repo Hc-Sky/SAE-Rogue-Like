@@ -146,16 +146,6 @@ public class Boss extends Monster {
 
     }
 
-    public void update(Player player) {
-        if (isAttacking) {
-            attackStateTime += Gdx.graphics.getDeltaTime();
-            // Si l'animation d'attaque dure depuis plus de 1 seconde, infligez des dégâts
-            if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
-                player.takeDamage(this.damage);
-            }
-        }
-    }
-
 
     @Override
     public void takeDamage(Player player) {
