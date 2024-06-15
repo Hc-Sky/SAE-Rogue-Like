@@ -186,10 +186,8 @@ public class InGameScreen implements Screen {
 		if (currentLevel%5 == 0){
 			if (BossMap.isBossDefeated()){
 				map.stairs.canInteract = true;
-				map.stairs.refreshInteract(player, true);
 			} else {
 				map.stairs.canInteract = false;
-				map.stairs.refreshInteract(player, false);
 			}
 		}
 

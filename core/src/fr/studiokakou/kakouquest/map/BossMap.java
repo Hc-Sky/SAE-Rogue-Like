@@ -53,12 +53,6 @@ public class BossMap extends Map {
 
     public static boolean isBossDefeated() {
         return monsters.isEmpty();
-//        for (Monster monster : monsters) {
-//            if (monster instanceof Boss && monster.isDying) {
-//                return true; // Boss monster is defeated
-//            }
-//        }
-//        return false; // Boss monster is still alive
     }
 
     @Override
