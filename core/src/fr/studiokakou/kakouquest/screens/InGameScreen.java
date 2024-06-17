@@ -14,7 +14,10 @@ import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
+import fr.studiokakou.kakouquest.interactive.Stairs;
+import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Map;
+import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
@@ -105,21 +108,38 @@ public class InGameScreen implements Screen {
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
 						public void run() {
-							InGameScreen.currentLevel += 1;
-							InGameScreen.stateTime = 0f;
-							System.out.println("next level");
-							map.dispose();
+							if ((currentLevel+1) % 5 == 0){
+								InGameScreen.currentLevel++;
+								InGameScreen.stateTime = 0f;
+								System.out.println("boss level");
 
-							map = new Map(map_width, map_height);
-							player.hasPlayerSpawn = false;
-							player.setPos(map.getPlayerSpawn());
 
-							startTime = TimeUtils.millis();
+								map = new BossMap(10,10);
+								player.hasPlayerSpawn = false;
+								player.setPos(map.getPlayerSpawn());
 
-							map.spawnMonsters(currentLevel);
-							map.genInteractive(currentLevel, InGameScreen.this);
+								startTime = TimeUtils.millis();
 
-							game.setScreen(InGameScreen.this);
+								map.genInteractive(currentLevel, InGameScreen.this);
+
+								game.setScreen(InGameScreen.this);
+							}
+							else {
+								InGameScreen.currentLevel += 1;
+								InGameScreen.stateTime = 0f;
+								System.out.println("next level");
+
+								map = new Map(map_width, map_height);
+								player.hasPlayerSpawn = false;
+								player.setPos(map.getPlayerSpawn());
+
+								startTime = TimeUtils.millis();
+
+								map.spawnMonsters(currentLevel);
+								map.genInteractive(currentLevel, InGameScreen.this);
+
+								game.setScreen(InGameScreen.this);
+							}
 						}
 					});
 				} catch (InterruptedException e) {
@@ -163,6 +183,14 @@ public class InGameScreen implements Screen {
 		if (isCountingDown) {
 			renderCountdown(delta);
 			return;
+		}
+
+		if (currentLevel%5 == 0){
+			if (BossMap.isBossDefeated()){
+				map.stairs.canInteract = true;
+			} else {
+				map.stairs.canInteract = false;
+			}
 		}
 
 		InGameScreen.stateTime += delta;

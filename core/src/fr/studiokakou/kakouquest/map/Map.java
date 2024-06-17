@@ -58,7 +58,7 @@ public class Map {
     /**
      * The list of rooms.
      */
-    ArrayList<Room> rooms =  new ArrayList<>();
+    public ArrayList<Room> rooms =  new ArrayList<>();
     /**
      * The list of bridges.
      */
@@ -362,6 +362,7 @@ public class Map {
     public void genInteractive(int currentLevel, InGameScreen gameScreen){
 
         this.stairs = new Stairs(this.rooms.get(this.rooms.size()-1).getCenterOutOfMapPos(), gameScreen);
+        System.out.println("5");
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){

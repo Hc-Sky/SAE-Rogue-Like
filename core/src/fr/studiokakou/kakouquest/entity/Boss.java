@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
@@ -118,32 +117,59 @@ public class Boss extends Monster {
      * @return
      */
     @Override
+    public boolean canMove(Point orientation, Map map){
+        Point newPos = this.pos.add(orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
+        Point hitboxTopLeft = newPos.add(this.width-280, this.height-150);
+        Point hitboxBottomLeft = newPos.add(this.width-280, 50);
+        Point hitboxTopRight = newPos.add(this.width-200, this.height-150);
+        Point hitboxBottomRight = newPos.add(this.width-200, 50);
+
+        Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
+
+        return map.arePointsOnFloor(points);
+    }
+
+    @Override
     public void move(Player player, Map map, LocalDateTime radiantTimer) {
         if (isDying || isRed || isAttacking || isHit || !player.hasPlayerSpawn) {
             return;
         }
         Point playerPos = player.pos;
-        if (Utils.distance(playerPos, this.pos) <= 20) {
+        if (Utils.distance(playerPos, this.pos) <= 60) {
             this.attack(player);
+        }
+        if (isAttacking) {
+            attackStateTime += Gdx.graphics.getDeltaTime();
+            // Si l'animation d'attaque dure depuis plus de 1 seconde, infligez des dégâts
+            if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
+                player.takeDamage(this.damage);
+            }
         }
         if (detectPlayer(playerPos)) {
             this.isRunning = true;
             this.getOrientation(player);
             Point orientation = Point.getOrientation(this.pos, playerPos);
-            if (canMove(new Point(orientation.x, 0), map)) {
-                this.pos = this.pos.add(orientation.x * this.speed * Gdx.graphics.getDeltaTime(), 0);
+            if (this.pos.y > 80) {
+                if (canMove(new Point(orientation.x, 0), map)) {
+                    this.pos = this.pos.add(orientation.x * this.speed * Gdx.graphics.getDeltaTime(), 0);
+                }
+                if (canMove(new Point(0, orientation.y), map)) {
+                    this.pos = this.pos.add(0, orientation.y * this.speed * Gdx.graphics.getDeltaTime());
+                }
+            } else if (orientation.y > 0) {
+                if (canMove(new Point(orientation.x, 0), map)) {
+                    this.pos = this.pos.add(orientation.x * this.speed * Gdx.graphics.getDeltaTime(), 0);
+                }
+                if (canMove(new Point(0, orientation.y), map)) {
+                    this.pos = this.pos.add(0, orientation.y * this.speed * Gdx.graphics.getDeltaTime());
+                }
             }
-            if (canMove(new Point(0, orientation.y), map)) {
-                this.pos = this.pos.add(0, orientation.y * this.speed * Gdx.graphics.getDeltaTime());
-            }
-
             // Tourner le boss vers le joueur
             this.isFlip = (this.pos.x < player.pos.x);
         } else {
             this.isRunning = false;
         }
     }
-
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -155,6 +181,7 @@ public class Boss extends Monster {
             currentFrame = this.deathAnimation.getKeyFrame(deathStateTime, false);
             if (this.deathAnimation.isAnimationFinished(deathStateTime)) {
                 this.isDead = true;
+                Gdx.app.log("Boss", "Boss is dead");
             }
         } else if (isHit) {
             hitStateTime += Gdx.graphics.getDeltaTime();
@@ -186,11 +213,13 @@ public class Boss extends Monster {
 
             this.sprite.draw(batch);
         }
+
     }
+
 
     @Override
     public void takeDamage(Player player) {
-        if (Utils.getDistance(player.pos, this.pos) < 80 ){
+        if (Utils.getDistance(player.pos, this.pos) < 80) {
             this.hp -= player.currentWeapon.damage * (player.strength / 10);
             this.isHit = true;
             this.isRed = true; // Activer l'effet rouge
@@ -215,17 +244,16 @@ public class Boss extends Monster {
             return;
         }
         if (this.currentAttackTime == null || this.currentAttackTime.plusNanos((long) (1000000 * this.attackPause)).isBefore(LocalDateTime.now())) {
-            player.takeDamage(this.damage);
+            if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
+                player.takeDamage(this.damage);
+            }
             this.currentAttackTime = LocalDateTime.now();
             this.isAttacking = true;
             attackStateTime = 0; // Réinitialiser attackStateTime lors du début de l'attaque
-
             // Calculer l'orientation du boss par rapport au joueur
             this.isFlip = (this.pos.x + 150 < player.pos.x);
         }
     }
-
-
 
     public static Boss createSlimeBoss(int currentLevel) {
         return new Boss("Slime Boss",
@@ -234,6 +262,6 @@ public class Boss extends Monster {
                 "assets/entities/slime_boss_attack.png",
                 "assets/entities/slime_boss_hit.png",
                 "assets/entities/slime_boss_death.png",
-                2000, 50, 300, 30f, 150, currentLevel); // Réduire attackPause à 500 ms pour des attaques plus fréquentes
+                2000, 50, 300, 30f, 200, currentLevel); // Réduire attackPause à 500 ms pour des attaques plus fréquentes
     }
 }
