@@ -17,7 +17,12 @@ public class Potion {
     private PotionType type;
     private int amount;
 
-
+    /**
+     * Constructeur de la classe Potion.
+     *
+     * @param type Type de la potion.
+     * @param amount Quantité de la potion.
+     */
     public Potion(PotionType type, int amount) {
         this.type = type;
         this.amount = amount;
@@ -37,6 +42,11 @@ public class Potion {
         }
     }
 
+    /**
+     * Génère une potion aléatoire.
+     *
+     * @return Potion aléatoire.
+     */
     public static Potion generateRandomPotion() {
         Random random = new Random();
         PotionType type = PotionType.values()[random.nextInt(PotionType.values().length)];
@@ -46,7 +56,7 @@ public class Potion {
         return new Potion(type, amount);
     }
 
-
+    //getters and setters
     public PotionType getType() {
         return type;
     }

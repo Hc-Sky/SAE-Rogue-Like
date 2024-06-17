@@ -62,7 +62,7 @@ public class GameSpace extends Game {
 		//Le initialize sert juste pour le HelpScreen pour les fonts
 		initialize();
 		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
-		this.setScreen(new MenuScreen(this));
+		this.setScreen(new SplashScreen(this));
 		paused = false;
 	}
 

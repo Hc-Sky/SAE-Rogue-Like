@@ -13,20 +13,83 @@ import fr.studiokakou.kakouquest.utils.Utils;
 import java.time.LocalDateTime;
 
 public class Boss extends Monster {
+    /**
+     * Animation for the boss's attack.
+     */
     Animation<TextureRegion> attackAnimation;
+
+    /**
+     * Animation for when the boss is hit.
+     */
     Animation<TextureRegion> hitAnimation;
+
+    /**
+     * Animation for the boss's death.
+     */
     Animation<TextureRegion> deathAnimation;
+
+    /**
+     * Flag indicating whether the boss is currently attacking.
+     */
     boolean isAttacking = false;
+
+    /**
+     * Flag indicating whether the boss has been hit.
+     */
     boolean isHit = false;
 
+    /**
+     * The state time for the boss's animations.
+     */
     private float stateTime;
-    private float hitStateTime;
-    private float attackStateTime;
-    private float deathStateTime;
-    private final float HIT_ANIMATION_DURATION = 0.3f; // durée de l'animation hit en secondes
-    private final float ATTACK_ANIMATION_DURATION = 1.0f; // durée de l'animation attack en secondes
-    private final float DEATH_ANIMATION_DURATION = 5.0f; // durée de l'animation death en secondes
 
+    /**
+     * The state time for the boss's hit animation.
+     */
+    private float hitStateTime;
+
+    /**
+     * The state time for the boss's attack animation.
+     */
+    private float attackStateTime;
+
+    /**
+     * The state time for the boss's death animation.
+     */
+    private float deathStateTime;
+
+    /**
+     * The duration of the boss's hit animation in seconds.
+     */
+    private final float HIT_ANIMATION_DURATION = 0.3f;
+
+    /**
+     * The duration of the boss's attack animation in seconds.
+     */
+    private final float ATTACK_ANIMATION_DURATION = 1.0f;
+
+    /**
+     * The duration of the boss's death animation in seconds.
+     */
+    private final float DEATH_ANIMATION_DURATION = 5.0f;
+
+
+    /**
+     * Constructor for the Boss class.
+     *
+     * @param name
+     * @param idleAnimationPath
+     * @param runAnimationPath
+     * @param attackAnimationPath
+     * @param hitAnimationPath
+     * @param deathAnimationPath
+     * @param hp
+     * @param damage
+     * @param attackPause
+     * @param speed
+     * @param detectRange
+     * @param currentLevel
+     */
     public Boss(String name, String idleAnimationPath, String runAnimationPath, String attackAnimationPath,
                 String hitAnimationPath, String deathAnimationPath, int hp, int damage, float attackPause, float speed,
                 int detectRange, int currentLevel) {
@@ -46,6 +109,13 @@ public class Boss extends Monster {
         this.sprite = new Sprite(idleAnimation.getKeyFrame(0)); // Initialiser le sprite avec la première frame de l'animation idle
     }
 
+    /**
+     * Detect the player.
+     *
+     * @param orientation -> Point
+     * @param map -> Map
+     * @return
+     */
     @Override
     public boolean canMove(Point orientation, Map map){
         Point newPos = this.pos.add(orientation.x*(this.speed)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
@@ -164,6 +234,11 @@ public class Boss extends Monster {
         }
     }
 
+    /**
+     * Attack the player if the player is close enough to the boss.
+     *
+     * @param player -> Player
+     */
     protected void attack(Player player) {
         if (this.isDying || !player.hasPlayerSpawn) {
             return;

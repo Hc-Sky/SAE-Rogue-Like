@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
 import fr.studiokakou.kakouquest.interactive.Stairs;
@@ -19,7 +20,6 @@ import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
@@ -38,6 +38,7 @@ public class InGameScreen implements Screen {
 	public static float stateTime = 0f;
 
 	Player player;
+	public static String username;
 	Camera cam;
 	Hud hud;
 	BitmapFont font;
@@ -81,7 +82,7 @@ public class InGameScreen implements Screen {
 		this.map = new Map(this.map_width, this.map_height);
 
 		// Initialisation du joueur
-		this.player = new Player(map.getPlayerSpawn(), "player", selectedAvatarTexture);
+		this.player = new Player(map.getPlayerSpawn(), loadUsername(), selectedAvatarTexture);
 		this.cam = new Camera(this.player);
 
 		// Load countdown textures
@@ -111,6 +112,7 @@ public class InGameScreen implements Screen {
 								InGameScreen.currentLevel++;
 								InGameScreen.stateTime = 0f;
 								System.out.println("boss level");
+
 
 								map = new BossMap(10,10);
 								player.hasPlayerSpawn = false;
@@ -156,7 +158,7 @@ public class InGameScreen implements Screen {
 			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
 			pm.dispose();
 
-			this.hud = new Hud(this.player, this.currentLevel,cam.zoom);
+			this.hud = new Hud(this.player, currentLevel,cam.zoom);
 
 			startTime = TimeUtils.millis();
 		    font = new BitmapFont();
@@ -266,7 +268,7 @@ public class InGameScreen implements Screen {
 
 
 		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
-			this.currentLevel=0;
+			currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();
 		}
@@ -361,4 +363,11 @@ public class InGameScreen implements Screen {
 			texture.dispose();
 		}
 	}
+	private String loadUsername() {
+		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
+			return "guest";
+		}
+		return GetCoreProperties.getStringProperty("USERNAME");
+	}
 }
+

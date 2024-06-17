@@ -90,9 +90,6 @@ public class Hud {
         // ecrit le texte de la stamina
         font.draw(batch, "Stamina : " + player.stamina + "/" + player.max_stamina, healthBarPos.x + healthBarOutside.getWidth()*this.hudSize + 10, healthBarPos.y+10);
 
-        Utils.bigMarkPoint(staminaBarPos, batch);
-        Utils.bigMarkPoint(healthBarPos, batch);
-
         Texture square = drawSquare(Color.WHITE);
         batch.draw(square, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
         batch.draw(square, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
@@ -233,6 +230,7 @@ public class Hud {
         }
         return staminaAmount;
     }
+
 
     private int getHealthAmount() {
         int healthAmount;

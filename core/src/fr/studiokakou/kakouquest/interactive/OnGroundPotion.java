@@ -24,6 +24,12 @@ public class OnGroundPotion {
     public int interactKeyCode;
     public Animation<TextureRegion> interactKeyAnimation;
 
+    /**
+     * Constructor of the OnGroundPotion class
+     *
+     * @param pos    the pos
+     * @param potion the potion
+     */
     public OnGroundPotion(Point pos, Potion potion){
         this.pos = pos;
         this.potion = potion;
@@ -34,6 +40,12 @@ public class OnGroundPotion {
         this.interactKeyAnimation = Utils.getAnimationHorizontal("assets/keys/animated/"+this.interactKey+".png", 2, 1, 1f);
     }
 
+    /**
+     * Refresh interact.
+     *
+     * @param player     the player
+     * @param isClosest the is closest
+     */
     public void refreshInteract(Player player, boolean isClosest){
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.interact(player);
@@ -46,6 +58,11 @@ public class OnGroundPotion {
         }
     }
 
+    /**
+     * Interact with the player to add the potion to the player's inventory
+     *
+     * @param player the player
+     */
     public void interact(Player player) {
         if (this.canInteract) {
             Potion.PotionType potionType = this.potion.getType();
@@ -57,7 +74,11 @@ public class OnGroundPotion {
         }
     }
 
-
+    /**
+     * Draw the potion on the screen
+     *
+     * @param batch the batch
+     */
     public void draw(SpriteBatch batch){
         if (canInteract){
             TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);

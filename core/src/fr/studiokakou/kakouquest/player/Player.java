@@ -14,7 +14,6 @@ import fr.studiokakou.kakouquest.map.Floor;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
-import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 import fr.studiokakou.kakouquest.weapon.Bow;
@@ -227,6 +226,7 @@ public class Player {
     public boolean betterDurability = false;
     public boolean biggerWeapon = false;
     public boolean isRadiant = false;
+    public boolean xpBoost = false;
 
     /**
      * Constructeur de Player.
@@ -683,12 +683,10 @@ public class Player {
      * @param batch the batch
      */
     public void draw(SpriteBatch batch, Map map){
-
         if (hasPlayerSpawn) {
             if (isRadiant){
                 batch.draw(radiant, this.center().x - (float) (radiant.getWidth()*1.5) /2, this.center().y - (float) (radiant.getHeight()*1.5) /2, (float) ((float) radiant.getWidth() *1.5), (float) ((float) radiant.getHeight() *1.5));
             }
-
             TextureRegion currentFrame;
             if (this.isRunning){
                 if (!flip && this.lastPos.x > this.pos.x){
@@ -755,20 +753,33 @@ public class Player {
         this.bloodStateTime=0f;
     }
 
+    /**
+     * Permet de vérifier si le joueur peut être amélioré.
+     *
+     * @return the boolean
+     */
     public void checkUpgrade(){
         if (!UpgradeCardScreen.isUpgrading && this.experience >= this.experienceToNextLevel){
             this.playerLevel += 1;
             UpgradeCardScreen.upgrade(this);
             double surplus = this.experience - this.experienceToNextLevel;
             this.experience = 0;
-            this.experienceToNextLevel = this.experienceToNextLevel * 1.14;
+            this.experienceToNextLevel = this.experienceToNextLevel * 1.12;
             if (surplus > 0){
                 this.experience = surplus;
             }
         }
     }
 
+    /**
+     * Permet de gagner de l'expérience.
+     *
+     * @param experience the experience
+     */
     public void gainExperience(double experience){
         this.experience += experience;
+        if (this.xpBoost){
+            this.experience += experience*0.5;
+        }
     }
 }

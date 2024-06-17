@@ -119,7 +119,7 @@ public class MenuScreen implements Screen {
             game.hudBatch.draw(playButtonSelected, xposPlay - (playButtonSelectedWidth - playButtonWidth) / 2, yposPlay - (playButtonSelectedHeight - playButtonHeight) / 2, playButtonSelectedWidth, playButtonSelectedHeight);
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 this.dispose();
-                game.setScreen(new AvatarChoiceScreen(game));
+                game.setScreen(new UsernameScreen(game));
             }
         } else {
             game.hudBatch.draw(playButton, xposPlay, yposPlay, playButtonWidth, playButtonHeight);

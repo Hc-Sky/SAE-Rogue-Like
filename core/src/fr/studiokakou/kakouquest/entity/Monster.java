@@ -167,6 +167,14 @@ public class Monster {
         return map.arePointsOnFloor(points);
     }
 
+    /**
+     * Checks if the monster can move to the specified orientation on the map.
+     *
+     * @param orientation The direction to move.
+     * @param map The map.
+     * @param divider The divider to use for the speed.
+     * @return True if the monster can move, false otherwise.
+     */
     public boolean canMove(Point orientation, Map map, int divider){
         Point newPos = this.pos.add(orientation.x*(this.speed/divider)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed/divider)*Gdx.graphics.getDeltaTime());
         Point hitboxTopLeft = newPos.add(3, this.height - Floor.TEXTURE_HEIGHT);
@@ -179,6 +187,12 @@ public class Monster {
         return map.arePointsOnFloor(points);
     }
 
+
+    /**
+     * Randomly determines if the monster can move.
+     *
+     * @return True if the monster can move, false otherwise.
+     */
     public void getRandomMove(){
         if (Utils.randint(1, 3) == 1){
             this.isRandomMoving = true;
@@ -201,6 +215,9 @@ public class Monster {
         }
     }
 
+    /**
+     * Inflicts radiant damage to the monster.
+     */
     public void takeRadiantDamage(){
 
         this.hp -= 5;
@@ -283,7 +300,11 @@ public class Monster {
         return Utils.distance(this.pos, playerPos) <= this.detectRange;
     }
 
-
+    /**
+     * Attacks the player.
+     *
+     * @param player The player to attack.
+     */
     private void attack(Player player) {
         if (this.isDying || !player.hasPlayerSpawn){
             return;
@@ -395,6 +416,11 @@ public class Monster {
         return false;
     }
 
+    /**
+     * Handles monster getting hit by an arrow.
+     *
+     * @param player The player shooting the arrow.
+     */
     public void arrowHit(Player player){
         this.hp -= Bow.BOW_DAMAGE*(player.strength/10);
         this.bloodStateTime=0f;
@@ -446,6 +472,12 @@ public class Monster {
         possibleMonsters.get(1).add(TINY_ZOMBIE(currentLevel));
         possibleMonsters.get(4).add(WOGOL(currentLevel));
         possibleMonsters.get(13).add(Boss.createSlimeBoss(currentLevel));
+    }
+
+    public void dispose(){
+        this.idleAnimation = null;
+        this.runAnimation = null;
+        this.bloodEffect = null;
     }
 
     static Monster BIG_DEMON(int currentLevel){
