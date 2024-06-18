@@ -90,6 +90,28 @@ public class UsernameScreen implements Screen {
             case Input.Keys.RIGHT_BRACKET: return "$";
             case Input.Keys.BACKSLASH: return "*";
             case Input.Keys.EQUALS: return "=";
+            case Input.Keys.SHIFT_LEFT: return "";
+            case Input.Keys.SHIFT_RIGHT: return "";
+            case Input.Keys.CONTROL_LEFT: return "";
+            case Input.Keys.CONTROL_RIGHT: return "";
+            case Input.Keys.TAB: return "";
+            case Input.Keys.ALT_LEFT: return "";
+            case Input.Keys.ALT_RIGHT: return "";
+            case Input.Keys.NUMPAD_0: return "0";
+            case Input.Keys.NUMPAD_1: return "1";
+            case Input.Keys.NUMPAD_2: return "2";
+            case Input.Keys.NUMPAD_3: return "3";
+            case Input.Keys.NUMPAD_4: return "4";
+            case Input.Keys.NUMPAD_5: return "5";
+            case Input.Keys.NUMPAD_6: return "6";
+            case Input.Keys.NUMPAD_7: return "7";
+            case Input.Keys.NUMPAD_8: return "8";
+            case Input.Keys.NUMPAD_9: return "9";
+            case Input.Keys.UP: return "";
+            case Input.Keys.DOWN: return "";
+            case Input.Keys.LEFT: return "";
+            case Input.Keys.RIGHT: return "";
+
             default:
                 return Input.Keys.toString(keycode).toLowerCase();
         }
