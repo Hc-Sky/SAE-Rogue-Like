@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest.player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -589,23 +590,13 @@ public class Player {
      *
      */
     public void getKeyboardWeapon() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
-            setCurrentWeapon(defaultWeapon);
-            indexWeapon = -1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-            if (weapons.size() >= 1) {
-                setCurrentWeapon(weapons.get(0));
-                indexWeapon = 0;
-            }
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            if (weapons.size() >= 2) {
-                setCurrentWeapon(weapons.get(1));
-                indexWeapon = 1;
-            }
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            if (weapons.size() >= 3) {
-                setCurrentWeapon(weapons.get(2));
-                indexWeapon = 2;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3) || Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            indexWeapon += 1;
+            if (indexWeapon + 1 <= weapons.size()) {
+                setCurrentWeapon(weapons.get(indexWeapon));
+            } else {
+                indexWeapon = -1;
+                setCurrentWeapon(defaultWeapon);
             }
         }
     }
@@ -614,13 +605,13 @@ public class Player {
      * Permet de récupérer le choix de l'utilisation des potions.
      */
     public void getKeyboardPotion() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             usePotion(Potion.PotionType.HEALTH);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             usePotion(Potion.PotionType.STAMINA);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
             usePotion(Potion.PotionType.STRENGTH);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.APOSTROPHE)) {
             usePotion(Potion.PotionType.SPEED);
         }
     }
