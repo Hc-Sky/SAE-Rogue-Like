@@ -1,8 +1,12 @@
 package fr.studiokakou.kakouquest.bdd;
 
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.player.Player;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class GameDatabase {
 	private Connection connexion;
@@ -10,12 +14,11 @@ public class GameDatabase {
 	private void loadDatabase() {
 		// Chargement du driver
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 		}
-
 		try {
-			connexion = DriverManager.getConnection("jdbc:mysql://165.232.124.186:3306/studio_kakou", "root", "********");
+			connexion = DriverManager.getConnection("jdbc:mysql://165.232.124.186:3306/studio_kakou", "root", "StudioKakou06!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -23,17 +26,28 @@ public class GameDatabase {
 
 	public void savePlayerStats(Player player) {
 		loadDatabase();
-		String sql = "INSERT INTO player(partie_id, hp, stamina, strength, speed, player_level, player_score) VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO player(partie_id, player_name, hp, stamina, strength, speed, player_level, player_score) VALUES(?,?,?,?,?,?,?,?)";
 
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
 			pstmt.setInt(1, player.getPartie_id());
-			pstmt.setInt(2, player.getHp());
-			pstmt.setInt(3, (int) player.getStamina());
-			pstmt.setInt(4, player.getStrength());
-			pstmt.setInt(5, (int) player.getSpeed());
-			pstmt.setInt(6, player.getPlayerLevel());
-			pstmt.setInt(7, player.getPlayerScore());
+			pstmt.setString(2, loadUsername());
+			pstmt.setInt(3, player.getHp());
+			pstmt.setInt(4, (int) player.getStamina());
+			pstmt.setInt(5, player.getStrength());
+			pstmt.setInt(6, (int) player.getSpeed());
+			pstmt.setInt(7, player.getPlayerLevel());
+			pstmt.setInt(8, player.getPlayerScore());
+
+
+			System.out.println("player.getPartie_id() : " + player.getPartie_id());
+			System.out.println("player.getPlayerName() : " + loadUsername());
+			System.out.println("player.getHp() : " + player.getHp());
+			System.out.println("player.getStamina() : " + player.getStamina());
+			System.out.println("player.getStrength() : " + player.getStrength());
+			System.out.println("player.getSpeed() : " + player.getSpeed());
+			System.out.println("player.getPlayerLevel() : " + player.getPlayerLevel());
+			System.out.println("player.getPlayerScore() : " + player.getPlayerScore());
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -96,6 +110,13 @@ public class GameDatabase {
 		}
 	}
 
+
+	private String loadUsername() {
+		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
+			return "guest";
+		}
+		return GetCoreProperties.getStringProperty("USERNAME");
+	}
 
 
 }
