@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -57,7 +58,7 @@ public class Map {
     /**
      * The list of rooms.
      */
-    ArrayList<Room> rooms =  new ArrayList<>();
+    public ArrayList<Room> rooms =  new ArrayList<>();
     /**
      * The list of bridges.
      */
@@ -289,7 +290,7 @@ public class Map {
         Map.monsters.clear();
         ArrayList<Integer> randomRarity = new ArrayList<>();
 
-        float tmp_current_level = (float) currentLevel /3;
+        float tmp_current_level = (float) (currentLevel/1.5);
         if (tmp_current_level<1){
             tmp_current_level=1;
         }
@@ -326,8 +327,9 @@ public class Map {
      * @param player the player
      */
     public void moveMonsters(Player player){
+        LocalDateTime tmpDateTime = player.radiantTimer;
         for (Monster m : Map.monsters){
-            m.move(player, this);
+            m.move(player, this, tmpDateTime);
         }
     }
 
@@ -360,10 +362,11 @@ public class Map {
     public void genInteractive(int currentLevel, InGameScreen gameScreen){
 
         this.stairs = new Stairs(this.rooms.get(this.rooms.size()-1).getCenterOutOfMapPos(), gameScreen);
+        System.out.println("5");
 
         this.chests.clear();
         for (Room r : rooms.subList(1, rooms.size()-1)){
-            if (Utils.randint(1, 1) == 1){
+            if (Utils.randint(1, 4) == 1){
                 if (!this.stairs.pos.equals(r.getCenterOutOfMapPos())){
                     this.chests.add(new Chest(r.getCenterOutOfMapPos(), currentLevel));
                 }
@@ -486,8 +489,11 @@ public class Map {
      * Disposes resources.
      */
     public void dispose(){
-        for (Floor f : this.floors){
-            f.texture.dispose();
+        for (Wall w : this.walls){
+            w.texture.dispose();
+        }
+        for (Monster m : Map.monsters){
+            m.dispose();
         }
     }
 }

@@ -52,6 +52,13 @@ public class Floor {
 
     }
 
+    /**
+     * Get surrounding array list.
+     * Sert à obtenir les murs entourant le sol.
+     *
+     * @param floors the floors
+     * @return the array list
+     */
     public ArrayList<Wall> getSurrounding(ArrayList<Floor> floors){
 
         ArrayList<Point> result = new ArrayList<>();

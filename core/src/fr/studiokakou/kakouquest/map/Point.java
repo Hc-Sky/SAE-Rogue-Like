@@ -71,29 +71,45 @@ public class Point {
      */
     public static Point getOrientation(Point start, Point end){
         //retourne un Point dont les valeurs de x et y ne peuvent etre que -1, 0 ou 1
-        float x = end.x - start.x;
-        float y = end.y - start.y;
-        float totalDistance = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        float ratioX = x / totalDistance;
-        float ratioY = y / totalDistance;
+//        float x = end.x - start.x;
+//        float y = end.y - start.y;
+//        float totalDistance = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+//        float ratioX = x / totalDistance;
+//        float ratioY = y / totalDistance;
+//
+//        if (ratioX > 0){
+//            x = 1;
+//        } else if (ratioX < 0){
+//            x = -1;
+//        } else {
+//            x = 0;
+//        }
+//
+//        if (ratioY > 0){
+//            y = 1;
+//        } else if (ratioY < 0){
+//            y = -1;
+//        } else {
+//            y = 0;
+//        }
+//
+//        return new Point(x, y);
 
-        if (ratioX > 0){
-            x = 1;
-        } else if (ratioX < 0){
-            x = -1;
-        } else {
-            x = 0;
+        Point orientation = new Point(0, 0);
+
+        if (start.x+1 < end.x){
+            orientation = orientation.add(1, 0);
+        } else if (start.x-1 > end.x){
+            orientation = orientation.add(-1, 0);
         }
 
-        if (ratioY > 0){
-            y = 1;
-        } else if (ratioY < 0){
-            y = -1;
-        } else {
-            y = 0;
+        if (start.y+1 < end.y){
+            orientation = orientation.add(0, 1);
+        } else if (start.y-1 > end.y){
+            orientation = orientation.add(0, -1);
         }
 
-        return new Point(x, y);
+        return orientation;
     }
 
     /**

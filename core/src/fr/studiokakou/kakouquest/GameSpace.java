@@ -1,6 +1,9 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -20,6 +23,8 @@ public class GameSpace extends Game {
 	 * Le SpriteBatch pour dessiner les éléments de l'HUD (interface utilisateur).
 	 */
 	public SpriteBatch hudBatch;
+
+	public SpriteBatch upgradeBatch;
 	/**
 	 * Le temps de démarrage de l'application.
 	 */
@@ -33,7 +38,12 @@ public class GameSpace extends Game {
 
 	public BitmapFont font;
 
+	public Screen previousScreen;
 	private Player player;
+
+	private PauseScreen pauseScreen;
+	private boolean paused;
+
 
 
 	/**
@@ -46,11 +56,14 @@ public class GameSpace extends Game {
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
+		upgradeBatch = new SpriteBatch();
+		pauseScreen = new PauseScreen(this);
 		startTime = TimeUtils.millis();
 		//Le initialize sert juste pour le HelpScreen pour les fonts
 		initialize();
 		// Définition de l'écran initial du jeu (écran de jeu ou écran de démarrage ou menu)
 		this.setScreen(new SplashScreen(this));
+		paused = false;
 	}
 
 	/**
@@ -96,5 +109,20 @@ public class GameSpace extends Game {
 	public void removeAvatarChoiceScreen() {
 		screen.dispose(); // Libère les ressources de l'écran de sélection d'avatar
 		screen = null; // Définit l'écran de sélection d'avatar comme nul
+	}
+	public InGameScreen getInGameScreen() {
+		return (InGameScreen) this.getScreen();
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
+	public void setPreviousScreen(Screen screen) {
+		this.previousScreen = screen;
 	}
 }
