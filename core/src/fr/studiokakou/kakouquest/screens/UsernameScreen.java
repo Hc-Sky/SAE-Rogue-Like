@@ -111,6 +111,20 @@ public class UsernameScreen implements Screen {
             case Input.Keys.DOWN: return "";
             case Input.Keys.LEFT: return "";
             case Input.Keys.RIGHT: return "";
+            case Input.Keys.FORWARD_DEL: return "";
+            case Input.Keys.INSERT: return "";
+            case Input.Keys.END: return "";
+            case Input.Keys.NUMPAD_ADD: return "+";
+            case Input.Keys.NUMPAD_SUBTRACT: return "-";
+            case Input.Keys.NUMPAD_MULTIPLY: return "*";
+            case Input.Keys.NUMPAD_DIVIDE: return "/";
+            case Input.Keys.CAPS_LOCK: return "";
+            case Input.Keys.PAGE_DOWN: return "";
+            case Input.Keys.PAGE_UP: return "";
+            case Input.Keys.HOME: return "";
+            case Input.Keys.SYM: return "CLIQUEZ PAS LA!";
+            case Input.Keys.PRINT_SCREEN: return "";
+            case Input.Keys.PAUSE: return "";
 
             default:
                 return Input.Keys.toString(keycode).toLowerCase();
