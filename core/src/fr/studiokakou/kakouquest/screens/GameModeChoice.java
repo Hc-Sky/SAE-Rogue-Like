@@ -57,15 +57,14 @@ public class GameModeChoice implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.begin();
-        /*
-          Définition de l'abscisse et ordonnées pour chaque boutons en fonction
-          de la taille (résolution) de l'écran
-         */
+
+        //Définition de l'abscisse et ordonnées pour chaque boutons en fonction de la taille (résolution) de l'écran
         int xposSolo = Gdx.graphics.getWidth()/4 - SOLO_BUTTON_WIDTH/2;
         int xposMulti = (Gdx.graphics.getWidth()/4)*3 - MULTI_BUTTON_WIDTH/2;
         int yposSolo = Gdx.graphics.getHeight()/2;
         int yposMulti = Gdx.graphics.getHeight()/2;
 
+        // Dessine le bouton solo
         game.batch.draw(SoloButton, xposSolo, yposSolo, SOLO_BUTTON_WIDTH, SOLO_BUTTON_HEIGHT);
         if (Gdx.input.getX() < xposSolo + SOLO_BUTTON_WIDTH &&
                 Gdx.input.getX() > xposSolo &&
@@ -77,6 +76,7 @@ public class GameModeChoice implements Screen {
             }
         }
 
+        // Dessine le bouton multi
         game.batch.draw(MultiButton, xposMulti, yposMulti, MULTI_BUTTON_WIDTH, MULTI_BUTTON_HEIGHT);
         if (Gdx.input.getX() < xposMulti + MULTI_BUTTON_WIDTH &&
                 Gdx.input.getX() > xposMulti &&
@@ -92,6 +92,7 @@ public class GameModeChoice implements Screen {
             }
         }
 
+        // Dessine le bouton retour
         game.batch.draw(BackButton, 60, 60, 230, 70);
         if (Gdx.input.getX() < 60 + 230 &&
                 Gdx.input.getX() > 60 &&

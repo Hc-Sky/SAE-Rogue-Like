@@ -1,6 +1,7 @@
 package fr.studiokakou.kakouquest.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +12,7 @@ import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
+import fr.studiokakou.kakouquest.weapon.Bow;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,30 +28,24 @@ import java.util.Objects;
  * @author hugocohen--cofflard
  */
 public class Monster {
-    /** The name of the monster. */
     public String name;
-    /** The position of the monster. */
     public Point pos;
-    /** The speed of the monster. */
-    public float speed;
-    /** The damage inflicted by the monster. */
-    public int damage;
-    /** The time pause between attacks. */
-    public float attackPause;
+
+    Point randomMoveDirection;
+    LocalDateTime randomMoveStart;
+    boolean isRandomMoving=false;
 
     LocalDateTime currentAttackTime;
     public int xp;
-    /** The hit points of the monster. */
     public int hp;
-    /** The range in which the monster can detect the player. */
     public int detectRange;
-    /** The height of the monster. */
     float height;
-    /** The width of the monster. */
     float width;
-    /** The animation for idle state. */
+    public float speed;
+    public int damage;
+    public float attackPause;
+
     Animation<TextureRegion> idleAnimation;
-    /** The animation for running state. */
     Animation<TextureRegion> runAnimation;
     boolean isRunning=false;
     boolean isFlip=Utils.randint(0, 1)==0;
@@ -58,19 +54,23 @@ public class Monster {
     public boolean isDying=false;
     public boolean isDead = false;
 
-    /** Number of columns in the animation sprite sheet. */
     public static int FRAME_COLS = 1;
-    /** Number of rows in the animation sprite sheet. */
     public static int FRAME_ROWS = 4;
 
     //hit vars
     public ArrayList<String> player_hitted = new ArrayList<>();
     boolean isRed;
+    boolean isRedRadiant;
+    LocalDateTime radiantStart=null;
     LocalDateTime hitStart=null;
     Animation<TextureRegion> bloodEffect;
     float bloodStateTime=0f;
 
     public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
+
+    public boolean onGuard = false;
+
+    public static Texture exclamationMark;
 
 
     /**
@@ -111,6 +111,10 @@ public class Monster {
         this.upgradeStats(currentLevel);
     }
 
+    public static void initExclamationMark(){
+        exclamationMark = new Texture("assets/effects/exclamation.png");
+    }
+
     /**
      * Sets the position of the monster.
      *
@@ -128,6 +132,11 @@ public class Monster {
     public void upgradeStats(int currentLevel){
         this.hp = this.hp +(this.hp * currentLevel/4);
         this.damage = this.damage + (this.damage * currentLevel /4);
+        if (InGameScreen.currentLevel < 12) {
+            this.speed = this.speed * (1 + (float) currentLevel /10);
+        } else {
+            this.speed = this.speed * (1 + (float) 12 / 20);
+        }
     }
 
     /**
@@ -159,18 +168,86 @@ public class Monster {
     }
 
     /**
+     * Checks if the monster can move to the specified orientation on the map.
+     *
+     * @param orientation The direction to move.
+     * @param map The map.
+     * @param divider The divider to use for the speed.
+     * @return True if the monster can move, false otherwise.
+     */
+    public boolean canMove(Point orientation, Map map, int divider){
+        Point newPos = this.pos.add(orientation.x*(this.speed/divider)*Gdx.graphics.getDeltaTime(), orientation.y*(this.speed/divider)*Gdx.graphics.getDeltaTime());
+        Point hitboxTopLeft = newPos.add(3, this.height - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomLeft = newPos.add(3, 0);
+        Point hitboxTopRight = newPos.add(this.width-3, this.height - Floor.TEXTURE_HEIGHT);
+        Point hitboxBottomRight = newPos.add(this.width-3, 0);
+
+        Point[] points = {hitboxTopLeft, hitboxBottomLeft, hitboxTopRight, hitboxBottomRight};
+
+        return map.arePointsOnFloor(points);
+    }
+
+
+    /**
+     * Randomly determines if the monster can move.
+     *
+     * @return True if the monster can move, false otherwise.
+     */
+    public void getRandomMove(){
+        if (Utils.randint(1, 3) == 1){
+            this.isRandomMoving = true;
+            this.randomMoveDirection = new Point(Utils.randint(-1, 1), Utils.randint(-1, 1));
+            while (this.randomMoveDirection.x == 0 && this.randomMoveDirection.y == 0){
+                this.randomMoveDirection = new Point(Utils.randint(-1, 1), Utils.randint(-1, 1));
+            }
+            if (randomMoveDirection.x == 1){
+                this.isFlip = false;
+            } else if (randomMoveDirection.x == -1){
+                this.isFlip = true;
+            }
+            this.randomMoveStart = LocalDateTime.now();
+            this.isRunning = true;
+        } else {
+            this.isRandomMoving = false;
+            this.isRunning = false;
+            this.randomMoveDirection = null;
+            this.randomMoveStart = LocalDateTime.now();
+        }
+    }
+
+    /**
+     * Inflicts radiant damage to the monster.
+     */
+    public void takeRadiantDamage(){
+
+        this.hp -= 5;
+        this.isRedRadiant = true;
+        this.radiantStart = LocalDateTime.now();
+
+        if (this.hp <= 0){
+            this.isDying=true;
+        }
+    }
+
+    /**
      * Moves the monster towards the player if in detection range.
      *
      * @param player The player.
      * @param map The map.
      */
-    public void move(Player player, Map map){
+    public void move(Player player, Map map, LocalDateTime radiantTimer){
         if (isDying || isRed || !player.hasPlayerSpawn){
             return;
         }
         Point playerPos = player.pos;
         if (Utils.distance(playerPos, this.pos)<=10){
             this.attack(player);
+        }
+        if (player.isRadiant && Utils.getDistance(playerPos, this.pos) <= 36){
+            if (radiantTimer==null || radiantTimer.plusNanos(1000000000).isBefore(LocalDateTime.now())){
+                this.takeRadiantDamage();
+                player.radiantTimer = LocalDateTime.now();
+            }
         }
         if (detectPlayer(playerPos)){
             this.isRunning = true;
@@ -183,7 +260,17 @@ public class Monster {
                 this.pos = this.pos.add(0, orientation.y*(this.speed)*Gdx.graphics.getDeltaTime());
             }
         }else {
-            this.isRunning=false;
+            if (this.randomMoveStart == null || this.randomMoveStart.plusSeconds(1).isBefore(LocalDateTime.now())){
+                this.getRandomMove();
+            }
+            if (this.isRandomMoving){
+                if (canMove(this.randomMoveDirection, map, 3)){
+                    this.pos = this.pos.add(this.randomMoveDirection.x*(this.speed/3)*Gdx.graphics.getDeltaTime(), this.randomMoveDirection.y*(this.speed/3)*Gdx.graphics.getDeltaTime());
+                } else {
+                    this.isRunning = false;
+                    this.isRandomMoving = false;
+                }
+            }
         }
     }
 
@@ -207,10 +294,17 @@ public class Monster {
      * @return True if the player is detected, false otherwise.
      */
     public boolean detectPlayer(Point playerPos){
+        if (onGuard){
+            return Utils.distance(this.pos, playerPos) <= this.detectRange*2;
+        }
         return Utils.distance(this.pos, playerPos) <= this.detectRange;
     }
 
-
+    /**
+     * Attacks the player.
+     *
+     * @param player The player to attack.
+     */
     private void attack(Player player) {
         if (this.isDying || !player.hasPlayerSpawn){
             return;
@@ -255,11 +349,15 @@ public class Monster {
 
         this.sprite.flip(this.isFlip, false);
 
-        if (isRed){
+        if (isRed || isRedRadiant){
             this.sprite.setColor(1, 0, 0, 1f);
         }
 
         this.sprite.draw(batch);
+
+        if (onGuard) {
+            batch.draw(exclamationMark, this.pos.x + this.width / 2 - 3, this.pos.y + this.height + 3, 5, 14);
+        }
 
     }
 
@@ -286,11 +384,17 @@ public class Monster {
 
         if (hitStart!= null && this.isRed && this.hitStart.plusNanos(200000000).isBefore(LocalDateTime.now())){
             this.isRed=false;
-            this.player_hitted.remove(this.player_hitted.get(0));
+            if (this.player_hitted.size()>0){
+                this.player_hitted.remove(this.player_hitted.get(0));
+            }
             this.hitStart=null;
             if (isDying){
                 this.isDead=true;
             }
+        }
+
+        if (this.isRedRadiant && radiantStart!=null && radiantStart.plusNanos(150000000).isBefore(LocalDateTime.now())){
+            this.isRedRadiant = false;
         }
     }
 
@@ -310,6 +414,24 @@ public class Monster {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Handles monster getting hit by an arrow.
+     *
+     * @param player The player shooting the arrow.
+     */
+    public void arrowHit(Player player){
+        this.hp -= Bow.BOW_DAMAGE*(player.strength/10);
+        this.bloodStateTime=0f;
+        this.isRed=true;
+        this.hitStart=LocalDateTime.now();
+        this.onGuard = true;
+
+        if (this.hp <= 0){
+            this.isDying=true;
+            player.gainExperience(this.xp);
+        }
     }
 
 
@@ -350,11 +472,12 @@ public class Monster {
         possibleMonsters.get(1).add(TINY_ZOMBIE(currentLevel));
         possibleMonsters.get(4).add(WOGOL(currentLevel));
         possibleMonsters.get(13).add(Boss.createSlimeBoss(currentLevel));
+    }
 
-        // Add Slime Boss from level 8
-        if (currentLevel == 1) {
-            possibleMonsters.get(currentLevel).add(Boss.createSlimeBoss(currentLevel));
-        }
+    public void dispose(){
+        this.idleAnimation = null;
+        this.runAnimation = null;
+        this.bloodEffect = null;
     }
 
     static Monster BIG_DEMON(int currentLevel){

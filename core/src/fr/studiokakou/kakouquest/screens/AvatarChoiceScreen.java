@@ -79,6 +79,12 @@ public class AvatarChoiceScreen implements Screen {
 
     }
 
+    /**
+     * Permet de dessiner l'écran de sélection d'avatar.
+     *
+     *
+     * @param delta le delta
+     */
     @Override
     public void render(float delta) {
         /*
@@ -120,6 +126,12 @@ public class AvatarChoiceScreen implements Screen {
         batch.end();
     }
 
+    /**
+     * Permet de redimensionner l'écran de sélection d'avatar.
+     *
+     * @param width  la largeur
+     * @param height la hauteur
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);

@@ -12,12 +12,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.bdd.GameDatabase;
+import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
+import fr.studiokakou.kakouquest.interactive.Stairs;
+import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Map;
+import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.upgradeCard.UpgradeCard;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
 
@@ -36,11 +39,12 @@ public class InGameScreen implements Screen {
 	public static float stateTime = 0f;
 
 	Player player;
+	public static String username;
 	Camera cam;
 	Hud hud;
 	BitmapFont font;
 
-	int currentLevel;
+	public static int currentLevel;
 	Map map;
 	public int map_height;
 	public int map_width;
@@ -69,7 +73,7 @@ public class InGameScreen implements Screen {
 		this.hudBatch = game.hudBatch;
 		this.upgradeBatch = game.upgradeBatch;
 
-		this.currentLevel = 1;
+		currentLevel = 1;
 
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
@@ -79,7 +83,7 @@ public class InGameScreen implements Screen {
 		this.map = new Map(this.map_width, this.map_height);
 
 		// Initialisation du joueur
-		this.player = new Player(map.getPlayerSpawn(), "player", selectedAvatarTexture);
+		this.player = new Player(map.getPlayerSpawn(), loadUsername(), selectedAvatarTexture);
 		this.cam = new Camera(this.player);
 
 		// Load countdown textures
@@ -105,20 +109,38 @@ public class InGameScreen implements Screen {
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
 						public void run() {
-							InGameScreen.stateTime = 0f;
-							System.out.println("next level");
-							currentLevel += 1;
+							if ((currentLevel+1) % 5 == 0){
+								InGameScreen.currentLevel++;
+								InGameScreen.stateTime = 0f;
+								System.out.println("boss level");
 
-							map = new Map(map_width, map_height);
-							player.hasPlayerSpawn = false;
-							player.setPos(map.getPlayerSpawn());
 
-							startTime = TimeUtils.millis();
+								map = new BossMap(10,10);
+								player.hasPlayerSpawn = false;
+								player.setPos(map.getPlayerSpawn());
 
-							map.spawnMonsters(currentLevel);
-							map.genInteractive(currentLevel, InGameScreen.this);
+								startTime = TimeUtils.millis();
 
-							game.setScreen(InGameScreen.this);
+								map.genInteractive(currentLevel, InGameScreen.this);
+
+								game.setScreen(InGameScreen.this);
+							}
+							else {
+								InGameScreen.currentLevel += 1;
+								InGameScreen.stateTime = 0f;
+								System.out.println("next level");
+
+								map = new Map(map_width, map_height);
+								player.hasPlayerSpawn = false;
+								player.setPos(map.getPlayerSpawn());
+
+								startTime = TimeUtils.millis();
+
+								map.spawnMonsters(currentLevel);
+								map.genInteractive(currentLevel, InGameScreen.this);
+
+								game.setScreen(InGameScreen.this);
+							}
 						}
 					});
 				} catch (InterruptedException e) {
@@ -137,11 +159,13 @@ public class InGameScreen implements Screen {
 			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
 			pm.dispose();
 
-			this.hud = new Hud(this.player, this.currentLevel, this.cam.zoom);
+			this.hud = new Hud(this.player, currentLevel,cam.zoom);
 
 			startTime = TimeUtils.millis();
 		    font = new BitmapFont();
             hud.setFont(font);
+
+			Monster.initExclamationMark();
 
 			this.map.spawnMonsters(currentLevel);
 			this.map.genInteractive(currentLevel, this);
@@ -156,13 +180,18 @@ public class InGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		if (paused) {
-			System.out.println("Game is paused");
-		}
 
 		if (isCountingDown) {
 			renderCountdown(delta);
 			return;
+		}
+
+		if (currentLevel%5 == 0){
+			if (BossMap.isBossDefeated()){
+				map.stairs.canInteract = true;
+			} else {
+				map.stairs.canInteract = false;
+			}
 		}
 
 		InGameScreen.stateTime += delta;
@@ -172,6 +201,11 @@ public class InGameScreen implements Screen {
 			game.setScreen(new PauseScreen(game));
 			pause();
 			return;
+		}
+
+
+		if (Gdx.input.isKeyPressed(Input.Keys.N)){
+			player.experience += 100;
 		}
 
 		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
@@ -209,7 +243,7 @@ public class InGameScreen implements Screen {
 		if (!UpgradeCardScreen.isUpgrading){
 			player.regainStamina();
 		}
-		player.draw(this.batch);
+		player.draw(this.batch, map);
 
 		batch.end();
 
@@ -235,7 +269,7 @@ public class InGameScreen implements Screen {
 
 
 		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
-			this.currentLevel=0;
+			currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();
 		}
@@ -330,4 +364,11 @@ public class InGameScreen implements Screen {
 			texture.dispose();
 		}
 	}
+	private String loadUsername() {
+		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
+			return "guest";
+		}
+		return GetCoreProperties.getStringProperty("USERNAME");
+	}
 }
+
