@@ -138,13 +138,6 @@ public class Boss extends Monster {
         if (Utils.distance(playerPos, this.pos) <= 60) {
             this.attack(player);
         }
-        if (isAttacking) {
-            attackStateTime += Gdx.graphics.getDeltaTime();
-            // Si l'animation d'attaque dure depuis plus de 1 seconde, infligez des dégâts
-            if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
-                player.takeDamage(this.damage);
-            }
-        }
         if (detectPlayer(playerPos)) {
             this.isRunning = true;
             this.getOrientation(player);
@@ -224,6 +217,13 @@ public class Boss extends Monster {
             this.isHit = true;
             this.isRed = true; // Activer l'effet rouge
             hitStateTime = 0; // Réinitialiser hitStateTime lors de la prise de dégâts
+            if (isAttacking) {
+                attackStateTime += Gdx.graphics.getDeltaTime();
+                // Si l'animation d'attaque dure depuis plus de 1 seconde, infligez des dégâts
+                if (attackStateTime > 1.0f && Utils.getDistance(player.pos, this.pos) < 60) {
+                    player.takeDamage(this.damage);
+                }
+            }
             if (this.hp <= 0) {
                 this.isAttacking = false;
                 this.isHit = false;
@@ -262,6 +262,6 @@ public class Boss extends Monster {
                 "assets/entities/slime_boss_attack.png",
                 "assets/entities/slime_boss_hit.png",
                 "assets/entities/slime_boss_death.png",
-                2000, 50, 300, 30f, 200, currentLevel); // Réduire attackPause à 500 ms pour des attaques plus fréquentes
+                2000, 130, 300, 30f, 200, currentLevel); // Réduire attackPause à 500 ms pour des attaques plus fréquentes
     }
 }

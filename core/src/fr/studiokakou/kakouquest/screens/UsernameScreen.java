@@ -17,8 +17,7 @@ public class UsernameScreen implements Screen {
 
     GameSpace game;
 
-    SpriteBatch batcher;
-
+    SpriteBatch hudBatch;
     // Image de fond
     Texture background;
 
@@ -30,7 +29,7 @@ public class UsernameScreen implements Screen {
 
     public UsernameScreen(GameSpace game) {
         this.game = game;
-        batcher = game.batch;
+        hudBatch = game.hudBatch;
         backButton = new Texture("assets/buttons/back_button.png");
         backButtonSelected = new Texture("assets/buttons/back_button_selected.png");
 
@@ -160,13 +159,13 @@ public class UsernameScreen implements Screen {
         }
         game.hudBatch.end();
 
-        batcher.begin();
+        hudBatch.begin();
 
-        scaledFont.draw(batcher, "Entrez votre nom d'utilisateur", (float) Gdx.graphics.getWidth() / 2 - 240, (float) Gdx.graphics.getHeight() - 350);
-        scaledFont.draw(batcher, "Username : " + UsernameScreen.username + "|", (float) Gdx.graphics.getWidth() / 2 - 125, (float) Gdx.graphics.getHeight() / 2 + 60);
-        scaledFont.draw(batcher, "Le nom d'utilisateur doit faire au moins 3 caractères", (float) Gdx.graphics.getWidth() / 2 - 450, (float) Gdx.graphics.getHeight() / 2);
+        scaledFont.draw(hudBatch, "Entrez votre nom d'utilisateur", (float) Gdx.graphics.getWidth() / 2 - 240, (float) Gdx.graphics.getHeight() - 350);
+        scaledFont.draw(hudBatch, "Username : " + UsernameScreen.username + "|", (float) Gdx.graphics.getWidth() / 2 - 125, (float) Gdx.graphics.getHeight() / 2 + 60);
+        scaledFont.draw(hudBatch, "Le nom d'utilisateur doit faire au moins 3 caractères", (float) Gdx.graphics.getWidth() / 2 - 450, (float) Gdx.graphics.getHeight() / 2);
 
-        batcher.end();
+        hudBatch.end();
     }
 
     @Override
