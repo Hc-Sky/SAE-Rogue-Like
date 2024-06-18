@@ -592,11 +592,11 @@ public class Player {
     public void getKeyboardPotion() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             usePotion(Potion.PotionType.HEALTH);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             usePotion(Potion.PotionType.STAMINA);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
             usePotion(Potion.PotionType.STRENGTH);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.APOSTROPHE)) {
             usePotion(Potion.PotionType.SPEED);
         }
     }
