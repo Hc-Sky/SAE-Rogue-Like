@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.GetCoreProperties;
@@ -58,6 +59,15 @@ public class InGameScreen implements Screen {
 	private static final float COUNTDOWN_INTERVAL = 0.5f; // 0.5 second interval
 	private Texture background;
 
+	// Konami Code variables
+	private final int[] konamiCode = {
+			Input.Keys.UP, Input.Keys.UP, Input.Keys.DOWN, Input.Keys.DOWN,
+			Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.LEFT, Input.Keys.RIGHT,
+			Input.Keys.B, Input.Keys.A
+	};
+	private Array<Integer> konamiSequence;
+	private boolean konamiActivated = false;
+
 	/**
 	 * Constructeur de l'écran de jeu.
 	 *
@@ -89,6 +99,8 @@ public class InGameScreen implements Screen {
 		countdownTextures[1] = new Texture("assets/window/2.png");
 		countdownTextures[2] = new Texture("assets/window/1.png");
 		background = new Texture("assets/window/settings_background.png");
+		// Initialize the Konami sequence tracker
+		konamiSequence = new Array<Integer>(10);
 	}
 
 	/**
@@ -152,6 +164,7 @@ public class InGameScreen implements Screen {
 		if (!initialized) {
 			InGameScreen.stateTime = 0f;
 
+
 			Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor/melee_attack.png"));
 			Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth() / 2, pm.getHeight() / 2));
 			pm.dispose();
@@ -203,6 +216,10 @@ public class InGameScreen implements Screen {
 
 		if (Gdx.input.isKeyPressed(Input.Keys.N)){
 			player.experience += 100;
+		}
+
+		if (!konamiActivated) {
+			checkKonamiCode();
 		}
 
 		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
@@ -346,6 +363,44 @@ public class InGameScreen implements Screen {
 		countdownIndex = 0;
 		paused = true; // Ensure the game is paused during the countdown
 		System.out.println("Starting countdown");
+	}
+
+	private void checkKonamiCode() {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.UP) ||
+				Gdx.input.isKeyJustPressed(Input.Keys.DOWN) ||
+				Gdx.input.isKeyJustPressed(Input.Keys.LEFT) ||
+				Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) ||
+				Gdx.input.isKeyJustPressed(Input.Keys.B) ||
+				Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+
+			int key = Gdx.input.isKeyJustPressed(Input.Keys.UP) ? Input.Keys.UP :
+					Gdx.input.isKeyJustPressed(Input.Keys.DOWN) ? Input.Keys.DOWN :
+							Gdx.input.isKeyJustPressed(Input.Keys.LEFT) ? Input.Keys.LEFT :
+									Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) ? Input.Keys.RIGHT :
+											Gdx.input.isKeyJustPressed(Input.Keys.B) ? Input.Keys.B :
+													Gdx.input.isKeyJustPressed(Input.Keys.A) ? Input.Keys.A : -1;
+
+			konamiSequence.add(key);
+
+			if (konamiSequence.size > konamiCode.length) {
+				konamiSequence.removeIndex(0);
+			}
+
+			boolean match = true;
+			for (int i = 0; i < konamiSequence.size; i++) {
+				if (konamiSequence.get(i) != konamiCode[i]) {
+					match = false;
+					break;
+				}
+			}
+
+			if (match && konamiSequence.size == konamiCode.length) {
+				konamiActivated = true;
+				System.out.println("Konami Code Activated!");
+				// Set the konami flag in the game
+				game.setKonamiActivated(true);
+			}
+		}
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class LoadingScreen implements Screen {
     private GameSpace game;
-    private SpriteBatch batch;
+    private SpriteBatch hudBatch;
     private BitmapFont font;
     private String loadingMessage;
     private Texture texture;
@@ -26,19 +26,17 @@ public class LoadingScreen implements Screen {
             "On prépare la suite pour vous Sir Kakou..."
     };
 
-    /**
-     * Constructeur de l'écran de chargement.
-     *
-     * @param game Espace de jeu.
-     */
+    // Existing code...
+
     public LoadingScreen(GameSpace game) {
         this.game = game;
-        this.batch = new SpriteBatch();
+        this.hudBatch = new SpriteBatch();
         this.font = new BitmapFont();
         this.font.getData().setScale(2);  // Agrandir la police par un facteur de 2
         this.loadingMessage = getRandomMessage();
         this.texture = null;
     }
+
 
     /**
      * Récupérer un message aléatoire parmi les messages de chargement.
@@ -59,7 +57,11 @@ public class LoadingScreen implements Screen {
     private Texture getRandomTexture() {
         Random random = new Random();
         // 1 chance sur 15 de charger "fede.png" au lieu de "icon.png"
-        if (random.nextInt(15) == 0) {
+        if (game.isKonamiActivated()){
+            Gdx.app.log("LoadingScreen", "Easter Egg found!");
+            return new Texture(Gdx.files.internal("assets/window/easter-egg.png"));
+        }
+        else if (random.nextInt(15) == 0) {
             Gdx.app.log("LoadingScreen", "Loading fede.png");
             return new Texture(Gdx.files.internal("assets/window/fede.png"));
         } else {
@@ -88,7 +90,7 @@ public class LoadingScreen implements Screen {
         Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
+        hudBatch.begin();
 
         if (texture != null) {
             // Dessiner l'image
@@ -96,7 +98,7 @@ public class LoadingScreen implements Screen {
             float textureHeight = texture.getHeight() * 3f;
             float textureX = (Gdx.graphics.getWidth() - textureWidth) / 2;
             float textureY = (Gdx.graphics.getHeight() - textureHeight) / 2;
-            batch.draw(texture, textureX, textureY, textureWidth, textureHeight);
+            hudBatch.draw(texture, textureX, textureY, textureWidth, textureHeight);
         } else {
             Gdx.app.log("LoadingScreen", "Texture is null");
         }
@@ -105,8 +107,8 @@ public class LoadingScreen implements Screen {
         float x = (Gdx.graphics.getWidth() - layout.width) / 2;
         float y = (Gdx.graphics.getHeight() + layout.height) / 2 - texture.getHeight() * 2f; // Décalage en fonction de la hauteur de l'image
 
-        font.draw(batch, layout, x, y);
-        batch.end();
+        font.draw(hudBatch, layout, x, y);
+        hudBatch.end();
     }
 
     @Override
@@ -133,7 +135,7 @@ public class LoadingScreen implements Screen {
     @Override
     public void dispose() {
         font.dispose();
-        batch.dispose();
+        hudBatch.dispose();
         if (texture != null) {
             texture.dispose();
         }

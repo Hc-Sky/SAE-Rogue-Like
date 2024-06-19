@@ -43,6 +43,8 @@ public class GameSpace extends Game {
 
 	private PauseScreen pauseScreen;
 	private boolean paused;
+	private boolean konamiActivated = false;
+
 
 
 
@@ -124,5 +126,13 @@ public class GameSpace extends Game {
 
 	public void setPreviousScreen(Screen screen) {
 		this.previousScreen = screen;
+	}
+
+	public void setKonamiActivated(boolean activated) {
+		this.konamiActivated = activated;
+	}
+
+	public boolean isKonamiActivated() {
+		return konamiActivated;
 	}
 }
