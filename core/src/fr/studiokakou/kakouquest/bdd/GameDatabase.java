@@ -97,7 +97,7 @@ public class GameDatabase {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
 			pstmt.setInt(1, player.getPartie_id());
 			pstmt.setInt(2, InGameScreen.deepestLevel);
-			pstmt.setInt(3, (int) player.getGameScore());
+			pstmt.setInt(3, InGameScreen.score);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
