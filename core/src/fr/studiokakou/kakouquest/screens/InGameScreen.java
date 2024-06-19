@@ -208,7 +208,7 @@ public class InGameScreen implements Screen {
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			game.previousScreen = this;
-			game.setScreen(new PauseScreen(game));
+			game.setScreen(new PauseScreen(game, this));
 			pause();
 			return;
 		}

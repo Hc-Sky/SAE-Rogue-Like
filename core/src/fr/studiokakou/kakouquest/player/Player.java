@@ -47,6 +47,7 @@ public class Player {
     public int playerLevel;
     public double experience;
     public double experienceToNextLevel;
+    public int partie_id;
 
     //player weapons
     public MeleeWeapon currentWeapon;
@@ -773,4 +774,55 @@ public class Player {
             this.experience += experience*0.5;
         }
     }
+
+    //getter
+    public Point getPos() {
+        return pos;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMax_hp() {
+        return max_hp;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public float getStamina() {
+        return stamina;
+    }
+
+    public int getMax_stamina() {
+        return max_stamina;
+    }
+
+    public MeleeWeapon getCurrentWeapon() {
+        return currentWeapon;
+    }
+
+    public int getPartie_id() {
+        return 0;
+    }
+
+
+    public int getPlayerLevel() {
+        return playerLevel;
+    }
+
+    public int getPlayerScore() {
+        return 0;
+    }
+
+    public double getGameScore() {
+        return experience;
+    }
 }
+

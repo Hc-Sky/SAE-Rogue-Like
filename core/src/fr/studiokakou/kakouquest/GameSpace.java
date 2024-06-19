@@ -1,15 +1,15 @@
 package fr.studiokakou.kakouquest;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.player.Player;
-import fr.studiokakou.kakouquest.screens.*;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
+import fr.studiokakou.kakouquest.screens.PauseScreen;
+import fr.studiokakou.kakouquest.screens.SplashScreen;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
