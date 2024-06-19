@@ -24,6 +24,7 @@ public class PauseScreen implements Screen {
 	private static final int SETTINGS_BUTTON_SELECTED_HEIGHT = 204;
 
 	private GameSpace game;
+	private InGameScreen inGameScreen;
 	private GameDatabase db;
 	private Texture resumeButton;
 	private Texture resumeButtonSelected;
@@ -43,6 +44,19 @@ public class PauseScreen implements Screen {
 		exitButton = new Texture("assets/buttons/exit_button.png");
 		exitButtonSelected = new Texture("assets/buttons/exit_button_selected.png");
 		background = new Texture("assets/window/settings_background.png");
+	}
+
+	public PauseScreen(GameSpace game, InGameScreen inGameScreen) {
+		this.game = game;
+		this.db = new GameDatabase();
+		resumeButton = new Texture("assets/buttons/resume_button.png");
+		resumeButtonSelected = new Texture("assets/buttons/resume_button_selected.png");
+		settingsButton = new Texture("assets/buttons/settings_button.png");
+		settingsButtonSelected = new Texture("assets/buttons/settings_button_selected.png");
+		exitButton = new Texture("assets/buttons/exit_button.png");
+		exitButtonSelected = new Texture("assets/buttons/exit_button_selected.png");
+		background = new Texture("assets/window/settings_background.png");
+		this.inGameScreen = inGameScreen;
 	}
 
 	@Override
@@ -118,9 +132,9 @@ public class PauseScreen implements Screen {
 				Gdx.graphics.getHeight() - Gdx.input.getY() > yposExit) {
 			game.hudBatch.draw(exitButtonSelected, xposExit - 21, yposExit - 23, EXIT_BUTTON_SELECTED_WIDTH, EXIT_BUTTON_SELECTED_HEIGHT);
 			if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-				db.savePlayerStats(game.getPlayer());
-				db.saveWeaponStats(game.getPlayer());
-				db.saveAmeliorationStats(game.getPlayer());
+				db.savePlayerStats(inGameScreen.player);
+				db.saveWeaponStats(inGameScreen.player);
+				db.saveAmeliorationStats(inGameScreen.player);
 				db.closeConnection();
 				game.setScreen(new MenuScreen(game));
 			}

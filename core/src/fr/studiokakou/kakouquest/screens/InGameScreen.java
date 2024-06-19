@@ -5,20 +5,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.GameSpace;
-import fr.studiokakou.kakouquest.bdd.GameDatabase;
 import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.entity.Monster;
 import fr.studiokakou.kakouquest.hud.Hud;
-import fr.studiokakou.kakouquest.interactive.Stairs;
 import fr.studiokakou.kakouquest.map.BossMap;
 import fr.studiokakou.kakouquest.map.Map;
-import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
@@ -198,7 +195,7 @@ public class InGameScreen implements Screen {
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			game.previousScreen = this;
-			game.setScreen(new PauseScreen(game));
+			game.setScreen(new PauseScreen(game, this));
 			pause();
 			return;
 		}
