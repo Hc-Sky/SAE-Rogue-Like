@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import fr.studiokakou.kakouquest.map.Map;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -230,6 +231,8 @@ public class Boss extends Monster {
                 this.isRunning = false;
                 this.isDying = true;
                 deathStateTime = 0; // Réinitialiser deathStateTime lors de la mort
+                InGameScreen.score += 100*InGameScreen.currentLevel;
+                player.gainExperience(100*InGameScreen.currentLevel);
             }
         }
     }

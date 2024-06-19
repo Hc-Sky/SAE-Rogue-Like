@@ -37,12 +37,13 @@ public class InGameScreen implements Screen {
 	public static float stateTime = 0f;
 
 	Player player;
-	public static String username;
+	public static int score;
 	Camera cam;
 	Hud hud;
 	BitmapFont font;
 
 	public static int currentLevel;
+	public static int deepestLevel;
 	Map map;
 	public int map_height;
 	public int map_width;
@@ -81,6 +82,7 @@ public class InGameScreen implements Screen {
 		this.upgradeBatch = game.upgradeBatch;
 
 		currentLevel = 1;
+		deepestLevel = 1;
 
 		Monster.createPossibleMonsters(currentLevel);
 		MeleeWeapon.createPossibleMeleeWeapons();
@@ -92,6 +94,8 @@ public class InGameScreen implements Screen {
 		// Initialisation du joueur
 		this.player = new Player(map.getPlayerSpawn(), loadUsername(), selectedAvatarTexture);
 		this.cam = new Camera(this.player);
+
+		score = 0;
 
 		// Load countdown textures
 		countdownTextures = new Texture[3];
@@ -121,6 +125,7 @@ public class InGameScreen implements Screen {
 							if ((currentLevel+1) % 5 == 0){
 								InGameScreen.currentLevel++;
 								InGameScreen.stateTime = 0f;
+								InGameScreen.score+=150;
 								System.out.println("boss level");
 
 
@@ -283,6 +288,9 @@ public class InGameScreen implements Screen {
 
 
 		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
+			if (currentLevel > deepestLevel){
+				deepestLevel = currentLevel;
+			}
 			currentLevel=0;
 			this.player.playerDeath();
 			this.nextLevel();

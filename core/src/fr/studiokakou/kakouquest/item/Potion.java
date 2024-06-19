@@ -10,7 +10,6 @@ public class Potion {
         HEALTH, STAMINA, STRENGTH, SPEED
     }
 
-    public String texturePath;
     public Texture texture;
 
     private String name;

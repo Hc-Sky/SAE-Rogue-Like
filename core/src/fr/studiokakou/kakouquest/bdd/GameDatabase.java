@@ -2,6 +2,7 @@ package fr.studiokakou.kakouquest.bdd;
 
 import fr.studiokakou.kakouquest.GetCoreProperties;
 import fr.studiokakou.kakouquest.player.Player;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -95,6 +96,7 @@ public class GameDatabase {
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
 			pstmt.setInt(1, player.getPartie_id());
+			pstmt.setInt(2, InGameScreen.deepestLevel);
 			pstmt.setInt(3, (int) player.getGameScore());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {

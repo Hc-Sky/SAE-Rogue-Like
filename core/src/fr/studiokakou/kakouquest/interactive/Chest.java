@@ -184,6 +184,7 @@ public class Chest {
 
         if (this.canInteract && Gdx.input.isKeyJustPressed(this.interactKeyCode)){
             this.isOpened = true;
+            InGameScreen.score += 10;
             this.dropLoot();
             player.bow.arrowCount += this.nbArrows;
             if (this.potion != null) {

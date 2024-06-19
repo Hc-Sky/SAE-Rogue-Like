@@ -637,7 +637,7 @@ public class Player {
     private void applyEffect(Potion.PotionType type) {
         switch (type) {
             case HEALTH:
-                this.hp = Math.min(this.hp + 50, 100);
+                this.hp = Math.min(this.hp + 50, max_hp);
                 break;
             case STAMINA:
                 this.stamina = Math.min(this.stamina + 50, 100);

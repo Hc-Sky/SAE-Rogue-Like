@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.bdd.GameDatabase;
 
+import static fr.studiokakou.kakouquest.screens.InGameScreen.currentLevel;
+import static fr.studiokakou.kakouquest.screens.InGameScreen.deepestLevel;
+
 public class PauseScreen implements Screen {
 
 	private static final int RESUME_BUTTON_HEIGHT = 300;
@@ -132,10 +135,17 @@ public class PauseScreen implements Screen {
 				Gdx.graphics.getHeight() - Gdx.input.getY() > yposExit) {
 			game.hudBatch.draw(exitButtonSelected, xposExit - 21, yposExit - 23, EXIT_BUTTON_SELECTED_WIDTH, EXIT_BUTTON_SELECTED_HEIGHT);
 			if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-				db.savePlayerStats(inGameScreen.player);
-				db.saveWeaponStats(inGameScreen.player);
-				db.saveAmeliorationStats(inGameScreen.player);
-				db.closeConnection();
+				if (currentLevel > deepestLevel){
+					deepestLevel = currentLevel;
+				}
+				try {
+					db.savePlayerStats(inGameScreen.player);
+					db.saveWeaponStats(inGameScreen.player);
+					db.saveAmeliorationStats(inGameScreen.player);
+					db.closeConnection();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				game.setScreen(new MenuScreen(game));
 			}
 		} else {
