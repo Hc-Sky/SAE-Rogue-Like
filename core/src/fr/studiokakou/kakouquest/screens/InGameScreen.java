@@ -150,7 +150,6 @@ public class InGameScreen implements Screen {
 	 */
 	public void nextLevel() {
 		game.setScreen(new LoadingScreen(game));
-		InGameScreen.stateTime=0f;
 
 		new Thread(new Runnable() {
 			@Override
@@ -236,121 +235,112 @@ public class InGameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 
-		try {
-			if (isCountingDown) {
-				renderCountdown(delta);
-				return;
+		if (isCountingDown) {
+			renderCountdown(delta);
+			return;
+		}
+
+		if (currentLevel%5 == 0){
+			if (BossMap.isBossDefeated()){
+				map.stairs.canInteract = true;
+			} else {
+				map.stairs.canInteract = false;
 			}
+		}
 
-			if (currentLevel%5 == 0){
-				if (BossMap.isBossDefeated()){
-					map.stairs.canInteract = true;
-				} else {
-					map.stairs.canInteract = false;
-				}
-			}
+		InGameScreen.stateTime += delta;
 
-			InGameScreen.stateTime += delta;
-
-			if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-				game.previousScreen = this;
-				game.setScreen(new PauseScreen(game, this));
-				pause();
-				return;
-			}
-
-
-			if (Gdx.input.isKeyPressed(Input.Keys.N)){
-				player.experience += 100;
-			}
-
-			if (!konamiActivated) {
-				checkKonamiCode();
-			}
-
-			Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			Gdx.gl.glFlush();
-
-			if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
-				player.spawnPlayer();
-			}
-
-			if (player.hasPlayerSpawn && !player.isPlayerSpawning && ! UpgradeCardScreen.isUpgrading){
-				player.getKeyboardMove(this.map);
-				player.getKeyboardWeapon();
-				player.getKeyboardPotion();
-				player.getOrientation();
-				player.dash(this.map);
-			}
-
-			cam.update();
-
-			// Met à jour la position des monstres
-			if (! UpgradeCardScreen.isUpgrading){
-				this.map.moveMonsters(this.player);
-				this.map.updateInteractive(this.player);
-			}
-
-			batch.setProjectionMatrix(Camera.camera.combined);
-
-			batch.begin();
-
-			this.map.drawMap(this.batch);
-			this.map.drawInteractive(this.batch);
-			this.map.drawMonsters(batch);
-			this.map.updateHitsAnimation(this.batch);
-
-			if (!UpgradeCardScreen.isUpgrading){
-				player.regainStamina();
-			}
-			player.draw(this.batch, map);
-
-			batch.end();
-
-			this.map.checkDeadMonster();
-
-			player.checkUpgrade();
-
-
-//			if(! UpgradeCardScreen.isUpgrading){
-//				hudBatch.begin();
-//				this.hud.draw(hudBatch);
-//				hudBatch.end();
-//
-//				ShapeRenderer shapeRenderer = new ShapeRenderer();
-//				this.hud.drawXpBar(shapeRenderer);
-//			}
-
-			if (UpgradeCardScreen.isUpgrading){
-				upgradeBatch.begin();
-				UpgradeCardScreen.draw(upgradeBatch, player);
-				upgradeBatch.end();
-			}
-
-
-			if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
-				if (currentLevel > deepestLevel){
-					deepestLevel = currentLevel;
-				}
-				currentLevel=0;
-				this.player.playerDeath();
-				this.nextLevel();
-			}
-
-			if (UpgradeCardScreen.isUpgrading){
-				upgradeBatch.begin();
-				upgradeBatch.end();
-			}
-
-			this.map.updateRemoveInteractive();
-		} catch (Exception e) {
-			batch.end();
-			hudBatch.end();
-			System.out.println("Skipped a frame");
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			game.previousScreen = this;
+			game.setScreen(new PauseScreen(game, this));
+			pause();
+			return;
 		}
 
 
+		if (Gdx.input.isKeyPressed(Input.Keys.N)){
+			player.experience += 100;
+		}
+
+		if (!konamiActivated) {
+			checkKonamiCode();
+		}
+
+		Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
+			player.spawnPlayer();
+		}
+
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning && ! UpgradeCardScreen.isUpgrading){
+			player.getKeyboardMove(this.map);
+			player.getKeyboardWeapon();
+			player.getKeyboardPotion();
+			player.getOrientation();
+			player.dash(this.map);
+		}
+
+		cam.update();
+
+		// Met à jour la position des monstres
+		if (! UpgradeCardScreen.isUpgrading){
+			this.map.moveMonsters(this.player);
+			this.map.updateInteractive(this.player);
+		}
+
+		batch.setProjectionMatrix(Camera.camera.combined);
+
+		batch.begin();
+
+		this.map.drawMap(this.batch);
+		this.map.drawInteractive(this.batch);
+		this.map.drawMonsters(batch);
+		this.map.updateHitsAnimation(this.batch);
+
+		if (!UpgradeCardScreen.isUpgrading){
+			player.regainStamina();
+		}
+		player.draw(this.batch, map);
+
+		batch.end();
+
+		this.map.checkDeadMonster();
+
+		player.checkUpgrade();
+
+
+		if(! UpgradeCardScreen.isUpgrading){
+			hudBatch.begin();
+			this.hud.draw(hudBatch);
+			hudBatch.end();
+
+			ShapeRenderer shapeRenderer = new ShapeRenderer();
+			this.hud.drawXpBar(shapeRenderer);
+		}
+
+		if (UpgradeCardScreen.isUpgrading){
+			upgradeBatch.begin();
+			UpgradeCardScreen.draw(upgradeBatch, player);
+			upgradeBatch.end();
+		}
+
+
+		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
+			if (currentLevel > deepestLevel){
+				deepestLevel = currentLevel;
+			}
+			currentLevel=0;
+			this.player.playerDeath();
+			this.nextLevel();
+		}
+
+		if (UpgradeCardScreen.isUpgrading){
+			upgradeBatch.begin();
+			upgradeBatch.end();
+		}
+
+		this.map.updateRemoveInteractive();
 	}
 
 	private void renderCountdown(float delta) {

@@ -23,7 +23,7 @@ public class UpgradeCardScreen {
     public static void upgrade(Player player) {
         upgradeCards.clear();
         
-        if (Utils.randint(1, 10)==1){
+        if (Utils.randint(1, 7)==1){
             int random = Utils.randint(1, 3);
             if (random == 1 && !player.betterDurability)
                 upgradeCards.add(possibleCards.get(4));
@@ -32,7 +32,7 @@ public class UpgradeCardScreen {
             else if (random == 3 && !player.xpBoost){
                 upgradeCards.add(possibleCards.get(8));
             }
-        } else if (Utils.randint(1, 25)==1) {
+        } else if (Utils.randint(1, 15)==1) {
             int random = Utils.randint(6,7);
             if (random == 6)
                 upgradeCards.add(possibleCards.get(random));

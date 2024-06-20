@@ -218,15 +218,14 @@ public class Monster {
     /**
      * Inflicts radiant damage to the monster.
      */
-    public void takeRadiantDamage(Player player){
+    public void takeRadiantDamage(){
 
-        this.hp -= 10* (player.strength/10);
+        this.hp -= 5;
         this.isRedRadiant = true;
         this.radiantStart = LocalDateTime.now();
 
         if (this.hp <= 0){
             this.isDying=true;
-            this.isDead=true;
         }
     }
 
@@ -244,9 +243,9 @@ public class Monster {
         if (Utils.distance(playerPos, this.pos)<=10){
             this.attack(player);
         }
-        if (player.isRadiant && Utils.getDistance(playerPos, this.pos) <= 40){
+        if (player.isRadiant && Utils.getDistance(playerPos, this.pos) <= 36){
             if (radiantTimer==null || radiantTimer.plusNanos(1000000000).isBefore(LocalDateTime.now())){
-                this.takeRadiantDamage(player);
+                this.takeRadiantDamage();
                 player.radiantTimer = LocalDateTime.now();
             }
         }
