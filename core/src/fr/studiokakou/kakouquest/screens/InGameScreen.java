@@ -3,6 +3,7 @@ package fr.studiokakou.kakouquest.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +22,9 @@ import fr.studiokakou.kakouquest.player.Camera;
 import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.upgradeCard.UpgradeCardScreen;
 import fr.studiokakou.kakouquest.weapon.MeleeWeapon;
+
+import static com.badlogic.gdx.graphics.Color.GRAY;
+import static com.badlogic.gdx.graphics.Color.GREEN;
 
 public class InGameScreen implements Screen {
 
@@ -61,6 +65,7 @@ public class InGameScreen implements Screen {
 	private Texture background;
 
 	String selectedAvatarTexture;
+	private ShapeRenderer shapeRenderer; // Ajouter ShapeRenderer
 
 	// Konami Code variables
 	private final int[] konamiCode = {
@@ -109,6 +114,9 @@ public class InGameScreen implements Screen {
 		background = new Texture("assets/window/settings_background.png");
 		// Initialize the Konami sequence tracker
 		konamiSequence = new Array<Integer>(10);
+
+		// Initialiser ShapeRenderer
+		this.shapeRenderer = new ShapeRenderer();
 	}
 
 	public InGameScreen(GameSpace game, String selectedAvatarTexture, int currentLevel, Player player, int score, int deepestLevel) {
@@ -234,14 +242,13 @@ public class InGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-
 		if (isCountingDown) {
 			renderCountdown(delta);
 			return;
 		}
 
-		if (currentLevel%5 == 0){
-			if (BossMap.isBossDefeated()){
+		if (currentLevel % 5 == 0) {
+			if (BossMap.isBossDefeated()) {
 				map.stairs.canInteract = true;
 			} else {
 				map.stairs.canInteract = false;
@@ -257,8 +264,7 @@ public class InGameScreen implements Screen {
 			return;
 		}
 
-
-		if (Gdx.input.isKeyPressed(Input.Keys.N)){
+		if (Gdx.input.isKeyPressed(Input.Keys.N)) {
 			player.experience += 100;
 		}
 
@@ -273,7 +279,7 @@ public class InGameScreen implements Screen {
 			player.spawnPlayer();
 		}
 
-		if (player.hasPlayerSpawn && !player.isPlayerSpawning && ! UpgradeCardScreen.isUpgrading){
+		if (player.hasPlayerSpawn && !player.isPlayerSpawning && !UpgradeCardScreen.isUpgrading) {
 			player.getKeyboardMove(this.map);
 			player.getKeyboardWeapon();
 			player.getKeyboardPotion();
@@ -284,7 +290,7 @@ public class InGameScreen implements Screen {
 		cam.update();
 
 		// Met à jour la position des monstres
-		if (! UpgradeCardScreen.isUpgrading){
+		if (!UpgradeCardScreen.isUpgrading) {
 			this.map.moveMonsters(this.player);
 			this.map.updateInteractive(this.player);
 		}
@@ -292,13 +298,12 @@ public class InGameScreen implements Screen {
 		batch.setProjectionMatrix(Camera.camera.combined);
 
 		batch.begin();
-
 		this.map.drawMap(this.batch);
 		this.map.drawInteractive(this.batch);
 		this.map.drawMonsters(batch);
 		this.map.updateHitsAnimation(this.batch);
 
-		if (!UpgradeCardScreen.isUpgrading){
+		if (!UpgradeCardScreen.isUpgrading) {
 			player.regainStamina();
 		}
 		player.draw(this.batch, map);
@@ -309,35 +314,27 @@ public class InGameScreen implements Screen {
 
 		player.checkUpgrade();
 
-
-		if(! UpgradeCardScreen.isUpgrading){
+		if (!UpgradeCardScreen.isUpgrading) {
 			hudBatch.begin();
-			this.hud.draw(hudBatch);
+			//this.hud.draw(hudBatch);
 			hudBatch.end();
 
-			ShapeRenderer shapeRenderer = new ShapeRenderer();
-			this.hud.drawXpBar(shapeRenderer);
+			drawXpBar(); // Appeler la méthode pour dessiner la barre d'XP
 		}
 
-		if (UpgradeCardScreen.isUpgrading){
+		if (UpgradeCardScreen.isUpgrading) {
 			upgradeBatch.begin();
 			UpgradeCardScreen.draw(upgradeBatch, player);
 			upgradeBatch.end();
 		}
 
-
-		if (player.hp<=0 && ! UpgradeCardScreen.isUpgrading){
-			if (currentLevel > deepestLevel){
+		if (player.hp <= 0 && !UpgradeCardScreen.isUpgrading) {
+			if (currentLevel > deepestLevel) {
 				deepestLevel = currentLevel;
 			}
-			currentLevel=0;
+			currentLevel = 0;
 			this.player.playerDeath();
 			this.nextLevel();
-		}
-
-		if (UpgradeCardScreen.isUpgrading){
-			upgradeBatch.begin();
-			upgradeBatch.end();
 		}
 
 		this.map.updateRemoveInteractive();
@@ -462,12 +459,28 @@ public class InGameScreen implements Screen {
 		for (Texture texture : countdownTextures) {
 			texture.dispose();
 		}
+		shapeRenderer.dispose(); // Nettoyer ShapeRenderer
 	}
 	private String loadUsername() {
 		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
 			return "guest";
 		}
 		return GetCoreProperties.getStringProperty("USERNAME");
+	}
+
+	private void drawXpBar() {
+		float xpPercentage = (float) (player.experience / (float) player.experienceToNextLevel);
+		float barWidth = 300; // Largeur de la barre d'XP
+		float barHeight = 15; // Hauteur de la barre d'XP
+		float x = 100; // Position X de la barre d'XP
+		float y = 50; // Position Y de la barre d'XP
+
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(GRAY); // Fond gris pour la barre d'XP
+		shapeRenderer.rect(x, y, barWidth, barHeight);
+		shapeRenderer.setColor(GREEN); // Avant-plan bleu pour la barre d'XP
+		shapeRenderer.rect(x, y, barWidth * xpPercentage, barHeight);
+		shapeRenderer.end();
 	}
 }
 

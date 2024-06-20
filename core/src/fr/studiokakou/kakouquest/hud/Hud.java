@@ -169,15 +169,6 @@ public class Hud {
 
     }
 
-    public void drawXpBar(ShapeRenderer shapeRenderer){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(100, 50, 300, 15);
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(100F, 50F, (float) (300 * (player.experience / player.experienceToNextLevel)), 15);
-        shapeRenderer.end();
-    }
-
     public void setFont(BitmapFont font) {
         this.font = font;
     }
