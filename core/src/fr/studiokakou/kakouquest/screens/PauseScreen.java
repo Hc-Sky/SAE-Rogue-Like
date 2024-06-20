@@ -7,6 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.bdd.GameDatabase;
+import fr.studiokakou.kakouquest.utils.Utils;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
+
+import static fr.studiokakou.kakouquest.screens.InGameScreen.currentLevel;
+import static fr.studiokakou.kakouquest.screens.InGameScreen.deepestLevel;
 
 public class PauseScreen implements Screen {
 
@@ -132,10 +139,19 @@ public class PauseScreen implements Screen {
 				Gdx.graphics.getHeight() - Gdx.input.getY() > yposExit) {
 			game.hudBatch.draw(exitButtonSelected, xposExit - 21, yposExit - 23, EXIT_BUTTON_SELECTED_WIDTH, EXIT_BUTTON_SELECTED_HEIGHT);
 			if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-				db.savePlayerStats(inGameScreen.player);
-				db.saveWeaponStats(inGameScreen.player);
-				db.saveAmeliorationStats(inGameScreen.player);
-				db.closeConnection();
+				if (currentLevel > deepestLevel){
+					deepestLevel = currentLevel;
+				}
+				try {
+					int id = Utils.randint(1, 1000000);
+					db.savePlayerStats(inGameScreen.player, id);
+					db.saveWeaponStats(inGameScreen.player, id);
+					db.saveAmeliorationStats(inGameScreen.player, id);
+					db.saveGameStats(inGameScreen.player, id);
+					db.closeConnection();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				game.setScreen(new MenuScreen(game));
 			}
 		} else {
