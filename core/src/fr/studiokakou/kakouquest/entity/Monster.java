@@ -66,7 +66,7 @@ public class Monster {
     Animation<TextureRegion> bloodEffect;
     float bloodStateTime=0f;
 
-    public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
+    public static Hashtable<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>();
 
     public boolean onGuard = false;
 
@@ -445,6 +445,7 @@ public class Monster {
      * @param currentLevel The current level.
      */
     public static void createPossibleMonsters(int currentLevel){
+        possibleMonsters.clear();
         possibleMonsters = new Hashtable<>();
         possibleMonsters.put(1, new ArrayList<>());
         possibleMonsters.put(2, new ArrayList<>());

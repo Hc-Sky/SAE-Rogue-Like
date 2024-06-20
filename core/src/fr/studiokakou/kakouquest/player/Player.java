@@ -47,7 +47,6 @@ public class Player {
     public int playerLevel;
     public double experience;
     public double experienceToNextLevel;
-    public int partie_id;
 
     //player weapons
     public MeleeWeapon currentWeapon;

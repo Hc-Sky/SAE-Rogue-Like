@@ -492,8 +492,17 @@ public class Map {
         for (Wall w : this.walls){
             w.texture.dispose();
         }
+        this.walls.clear();
+        this.floors.clear();
         for (Monster m : Map.monsters){
             m.dispose();
         }
+        Map.monsters.clear();
+
+        Monster.possibleMonsters.elements().asIterator().forEachRemaining(
+                monstersList -> monstersList.forEach(
+                        Monster::dispose
+                )
+        );
     }
 }
