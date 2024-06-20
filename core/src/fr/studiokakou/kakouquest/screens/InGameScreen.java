@@ -316,7 +316,7 @@ public class InGameScreen implements Screen {
 
 		if (!UpgradeCardScreen.isUpgrading) {
 			hudBatch.begin();
-			//this.hud.draw(hudBatch);
+			this.hud.draw(hudBatch);
 			hudBatch.end();
 
 			drawXpBar(); // Appeler la méthode pour dessiner la barre d'XP
