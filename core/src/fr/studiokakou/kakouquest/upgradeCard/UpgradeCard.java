@@ -39,7 +39,7 @@ public class UpgradeCard {
         switch (upgradeName) {
             case "hp":
                 player.max_hp += upgradeAmount;
-                player.hp += (int) ( player.max_hp *0.6);
+                player.hp = Math.min(player.hp+(int) ( player.max_hp *0.6), player.max_hp);
                 break;
             case "stamina":
                 player.max_stamina += upgradeAmount;
