@@ -142,6 +142,7 @@ public class PauseScreen implements Screen {
 					db.savePlayerStats(inGameScreen.player);
 					db.saveWeaponStats(inGameScreen.player);
 					db.saveAmeliorationStats(inGameScreen.player);
+					db.saveGameStats(inGameScreen.player);
 					db.closeConnection();
 				} catch (Exception e) {
 					e.printStackTrace();
