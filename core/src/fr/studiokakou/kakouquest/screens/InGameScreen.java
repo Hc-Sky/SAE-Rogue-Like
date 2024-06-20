@@ -112,7 +112,6 @@ public class InGameScreen implements Screen {
 	 */
 	public void nextLevel() {
 		game.setScreen(new LoadingScreen(game));
-		this.hud = new Hud(this.player, currentLevel, cam.zoom);
 
 		new Thread(new Runnable() {
 			@Override
