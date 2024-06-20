@@ -345,14 +345,8 @@ public class InGameScreen implements Screen {
 
 			this.map.updateRemoveInteractive();
 		} catch (Exception e) {
-			if (batch.isDrawing()){
-				batch.end();
-			}
-			if (hudBatch.isDrawing()){
-				hudBatch.end();
-				this.hud = new Hud(player, currentLevel, cam.zoom);
-				this.hudBatch = new SpriteBatch();
-			}
+			batch.end();
+			hudBatch.end();
 			System.out.println("Skipped a frame");
 		}
 
