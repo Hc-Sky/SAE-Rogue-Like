@@ -44,7 +44,7 @@ public class InGameScreen implements Screen {
 
 	public static int currentLevel;
 	public static int deepestLevel;
-	Map map;
+	public static Map map;
 	public int map_height;
 	public int map_width;
 
@@ -89,7 +89,7 @@ public class InGameScreen implements Screen {
 
 		this.map_height = 80;
 		this.map_width = 80;
-		this.map = new Map(this.map_width, this.map_height);
+		map = new Map(this.map_width, this.map_height);
 
 		// Initialisation du joueur
 		this.player = new Player(map.getPlayerSpawn(), loadUsername(), selectedAvatarTexture);
@@ -184,11 +184,11 @@ public class InGameScreen implements Screen {
 
 			Monster.initExclamationMark();
 
-			this.map.spawnMonsters(currentLevel);
-			this.map.genInteractive(currentLevel, this);
+			map.spawnMonsters(currentLevel);
+			map.genInteractive(currentLevel, this);
 
-		    this.map.spawnMonsters(currentLevel);
-		    this.map.genInteractive(currentLevel, this);
+		    map.spawnMonsters(currentLevel);
+		    map.genInteractive(currentLevel, this);
 
 		    UpgradeCardScreen.initUpgradeCards();
 			initialized = true;
@@ -238,29 +238,29 @@ public class InGameScreen implements Screen {
 			}
 
 			if (player.hasPlayerSpawn && !player.isPlayerSpawning && ! UpgradeCardScreen.isUpgrading){
-				player.getKeyboardMove(this.map);
+				player.getKeyboardMove(map);
 				player.getKeyboardWeapon();
 				player.getKeyboardPotion();
 				player.getOrientation();
-				player.dash(this.map);
+				player.dash(map);
 			}
 
 			cam.update();
 
 			// Met à jour la position des monstres
 			if (! UpgradeCardScreen.isUpgrading){
-				this.map.moveMonsters(this.player);
-				this.map.updateInteractive(this.player);
+				map.moveMonsters(this.player);
+				map.updateInteractive(this.player);
 			}
 
 			batch.setProjectionMatrix(Camera.camera.combined);
 
 			batch.begin();
 
-			this.map.drawMap(this.batch);
-			this.map.drawInteractive(this.batch);
-			this.map.drawMonsters(batch);
-			this.map.updateHitsAnimation(this.batch);
+			map.drawMap(this.batch);
+			map.drawInteractive(this.batch);
+			map.drawMonsters(batch);
+			map.updateHitsAnimation(this.batch);
 
 			if (!UpgradeCardScreen.isUpgrading){
 				player.regainStamina();
@@ -269,19 +269,19 @@ public class InGameScreen implements Screen {
 
 			batch.end();
 
-			this.map.checkDeadMonster();
+			map.checkDeadMonster();
 
 			player.checkUpgrade();
 
 
-//			if(! UpgradeCardScreen.isUpgrading){
-//				hudBatch.begin();
-//				this.hud.draw(hudBatch);
-//				hudBatch.end();
-//
-//				ShapeRenderer shapeRenderer = new ShapeRenderer();
-//				this.hud.drawXpBar(shapeRenderer);
-//			}
+			if(! UpgradeCardScreen.isUpgrading){
+				hudBatch.begin();
+				this.hud.draw(hudBatch);
+				hudBatch.end();
+
+				ShapeRenderer shapeRenderer = new ShapeRenderer();
+				this.hud.drawXpBar(shapeRenderer);
+			}
 
 			if (UpgradeCardScreen.isUpgrading){
 				upgradeBatch.begin();
@@ -304,7 +304,7 @@ public class InGameScreen implements Screen {
 				upgradeBatch.end();
 			}
 
-			this.map.updateRemoveInteractive();
+			map.updateRemoveInteractive();
 		} catch (Exception e) {
 			if (batch.isDrawing()){
 				batch.end();
@@ -435,7 +435,7 @@ public class InGameScreen implements Screen {
 	@Override
 	public void dispose() {
 		this.game.dispose();
-		this.map.dispose();
+		map.dispose();
 		for (Texture texture : countdownTextures) {
 			texture.dispose();
 		}
