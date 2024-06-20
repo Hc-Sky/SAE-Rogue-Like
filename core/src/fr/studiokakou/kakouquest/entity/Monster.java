@@ -325,6 +325,7 @@ public class Monster {
         if (this.hp <= 0){
             this.isDying=true;
             player.gainExperience(this.xp);
+            InGameScreen.score += this.xp;
         }
     }
 
@@ -431,6 +432,7 @@ public class Monster {
         if (this.hp <= 0){
             this.isDying=true;
             player.gainExperience(this.xp);
+            InGameScreen.score += this.xp;
         }
     }
 
