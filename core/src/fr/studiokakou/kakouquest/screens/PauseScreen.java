@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import fr.studiokakou.kakouquest.GameSpace;
 import fr.studiokakou.kakouquest.bdd.GameDatabase;
+import fr.studiokakou.kakouquest.utils.Utils;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 import static fr.studiokakou.kakouquest.screens.InGameScreen.currentLevel;
 import static fr.studiokakou.kakouquest.screens.InGameScreen.deepestLevel;
@@ -139,10 +143,11 @@ public class PauseScreen implements Screen {
 					deepestLevel = currentLevel;
 				}
 				try {
-					db.savePlayerStats(inGameScreen.player);
-					db.saveWeaponStats(inGameScreen.player);
-					db.saveAmeliorationStats(inGameScreen.player);
-					db.saveGameStats(inGameScreen.player);
+					int id = Utils.randint(1, 1000000);
+					db.savePlayerStats(inGameScreen.player, id);
+					db.saveWeaponStats(inGameScreen.player, id);
+					db.saveAmeliorationStats(inGameScreen.player, id);
+					db.saveGameStats(inGameScreen.player, id);
 					db.closeConnection();
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -25,23 +25,24 @@ public class GameDatabase {
 		}
 	}
 
-	public void savePlayerStats(Player player) {
+	public void savePlayerStats(Player player, int id) {
 		loadDatabase();
-		String sql = "INSERT INTO player(partie_id, player_name, hp, stamina, strength, speed, player_level, player_score) VALUES(?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO player(id, partie_id, player_name, hp, stamina, strength, speed, player_level, player_score) VALUES(?, ?,?,?,?,?,?,?,?)";
 
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
-			pstmt.setInt(1, player.getPartie_id());
-			pstmt.setString(2, loadUsername());
-			pstmt.setInt(3, player.getHp());
-			pstmt.setInt(4, (int) player.getStamina());
-			pstmt.setInt(5, player.getStrength());
-			pstmt.setInt(6, (int) player.getSpeed());
-			pstmt.setInt(7, player.getPlayerLevel());
-			pstmt.setInt(8, player.getPlayerScore());
+			pstmt.setInt(1, id);
+			pstmt.setInt(2, id);
+			pstmt.setString(3, loadUsername());
+			pstmt.setInt(4, player.getHp());
+			pstmt.setInt(5, (int) player.getStamina());
+			pstmt.setInt(6, player.getStrength());
+			pstmt.setInt(7, (int) player.getSpeed());
+			pstmt.setInt(8, player.getPlayerLevel());
+			pstmt.setInt(9, player.getPlayerScore());
 
 
-			System.out.println("player.getPartie_id() : " + player.getPartie_id());
+			System.out.println("player.getPartie_id() : " + id);
 			System.out.println("player.getPlayerName() : " + loadUsername());
 			System.out.println("player.getHp() : " + player.getHp());
 			System.out.println("player.getStamina() : " + player.getStamina());
@@ -56,12 +57,12 @@ public class GameDatabase {
 		}
 	}
 
-	public void saveWeaponStats(Player player) {
-		String sql = "INSERT INTO armes(id, name, dommage, durabilite, rarete) VALUES(?, ?, ?, ?, ?)";
+	public void saveWeaponStats(Player player, int id) {
+		String sql = "INSERT INTO armes(player_id, name, dommage, durabilite, rarete) VALUES(?, ?, ?, ?, ?)";
 
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
-			pstmt.setInt(1, player.getCurrentWeapon().getWeapon_id());
+			pstmt.setInt(1, id);
 			pstmt.setString(2, player.getCurrentWeapon().getWeapon_name());
 			pstmt.setInt(3, player.getCurrentWeapon().getWeapon_damage());
 			pstmt.setInt(4, player.getCurrentWeapon().getWeapon_durability());
@@ -73,8 +74,8 @@ public class GameDatabase {
 		}
 	}
 
-	public void saveAmeliorationStats(Player player) {
-		String sql = "INSERT INTO ameliorations(max_hp, max_stamina, strength, speed, partie_id) VALUES(?, ?, ?, ?, ?)";
+	public void saveAmeliorationStats(Player player, int id) {
+		String sql = "INSERT INTO ameliorations(max_hp, max_stamina, strength, speed, player_id) VALUES(?, ?, ?, ?, ?)";
 
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
@@ -82,7 +83,7 @@ public class GameDatabase {
 			pstmt.setString(2, String.valueOf(player.getMax_stamina()));
 			pstmt.setInt(3, player.getStrength());
 			pstmt.setInt(4, (int) player.getSpeed());
-			pstmt.setInt(5, player.getPartie_id());
+			pstmt.setInt(5, id);
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -90,12 +91,12 @@ public class GameDatabase {
 		}
 	}
 
-	public void saveGameStats(Player player) {
-		String sql = "INSERT INTO Game(partie_id, game_level, game_score) VALUES(?, ?, ?)";
+	public void saveGameStats(Player player, int id) {
+		String sql = "INSERT INTO game(id, game_level, game_score) VALUES(?, ?, ?)";
 
 		try {
 			PreparedStatement pstmt = connexion.prepareStatement(sql);
-			pstmt.setInt(1, player.getPartie_id());
+			pstmt.setInt(1, id);
 			pstmt.setInt(2, InGameScreen.deepestLevel);
 			pstmt.setInt(3, InGameScreen.score);
 			pstmt.executeUpdate();
