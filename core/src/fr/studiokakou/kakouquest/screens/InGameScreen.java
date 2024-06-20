@@ -304,7 +304,9 @@ public class InGameScreen implements Screen {
 
 			this.map.updateRemoveInteractive();
 		} catch (Exception e) {
-			e.printStackTrace();
+			batch.end();
+			hudBatch.end();
+			System.out.println("Skipped a frame");
 		}
 
 
