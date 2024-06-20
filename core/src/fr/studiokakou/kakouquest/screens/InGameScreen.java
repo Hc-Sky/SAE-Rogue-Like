@@ -60,12 +60,15 @@ public class InGameScreen implements Screen {
 	private static final float COUNTDOWN_INTERVAL = 0.5f; // 0.5 second interval
 	private Texture background;
 
+	String selectedAvatarTexture;
+
 	// Konami Code variables
 	private final int[] konamiCode = {
 			Input.Keys.UP, Input.Keys.UP, Input.Keys.DOWN, Input.Keys.DOWN,
 			Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.LEFT, Input.Keys.RIGHT,
 			Input.Keys.B, Input.Keys.A
 	};
+
 	private Array<Integer> konamiSequence;
 	private boolean konamiActivated = false;
 
@@ -76,6 +79,7 @@ public class InGameScreen implements Screen {
 	 */
 	public InGameScreen(GameSpace game, String selectedAvatarTexture) {
 		this.game = game;
+		this.selectedAvatarTexture = selectedAvatarTexture;
 
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
@@ -96,6 +100,40 @@ public class InGameScreen implements Screen {
 		this.cam = new Camera(this.player);
 
 		score = 0;
+
+		// Load countdown textures
+		countdownTextures = new Texture[3];
+		countdownTextures[0] = new Texture("assets/window/3.png");
+		countdownTextures[1] = new Texture("assets/window/2.png");
+		countdownTextures[2] = new Texture("assets/window/1.png");
+		background = new Texture("assets/window/settings_background.png");
+		// Initialize the Konami sequence tracker
+		konamiSequence = new Array<Integer>(10);
+	}
+
+	public InGameScreen(GameSpace game, String selectedAvatarTexture, int currentLevel, Player player, int score, int deepestLevel) {
+		this.game = game;
+
+		this.batch = game.batch;
+		this.hudBatch = game.hudBatch;
+		this.upgradeBatch = game.upgradeBatch;
+
+		InGameScreen.currentLevel = currentLevel;
+		InGameScreen.deepestLevel = deepestLevel;
+
+		Monster.createPossibleMonsters(currentLevel);
+		MeleeWeapon.createPossibleMeleeWeapons();
+
+		this.map_height = 80;
+		this.map_width = 80;
+		map = new Map(this.map_width, this.map_height);
+
+		// Initialisation du joueur
+		this.player = player;
+		this.player.setPos(map.getPlayerSpawn());
+		this.cam = new Camera(this.player);
+
+		InGameScreen.score = score;
 
 		// Load countdown textures
 		countdownTextures = new Texture[3];
@@ -155,7 +193,7 @@ public class InGameScreen implements Screen {
 								map.spawnMonsters(currentLevel);
 								map.genInteractive(currentLevel, InGameScreen.this);
 
-								game.setScreen(InGameScreen.this);
+								game.setScreen(new InGameScreen(game, selectedAvatarTexture, currentLevel, player, score, deepestLevel));
 							}
 						}
 					});
@@ -232,6 +270,7 @@ public class InGameScreen implements Screen {
 
 			Gdx.gl.glClearColor(34 / 255f, 34 / 255f, 34 / 255f, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			Gdx.gl.glFlush();
 
 			if (TimeUtils.millis() - startTime >= 1000 && !player.hasPlayerSpawn && !player.isPlayerSpawning) {
 				player.spawnPlayer();
