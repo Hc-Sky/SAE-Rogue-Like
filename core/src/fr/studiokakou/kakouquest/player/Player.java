@@ -60,6 +60,7 @@ public class Player {
 
 //potion
     public HashMap<Potion.PotionType, Integer> potions = new HashMap<>();
+    public Potion.PotionType indexPotion = null;
     /**
      * si le joueur est en train de dash.
      */
@@ -504,7 +505,9 @@ public class Player {
                     }
                     System.out.println(this.currentWeapon.resistance);
                     if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
+                        weapons.remove(currentWeapon);
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
+
                     }
                 }
             }
@@ -603,17 +606,49 @@ public class Player {
     }
 
     /**
-     * Permet de récupérer le choix de l'utilisation des potions.
+     Permet de récupérer le choix de l'utilisation des potions.
      */
     public void getKeyboardPotion() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            usePotion(Potion.PotionType.HEALTH);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            usePotion(Potion.PotionType.STAMINA);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-            usePotion(Potion.PotionType.STRENGTH);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.APOSTROPHE)) {
-            usePotion(Potion.PotionType.SPEED);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if (indexPotion == null) {
+                // Sélectionne la première potion non nulle
+                for (Potion.PotionType type : potions.keySet()) {
+                    if (potions.get(type) > 0) {
+                        indexPotion = type;
+                        break;
+                    }
+                }
+            } else {
+                // Passe à la potion suivante
+                boolean foundCurrent = false;
+                Potion.PotionType firstPotion = null;
+                Potion.PotionType nextPotion = null;
+
+                for (Potion.PotionType type : potions.keySet()) {
+                    if (firstPotion == null && potions.get(type) > 0) {
+                        firstPotion = type; // Enregistre la première potion disponible
+                    }
+                    if (foundCurrent && potions.get(type) > 0) {
+                        nextPotion = type;
+                        break;
+                    }
+                    if (type == indexPotion) {
+                        foundCurrent = true;
+                    }
+                }
+
+                // Si aucune potion suivante trouvée, revient au début
+                if (nextPotion != null) {
+                    indexPotion = nextPotion;
+                } else {
+                    indexPotion = firstPotion;
+                }
+            }
+            System.out.println(indexPotion);
+            System.out.println(potions);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            usePotion(indexPotion);
         }
     }
 

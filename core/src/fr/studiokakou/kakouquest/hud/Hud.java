@@ -92,7 +92,7 @@ public class Hud {
 
         font.draw(batch, "Score : " + InGameScreen.score, healthBarPos.x, staminaBarPos.y);
 
-        Texture square = drawSquare(Color.WHITE);
+        Texture square = drawSquare(Color.WHITE, 150, 150);
         batch.draw(square, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
         batch.draw(square, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
         batch.draw(square, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
@@ -101,27 +101,33 @@ public class Hud {
         batch.draw(defaultWeaponIcon, defaultWeaponIconPos.x, defaultWeaponIconPos.y, defaultWeaponIcon.getWidth() * hudSize * 1f, defaultWeaponIcon.getHeight() * hudSize * 1f);
         if (this.player.weapons.size() > 0) {
             if (this.player.indexWeapon == 0) {
-                Texture redSquare = drawSquare(Color.RED);
+                Texture redSquare = drawSquare(Color.RED, 150, 150);
                 batch.draw(redSquare, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
             }
             Texture weaponIcon1 = this.player.weapons.get(0).texture;
             batch.draw(weaponIcon1, weaponIcon1Pos.x, weaponIcon1Pos.y, weaponIcon1.getWidth() * hudSize * 1f, weaponIcon1.getHeight() * hudSize * 1f);
+            String durability = this.player.weapons.get(0).resistance + "/" + this.player.weapons.get(0).maxResistance;
+            font.draw(batch, durability, weaponIcon1Pos.x + 35, weaponIcon1Pos.y - 6);
         }
         if (this.player.weapons.size() > 1) {
             if (this.player.indexWeapon == 1) {
-                Texture redSquare = drawSquare(Color.RED);
+                Texture redSquare = drawSquare(Color.RED, 150, 150);
                 batch.draw(redSquare, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
             }
             Texture weaponIcon2 = this.player.weapons.get(1).texture;
             batch.draw(weaponIcon2, weaponIcon2Pos.x, weaponIcon2Pos.y, weaponIcon2.getWidth() * hudSize * 1f, weaponIcon2.getHeight() * hudSize * 1f);
+            String durability = this.player.weapons.get(1).resistance + "/" + this.player.weapons.get(1).maxResistance;
+            font.draw(batch, durability, weaponIcon2Pos.x + 35, weaponIcon2Pos.y - 6);
         }
         if (this.player.weapons.size() > 2) {
             if (this.player.indexWeapon == 2) {
-                Texture redSquare = drawSquare(Color.RED);
+                Texture redSquare = drawSquare(Color.RED, 150, 150);
                 batch.draw(redSquare, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
             }
             Texture weaponIcon3 = this.player.weapons.get(2).texture;
             batch.draw(weaponIcon3, weaponIcon3Pos.x, weaponIcon3Pos.y, weaponIcon3.getWidth() * hudSize * 1f, weaponIcon3.getHeight() * hudSize * 1f);
+            String durability = this.player.weapons.get(2).resistance + "/" + this.player.weapons.get(2).maxResistance;
+            font.draw(batch, durability, weaponIcon3Pos.x + 35, weaponIcon3Pos.y - 6);
         }
 
         // Parcours de la HashMap de potions
@@ -134,10 +140,17 @@ public class Hud {
                 Texture potionTexture = getTextureForPotion(potionType);
                 Point potionIconPos = getPointForPotion(potionType);
 
+                if (potionType == player.indexPotion) {
+                    Texture potionSquare = drawSquare(Color.RED, 75, 75);
+                    batch.draw(potionSquare, potionIconPos.x - 10, potionIconPos.y - 5);
+                }
+
                 batch.draw(potionTexture, potionIconPos.x, potionIconPos.y, potionTexture.getWidth() * hudSize, potionTexture.getHeight() * hudSize);
 
                 String potionCountText = "x" + potionCount;
                 font.draw(batch, potionCountText, potionIconPos.x + 35, potionIconPos.y + 15);
+                String potionNameText = potionType + "";
+                font.draw(batch, potionNameText, potionIconPos.x - (1 * potionNameText.length())/2, potionIconPos.y + 65);
             }
         }
 
@@ -187,26 +200,26 @@ public class Hud {
     private Point getPointForPotion(Potion.PotionType potionType) {
         switch (potionType) {
             case HEALTH:
-                return new Point (Gdx.graphics.getWidth() - 150, 600);
+                return new Point (Gdx.graphics.getWidth() - 165, 630);
             case STAMINA:
-                return new Point (Gdx.graphics.getWidth() - 95, 600);
+                return new Point (Gdx.graphics.getWidth() - 80, 630);
             case STRENGTH:
-                return new Point (Gdx.graphics.getWidth() - 150, 540);
+                return new Point (Gdx.graphics.getWidth() - 165, 550);
             case SPEED:
-                return new Point (Gdx.graphics.getWidth() - 95, 540);
+                return new Point (Gdx.graphics.getWidth() - 80, 550);
             default:
                 return null;
         }
     }
 
-    private Texture drawSquare(Color color) {
-        Pixmap pixmap = new Pixmap(150, 150, Pixmap.Format.RGBA8888);
+    private Texture drawSquare(Color color, int width, int height) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+
+        pixmap.setColor(new Color(1, 1, 1, 0.5f));
+        pixmap.fillRectangle(0, 0, 100, 100);
 
         pixmap.setColor(color);
         pixmap.drawRectangle(0, 0, 100, 100);
-
-        pixmap.setColor(new Color(1, 1, 1, 0.5f));
-        pixmap.fillRectangle(1, 1, 98, 98);
 
         Texture texture = new Texture(pixmap);
 
