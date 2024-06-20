@@ -327,9 +327,8 @@ public class Map {
      * @param player the player
      */
     public void moveMonsters(Player player){
-        LocalDateTime tmpDateTime = player.radiantTimer;
         for (Monster m : Map.monsters){
-            m.move(player, this, tmpDateTime);
+            m.move(player, this, player.radiantTimer);
         }
     }
 
@@ -504,5 +503,14 @@ public class Map {
                         Monster::dispose
                 )
         );
+
+        chests.clear();
+        onGroundMeleeWeapons.clear();
+        onGroundPotions.clear();
+
+        rooms.clear();
+        bridges.clear();
+        distances.clear();
+
     }
 }

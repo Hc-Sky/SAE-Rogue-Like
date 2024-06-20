@@ -207,8 +207,7 @@ public class Chest {
      */
     public void draw(SpriteBatch batch){
         if (canInteract && !this.isOpened && !this.isOpenning){
-            TextureRegion currentKeyFrame = this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true);
-            batch.draw(currentKeyFrame, this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
+            batch.draw(this.interactKeyAnimation.getKeyFrame(InGameScreen.stateTime, true), this.pos.x, this.pos.y+20, Floor.TEXTURE_WIDTH, Floor.TEXTURE_HEIGHT);
         }
 
         if (! isOpened){

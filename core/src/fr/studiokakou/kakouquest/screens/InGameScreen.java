@@ -112,6 +112,7 @@ public class InGameScreen implements Screen {
 	 */
 	public void nextLevel() {
 		game.setScreen(new LoadingScreen(game));
+		InGameScreen.stateTime=0f;
 
 		new Thread(new Runnable() {
 			@Override
@@ -144,6 +145,7 @@ public class InGameScreen implements Screen {
 								InGameScreen.stateTime = 0f;
 								System.out.println("next level");
 
+								map = null;
 								map = new Map(map_width, map_height);
 								player.hasPlayerSpawn = false;
 								player.setPos(map.getPlayerSpawn());
@@ -272,14 +274,14 @@ public class InGameScreen implements Screen {
 			player.checkUpgrade();
 
 
-			if(! UpgradeCardScreen.isUpgrading){
-				hudBatch.begin();
-				this.hud.draw(hudBatch);
-				hudBatch.end();
-
-				ShapeRenderer shapeRenderer = new ShapeRenderer();
-				this.hud.drawXpBar(shapeRenderer);
-			}
+//			if(! UpgradeCardScreen.isUpgrading){
+//				hudBatch.begin();
+//				this.hud.draw(hudBatch);
+//				hudBatch.end();
+//
+//				ShapeRenderer shapeRenderer = new ShapeRenderer();
+//				this.hud.drawXpBar(shapeRenderer);
+//			}
 
 			if (UpgradeCardScreen.isUpgrading){
 				upgradeBatch.begin();
