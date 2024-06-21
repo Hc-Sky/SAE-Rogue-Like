@@ -65,7 +65,6 @@ public class InGameScreen implements Screen {
 	private Texture background;
 
 	String selectedAvatarTexture;
-	public static ShapeRenderer shapeRenderer; // Ajouter ShapeRenderer
 
 	// Konami Code variables
 	private final int[] konamiCode = {
@@ -114,9 +113,6 @@ public class InGameScreen implements Screen {
 		background = new Texture("assets/window/settings_background.png");
 		// Initialize the Konami sequence tracker
 		konamiSequence = new Array<Integer>(10);
-
-		// Initialiser ShapeRenderer
-		shapeRenderer = new ShapeRenderer();
 	}
 
 	public InGameScreen(GameSpace game, String selectedAvatarTexture, int currentLevel, Player player, int score, int deepestLevel) {
@@ -318,8 +314,6 @@ public class InGameScreen implements Screen {
 			hudBatch.begin();
 			this.hud.draw(hudBatch);
 			hudBatch.end();
-
-			drawXpBar(); // Appeler la méthode pour dessiner la barre d'XP
 		}
 
 		if (UpgradeCardScreen.isUpgrading) {
@@ -459,29 +453,12 @@ public class InGameScreen implements Screen {
 		for (Texture texture : countdownTextures) {
 			texture.dispose();
 		}
-		shapeRenderer.dispose(); // Nettoyer ShapeRenderer
 	}
 	private String loadUsername() {
 		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
 			return "guest";
 		}
 		return GetCoreProperties.getStringProperty("USERNAME");
-	}
-
-	private void drawXpBar() {
-		float xpPercentage = (float) (player.experience / (float) player.experienceToNextLevel);
-		float barWidth = 300; // Largeur de la barre d'XP
-		float barHeight = 15; // Hauteur de la barre d'XP
-		float x = 100; // Position X de la barre d'XP
-		float y = 50; // Position Y de la barre d'XP
-
-//		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//		shapeRenderer.setColor(GRAY); // Fond gris pour la barre d'XP
-//		shapeRenderer.rect(x, y, barWidth, barHeight);
-//		shapeRenderer.setColor(GREEN); // Avant-plan bleu pour la barre d'XP
-//		shapeRenderer.rect(x, y, barWidth * xpPercentage, barHeight);
-//		shapeRenderer.end();
-//		shapeRenderer.flush();
 	}
 }
 
