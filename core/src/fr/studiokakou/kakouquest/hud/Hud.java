@@ -76,10 +76,10 @@ public class Hud {
 
 
         //potion textures
-        this.potionTextures.put("health", new Texture("assets/items/flask_big_red.png"));
-        this.potionTextures.put("stamina", new Texture("assets/items/flask_big_yellow.png"));
-        this.potionTextures.put("strength", new Texture("assets/items/flask_big_blue.png"));
-        this.potionTextures.put("speed", new Texture("assets/items/flask_big_green.png"));
+        this.potionTextures.put("HEALTH", new Texture("assets/items/flask_big_red.png"));
+        this.potionTextures.put("STAMINA", new Texture("assets/items/flask_big_yellow.png"));
+        this.potionTextures.put("STRENGTH", new Texture("assets/items/flask_big_blue.png"));
+        this.potionTextures.put("SPEED", new Texture("assets/items/flask_big_green.png"));
 
 
     }

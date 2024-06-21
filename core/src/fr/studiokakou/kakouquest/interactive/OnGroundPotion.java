@@ -69,7 +69,7 @@ public class OnGroundPotion {
             int currentAmount = player.potions.getOrDefault(potionType, 0);
             int newAmount = currentAmount + this.potion.getAmount();
             player.potions.put(potionType, newAmount);
-            System.out.println(player.potions);
+            //System.out.println(player.potions);
             this.toDelete = true;
         }
     }

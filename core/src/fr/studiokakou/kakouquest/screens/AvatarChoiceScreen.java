@@ -59,7 +59,7 @@ public class AvatarChoiceScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     // Gestion du clic sur une image
-                    System.out.println("Avatar " + (index + 1) + " clicked!");
+                    //System.out.println("Avatar " + (index + 1) + " clicked!");
                     // Création du joueur avec l'avatar sélectionné
                     Player player = new Player(new Point(0, 0), "PlayerName", texturePaths[index]);
                     game.setPlayer(player);

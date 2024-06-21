@@ -62,10 +62,10 @@ public class UpgradeCard {
 //            System.out.println("Size : " + player.weapons.size());
                 if (player.weapons.size() > 2) {
                     if (player.indexWeapon != -1) {
-                        System.out.println(player.weapons);
-                        System.out.println(player.indexWeapon);
+                        //System.out.println(player.weapons);
+                        //System.out.println(player.indexWeapon);
                         player.weapons.set(player.indexWeapon, MeleeWeapon.LAVISH_SWORD());
-                        System.out.println(player.weapons);
+                        //System.out.println(player.weapons);
                     }
                 } else {
                     player.weapons.add(MeleeWeapon.LAVISH_SWORD());

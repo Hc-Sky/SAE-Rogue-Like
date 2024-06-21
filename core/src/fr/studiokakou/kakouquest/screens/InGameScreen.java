@@ -172,7 +172,7 @@ public class InGameScreen implements Screen {
 								InGameScreen.currentLevel++;
 								InGameScreen.stateTime = 0f;
 								InGameScreen.score+=150;
-								System.out.println("boss level");
+								//System.out.println("boss level");
 
 
 								map = new BossMap(10,10);
@@ -188,7 +188,7 @@ public class InGameScreen implements Screen {
 							else {
 								InGameScreen.currentLevel += 1;
 								InGameScreen.stateTime = 0f;
-								System.out.println("next level");
+								//System.out.println("next level");
 
 								map = null;
 								map = new Map(map_width, map_height);
@@ -350,7 +350,7 @@ public class InGameScreen implements Screen {
 		if (countdownIndex >= countdownTextures.length) {
 			isCountingDown = false;
 			paused = false;
-			System.out.println("Countdown finished, resuming game");
+			//System.out.println("Countdown finished, resuming game");
 			game.setPaused(false); // Assurez-vous que le jeu reprend
 			return;
 		}
@@ -394,7 +394,7 @@ public class InGameScreen implements Screen {
 	@Override
 	public void resume() {
 		// Ne rien faire ici
-		System.out.println("Game resumed");
+		//System.out.println("Game resumed");
 	}
 
 	public void resumeGame() {
@@ -406,7 +406,7 @@ public class InGameScreen implements Screen {
 		countdownTimer = COUNTDOWN_INTERVAL;
 		countdownIndex = 0;
 		paused = true; // Ensure the game is paused during the countdown
-		System.out.println("Starting countdown");
+		//System.out.println("Starting countdown");
 	}
 
 	private void checkKonamiCode() {
@@ -440,7 +440,7 @@ public class InGameScreen implements Screen {
 
 			if (match && konamiSequence.size == konamiCode.length) {
 				konamiActivated = true;
-				System.out.println("Konami Code Activated!");
+				//System.out.println("Konami Code Activated!");
 				// Set the konami flag in the game
 				game.setKonamiActivated(true);
 			}

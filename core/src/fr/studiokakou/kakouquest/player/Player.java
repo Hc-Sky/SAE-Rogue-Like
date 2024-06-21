@@ -502,7 +502,7 @@ public class Player {
                             this.currentWeapon.resistance += 1;
                         }
                     }
-                    System.out.println(this.currentWeapon.resistance);
+                    //System.out.println(this.currentWeapon.resistance);
                     if (currentWeapon.resistance <= 0 && currentWeapon.resistance >- 100){
                         weapons.remove(currentWeapon);
                         this.currentWeapon = MeleeWeapon.RUSTY_SWORD();
@@ -643,8 +643,8 @@ public class Player {
                     indexPotion = firstPotion;
                 }
             }
-            System.out.println(indexPotion);
-            System.out.println(potions);
+            //System.out.println(indexPotion);
+            //System.out.println(potions);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             usePotion(indexPotion);

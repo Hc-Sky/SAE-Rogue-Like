@@ -42,14 +42,14 @@ public class GameDatabase {
 			pstmt.setInt(9, player.getPlayerScore());
 
 
-			System.out.println("player.getPartie_id() : " + id);
-			System.out.println("player.getPlayerName() : " + loadUsername());
-			System.out.println("player.getHp() : " + player.getHp());
-			System.out.println("player.getStamina() : " + player.getStamina());
-			System.out.println("player.getStrength() : " + player.getStrength());
-			System.out.println("player.getSpeed() : " + player.getSpeed());
-			System.out.println("player.getPlayerLevel() : " + player.getPlayerLevel());
-			System.out.println("player.getPlayerScore() : " + player.getPlayerScore());
+			//System.out.println("player.getPartie_id() : " + id);
+			//System.out.println("player.getPlayerName() : " + loadUsername());
+			//System.out.println("player.getHp() : " + player.getHp());
+			//System.out.println("player.getStamina() : " + player.getStamina());
+			//System.out.println("player.getStrength() : " + player.getStrength());
+			//System.out.println("player.getSpeed() : " + player.getSpeed());
+			//System.out.println("player.getPlayerLevel() : " + player.getPlayerLevel());
+			//System.out.println("player.getPlayerScore() : " + player.getPlayerScore());
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
