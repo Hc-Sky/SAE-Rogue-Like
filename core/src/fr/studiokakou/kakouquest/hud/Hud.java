@@ -16,6 +16,7 @@ import fr.studiokakou.kakouquest.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 /**
  * Le type Hud. Cette classe est utilisée pour créer un objet Hud.
@@ -30,12 +31,18 @@ public class Hud {
     Texture healthBarOutside;
 
     ArrayList<Texture> staminaBar = new ArrayList<>();
+    Hashtable<String, Texture> potionTextures = new Hashtable<>();
 
     float hudSize;
 
     BitmapFont font;
 
     Texture arrowTexture;
+
+    Texture redSquare;
+    Texture square;
+    Texture potionSquare;
+
 
     /**
      * Constructeur de l'HUD.
@@ -61,6 +68,20 @@ public class Hud {
         for (int i = 6; i >= 1; i--) {
             this.staminaBar.add(new Texture("assets/hud/stamina/"+i+".png"));
         }
+
+
+        redSquare = drawSquare(Color.RED, 150, 150);
+        square = drawSquare(Color.WHITE, 150, 150);
+        potionSquare = drawSquare(Color.RED, 75, 75);
+
+
+        //potion textures
+        this.potionTextures.put("health", new Texture("assets/items/flask_big_red.png"));
+        this.potionTextures.put("stamina", new Texture("assets/items/flask_big_yellow.png"));
+        this.potionTextures.put("strength", new Texture("assets/items/flask_big_blue.png"));
+        this.potionTextures.put("speed", new Texture("assets/items/flask_big_green.png"));
+
+
     }
 
     /**
@@ -92,43 +113,41 @@ public class Hud {
 
         font.draw(batch, "Score : " + InGameScreen.score, healthBarPos.x, staminaBarPos.y);
 
-        Texture square = drawSquare(Color.WHITE, 150, 150);
         batch.draw(square, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
         batch.draw(square, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
         batch.draw(square, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
 
-        Texture defaultWeaponIcon = this.player.defaultWeapon.texture;
-        batch.draw(defaultWeaponIcon, defaultWeaponIconPos.x, defaultWeaponIconPos.y, defaultWeaponIcon.getWidth() * hudSize * 1f, defaultWeaponIcon.getHeight() * hudSize * 1f);
+
+
+
+        batch.draw(this.player.defaultWeapon.texture, defaultWeaponIconPos.x, defaultWeaponIconPos.y, this.player.defaultWeapon.texture.getWidth() * hudSize * 1f, this.player.defaultWeapon.texture.getHeight() * hudSize * 1f);
         if (this.player.weapons.size() > 0) {
             if (this.player.indexWeapon == 0) {
-                Texture redSquare = drawSquare(Color.RED, 150, 150);
                 batch.draw(redSquare, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
             }
-            Texture weaponIcon1 = this.player.weapons.get(0).texture;
-            batch.draw(weaponIcon1, weaponIcon1Pos.x, weaponIcon1Pos.y, weaponIcon1.getWidth() * hudSize * 1f, weaponIcon1.getHeight() * hudSize * 1f);
+            batch.draw(this.player.weapons.get(0).texture, weaponIcon1Pos.x, weaponIcon1Pos.y, this.player.weapons.get(0).texture.getWidth() * hudSize * 1f, this.player.weapons.get(0).texture.getHeight() * hudSize * 1f);
             String durability = this.player.weapons.get(0).resistance + "/" + this.player.weapons.get(0).maxResistance;
             font.draw(batch, durability, weaponIcon1Pos.x + 35, weaponIcon1Pos.y - 6);
         }
         if (this.player.weapons.size() > 1) {
             if (this.player.indexWeapon == 1) {
-                Texture redSquare = drawSquare(Color.RED, 150, 150);
                 batch.draw(redSquare, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
             }
-            Texture weaponIcon2 = this.player.weapons.get(1).texture;
-            batch.draw(weaponIcon2, weaponIcon2Pos.x, weaponIcon2Pos.y, weaponIcon2.getWidth() * hudSize * 1f, weaponIcon2.getHeight() * hudSize * 1f);
+            batch.draw(this.player.weapons.get(1).texture, weaponIcon2Pos.x, weaponIcon2Pos.y, this.player.weapons.get(1).texture.getWidth() * hudSize * 1f, this.player.weapons.get(1).texture.getHeight() * hudSize * 1f);
             String durability = this.player.weapons.get(1).resistance + "/" + this.player.weapons.get(1).maxResistance;
             font.draw(batch, durability, weaponIcon2Pos.x + 35, weaponIcon2Pos.y - 6);
         }
         if (this.player.weapons.size() > 2) {
             if (this.player.indexWeapon == 2) {
-                Texture redSquare = drawSquare(Color.RED, 150, 150);
                 batch.draw(redSquare, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
             }
-            Texture weaponIcon3 = this.player.weapons.get(2).texture;
-            batch.draw(weaponIcon3, weaponIcon3Pos.x, weaponIcon3Pos.y, weaponIcon3.getWidth() * hudSize * 1f, weaponIcon3.getHeight() * hudSize * 1f);
+            batch.draw(this.player.weapons.get(2).texture, weaponIcon3Pos.x, weaponIcon3Pos.y, this.player.weapons.get(2).texture.getWidth() * hudSize * 1f, this.player.weapons.get(2).texture.getHeight() * hudSize * 1f);
             String durability = this.player.weapons.get(2).resistance + "/" + this.player.weapons.get(2).maxResistance;
             font.draw(batch, durability, weaponIcon3Pos.x + 35, weaponIcon3Pos.y - 6);
         }
+
+
+
 
         // Parcours de la HashMap de potions
         for (HashMap.Entry<Potion.PotionType, Integer> entry : this.player.potions.entrySet()) {
@@ -137,15 +156,13 @@ public class Hud {
 
             if (potionCount > 0) {
                 // Dessiner l'icône de la potion en fonction du type
-                Texture potionTexture = getTextureForPotion(potionType);
                 Point potionIconPos = getPointForPotion(potionType);
 
                 if (potionType == player.indexPotion) {
-                    Texture potionSquare = drawSquare(Color.RED, 75, 75);
                     batch.draw(potionSquare, potionIconPos.x - 10, potionIconPos.y - 5);
                 }
 
-                batch.draw(potionTexture, potionIconPos.x, potionIconPos.y, potionTexture.getWidth() * hudSize, potionTexture.getHeight() * hudSize);
+                batch.draw(potionTextures.get(potionType.name()), potionIconPos.x, potionIconPos.y, potionTextures.get(potionType.name()).getWidth() * hudSize, potionTextures.get(potionType.name()).getHeight() * hudSize);
 
                 String potionCountText = "x" + potionCount;
                 font.draw(batch, potionCountText, potionIconPos.x + 35, potionIconPos.y + 15);
@@ -171,21 +188,6 @@ public class Hud {
 
     public void setFont(BitmapFont font) {
         this.font = font;
-    }
-
-    private Texture getTextureForPotion(Potion.PotionType potionType) {
-        switch (potionType) {
-            case HEALTH:
-                return new Texture("assets/items/flask_big_red.png");
-            case STAMINA:
-                return new Texture("assets/items/flask_big_yellow.png");
-            case STRENGTH:
-                return new Texture("assets/items/flask_big_blue.png");
-            case SPEED:
-                return new Texture("assets/items/flask_big_green.png");
-            default:
-                return null;
-        }
     }
 
     private Point getPointForPotion(Potion.PotionType potionType) {

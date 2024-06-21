@@ -65,7 +65,7 @@ public class InGameScreen implements Screen {
 	private Texture background;
 
 	String selectedAvatarTexture;
-	private ShapeRenderer shapeRenderer; // Ajouter ShapeRenderer
+	public static ShapeRenderer shapeRenderer; // Ajouter ShapeRenderer
 
 	// Konami Code variables
 	private final int[] konamiCode = {
@@ -116,7 +116,7 @@ public class InGameScreen implements Screen {
 		konamiSequence = new Array<Integer>(10);
 
 		// Initialiser ShapeRenderer
-		this.shapeRenderer = new ShapeRenderer();
+		shapeRenderer = new ShapeRenderer();
 	}
 
 	public InGameScreen(GameSpace game, String selectedAvatarTexture, int currentLevel, Player player, int score, int deepestLevel) {
@@ -475,12 +475,13 @@ public class InGameScreen implements Screen {
 		float x = 100; // Position X de la barre d'XP
 		float y = 50; // Position Y de la barre d'XP
 
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(GRAY); // Fond gris pour la barre d'XP
-		shapeRenderer.rect(x, y, barWidth, barHeight);
-		shapeRenderer.setColor(GREEN); // Avant-plan bleu pour la barre d'XP
-		shapeRenderer.rect(x, y, barWidth * xpPercentage, barHeight);
-		shapeRenderer.end();
+//		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//		shapeRenderer.setColor(GRAY); // Fond gris pour la barre d'XP
+//		shapeRenderer.rect(x, y, barWidth, barHeight);
+//		shapeRenderer.setColor(GREEN); // Avant-plan bleu pour la barre d'XP
+//		shapeRenderer.rect(x, y, barWidth * xpPercentage, barHeight);
+//		shapeRenderer.end();
+//		shapeRenderer.flush();
 	}
 }
 
