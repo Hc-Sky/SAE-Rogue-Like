@@ -160,6 +160,7 @@ public class InGameScreen implements Screen {
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
 						public void run() {
+							map.dispose();
 							if ((currentLevel+1) % 5 == 0){
 								InGameScreen.currentLevel++;
 								InGameScreen.stateTime = 0f;
