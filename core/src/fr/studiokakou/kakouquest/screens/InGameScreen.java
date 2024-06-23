@@ -224,9 +224,6 @@ public class InGameScreen implements Screen {
 			this.map.spawnMonsters(currentLevel);
 			this.map.genInteractive(currentLevel, this);
 
-			this.map.spawnMonsters(currentLevel);
-			this.map.genInteractive(currentLevel, this);
-
 			UpgradeCardScreen.initUpgradeCards();
 			initialized = true;
 		}
