@@ -458,8 +458,6 @@ public class Monster {
         possibleMonsters.put(10, new ArrayList<>());
         possibleMonsters.put(11, new ArrayList<>());
         possibleMonsters.put(12, new ArrayList<>());
-        possibleMonsters.put(13, new ArrayList<>());
-
 
         possibleMonsters.get(10).add(BIG_DEMON(currentLevel));
         possibleMonsters.get(12).add(BIG_ZOMBIE(currentLevel));
@@ -474,7 +472,6 @@ public class Monster {
         possibleMonsters.get(7).add(SWAMPY(currentLevel));
         possibleMonsters.get(1).add(TINY_ZOMBIE(currentLevel));
         possibleMonsters.get(4).add(WOGOL(currentLevel));
-        possibleMonsters.get(13).add(Boss.createSlimeBoss(currentLevel));
     }
 
     public void dispose(){
